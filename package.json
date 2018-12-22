@@ -6,11 +6,10 @@
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
     "dev": "cross-env BABEL_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "build": "node build/build.js",
-    "build:report": "npm_config_report=true npm run build",
+    "build": "cross-env NODE_ENV=production env_config=prod node build/build.js",
     "lint": "eslint --ext .js,.vue src",
     "test": "npm run lint",
+    "precommit": "lint-staged",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "repository": {
