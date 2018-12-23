@@ -3,7 +3,7 @@
 
     <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
 
-    <panel-group :count="count"/>
+    <panel-group/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart/>
@@ -36,7 +36,6 @@ import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
-import { get } from '@/api/visits'
 export default {
   name: 'DashboardAdmin',
   components: {
@@ -46,19 +45,6 @@ export default {
     RaddarChart,
     PieChart,
     BarChart
-  },
-  data() {
-    return {
-      count: { newIp: 0, newVisits: 0, recentIp: 0, recentVisits: 0 }
-    }
-  },
-  mounted() {
-    get().then(res => {
-      this.count.newIp = res.newIp
-      this.count.newVisits = res.newVisits
-      this.count.recentIp = res.recentIp
-      this.count.recentVisits = res.recentVisits
-    })
   }
 }
 </script>

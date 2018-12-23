@@ -49,16 +49,23 @@
 
 <script>
 import CountTo from 'vue-count-to'
-
+import { get } from '@/api/visits'
 export default {
   components: {
     CountTo
   },
-  props: {
-    count: {
-      type: Object,
-      required: true
+  data() {
+    return {
+      count: { newIp: 0, newVisits: 0, recentIp: 0, recentVisits: 0 }
     }
+  },
+  mounted() {
+    get().then(res => {
+      this.count.newIp = res.newIp
+      this.count.newVisits = res.newVisits
+      this.count.recentIp = res.recentIp
+      this.count.recentVisits = res.recentVisits
+    })
   }
 }
 </script>
