@@ -1,6 +1,6 @@
 {
   "name": "eladmin-qt",
-  "version": "1.0",
+  "version": "1.0.0",
   "license": "Apache License 2.0",
   "description": "eladmin 前端代码",
   "author": "jie <zhengjie@tom.com>",
@@ -13,12 +13,13 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "repository": {
-    "type": "github",
+    "type": "git",
     "url": "https://github.com/elunez/eladmin-qd"
   },
   "dependencies": {
     "axios": "0.18.0",
     "element-ui": "2.4.6",
+    "connect": "3.6.6",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
     "clipboard": "1.7.1",
@@ -46,7 +47,7 @@
     "babel-plugin-transform-vue-jsx": "3.7.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-stage-2": "6.24.1",
-    "cross-env": "^5.1.1",
+    "cross-env": "5.2.0",
     "chalk": "2.4.1",
     "copy-webpack-plugin": "4.5.2",
     "css-loader": "1.0.0",
