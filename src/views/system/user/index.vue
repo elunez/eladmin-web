@@ -33,7 +33,7 @@
               <el-button size="mini" type="text" @click="scope.row.delPopover = false">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini" @click="scope.row.delPopover = true">删除</el-button>
+            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" size="mini" @click="scope.row.delPopover = true">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -95,6 +95,10 @@ export default {
           type: 'success',
           duration: 2500
         })
+      }).catch(err => {
+        this.delLoading = false
+        row.delPopover = false
+        console.log(err.response.data.message)
       })
     },
     time(time) {

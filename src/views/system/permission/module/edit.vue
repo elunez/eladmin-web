@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="mini" type="success" @click="to">编辑</el-button>
+    <el-button :disabled="data.id === 1" size="mini" type="success" @click="to">编辑</el-button>
     <el-dialog :visible.sync="dialog" :title="title" style="text-align: left" width="500px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="名称" prop="name">

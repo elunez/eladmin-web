@@ -85,6 +85,10 @@ export default {
           type: 'success',
           duration: 2500
         })
+      }).catch(err => {
+        this.delLoading = false
+        row.delPopover = false
+        console.log(err.response.data.message)
       })
     },
     time(time) {
