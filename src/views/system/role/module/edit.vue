@@ -68,6 +68,7 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.form.permissions = []
           const _this = this
           this.permissionIds.forEach(function(data, index) {
             const permission = { id: data }

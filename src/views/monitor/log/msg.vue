@@ -11,7 +11,7 @@
     <div id="console" :style="'height:'+ height" class="console">
       <div v-for="item in data" :key="item.time">
         <span>{{ item.name }}</span>
-        <span style="color:#CD0066 ">{{ item.timestamp+' ' }}</span>
+        <span style="color:#CD0066 ">{{ time(item.timestamp)+' ' }}</span>
         <span style="color: #00CD00">{{ item.threadName+' ' }}</span>
         <span :style="'color:'+ getColor(item.level) ">
           {{ item.level+' ' }}
@@ -58,6 +58,9 @@ export default {
     clearInterval(this.timer)
   },
   methods: {
+    time(date) {
+      return parseTime(date)
+    },
     initWebSocket() {
       this.connection(this)
       // 断开重连机制,尝试发送消息,捕获异常发生时重连

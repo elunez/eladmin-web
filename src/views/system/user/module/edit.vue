@@ -78,6 +78,7 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.form.roles = []
           const _this = this
           this.roleIds.forEach(function(data, index) {
             const role = { id: data }
