@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 5000 // 请求超时时间
+  timeout: 10000 // 请求超时时间
 })
 
 // request拦截器
@@ -39,7 +39,18 @@ service.interceptors.response.use(
     }
   },
   error => {
-    const code = error.response.data.status
+    let code = 0
+    try {
+      code = error.response.data.status
+    } catch (e) {
+      if (error.toString().indexOf('timeout')) {
+        Notification.error({
+          title: '请求超时',
+          duration: 2500
+        })
+        return Promise.reject(error)
+      }
+    }
     if (code === 403 || code === 401) {
       MessageBox.confirm(
         'Token 无效或已经过期，你可以取消继续留在该页面，或者重新登录',

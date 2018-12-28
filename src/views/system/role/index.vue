@@ -76,7 +76,7 @@ export default {
       del(row.id).then(res => {
         this.delLoading = false
         row.delPopover = false
-        this.init(search.data().query)
+        this.init()
         this.$notify({
           title: '删除成功',
           type: 'success',

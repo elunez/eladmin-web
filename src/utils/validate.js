@@ -25,3 +25,13 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+
+/**
+ * 验证邮箱
+ * @param str
+ * @returns {boolean}
+ */
+export function validatEmail(str) {
+  const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+  return reg.test(str)
+}

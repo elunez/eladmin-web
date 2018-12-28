@@ -8,9 +8,9 @@
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="soft" align="center" width="100px" label="排序">
+      <el-table-column prop="sort" align="center" width="100px" label="排序">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.soft }}</el-tag>
+          <el-tag>{{ scope.row.sort }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="path" label="链接地址"/>
@@ -93,7 +93,7 @@ export default {
       del(row.id).then(res => {
         this.delLoading = false
         row.delPopover = false
-        this.init(search.data().query)
+        this.init()
         this.$notify({
           title: '删除成功',
           type: 'success',

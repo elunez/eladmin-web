@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 import { parseTime } from '@/utils/index'
@@ -37,6 +38,11 @@ export default {
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
     }
+  },
+  computed: {
+    ...mapGetters([
+      'socketApi'
+    ])
   },
   // 监听控制滚动条
   watch: {
@@ -75,8 +81,7 @@ export default {
     },
     connection(_this) {
       // 建立连接对象，注意部署到线上后也要修改对应的地址
-      // const socket = new SockJS('http://localhost:/websocket?token=kl')// 连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
-      const socket = new SockJS('http://localhost:8000/websocket?token=kl')// 连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      const socket = new SockJS(this.socketApi)// 连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket)
       // 定义客户端的认证信息,按需求配置

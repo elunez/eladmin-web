@@ -17,7 +17,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="cancel">取消</el-button>
-        <el-button type="primary" @click="doSubmit">确认</el-button>
+        <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      dialog: false, title: '编辑角色',
+      loading: false, dialog: false, title: '编辑角色',
       form: { id: '', name: '', permissions: [], remark: '' }, permissionIds: [],
       rules: {
         name: [
@@ -68,6 +68,7 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.loading = true
           this.form.permissions = []
           const _this = this
           this.permissionIds.forEach(function(data, index) {
@@ -81,7 +82,11 @@ export default {
               type: 'success',
               duration: 2500
             })
+            this.loading = false
             _this.sup_this.init()
+          }).catch(err => {
+            this.loading = false
+            console.log(err.response.data.message)
           })
         } else {
           return false

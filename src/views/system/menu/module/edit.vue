@@ -19,8 +19,8 @@
         <el-form-item label="菜单名称" prop="name">
           <el-input v-model="form.name" placeholder="名称" style="width: 460px;"/>
         </el-form-item>
-        <el-form-item label="菜单排序" prop="soft">
-          <el-input v-model.number="form.soft" placeholder="序号越小越靠前" style="width: 460px;"/>
+        <el-form-item label="菜单排序" prop="sort">
+          <el-input v-model.number="form.sort" placeholder="序号越小越靠前" style="width: 460px;"/>
         </el-form-item>
         <el-form-item label="内部菜单" prop="iframe">
           <el-radio v-model="form.iframe" label="false">是</el-radio>
@@ -41,7 +41,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="cancel">取消</el-button>
-        <el-button type="primary" @click="doSubmit">确认</el-button>
+        <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -73,13 +73,13 @@ export default {
   },
   data() {
     return {
-      dialog: false, title: '编辑菜单',
-      form: { id: '', name: '', soft: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }, roleIds: [],
+      loading: false, dialog: false, title: '编辑菜单',
+      form: { id: '', name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }, roleIds: [],
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ],
-        soft: [
+        sort: [
           { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
         ],
         iframe: [
@@ -91,7 +91,7 @@ export default {
   methods: {
     to() {
       const _this = this
-      this.form = { id: this.data.id, component: this.data.component, name: this.data.name, soft: this.data.soft, pid: this.data.pid, path: this.data.path, iframe: this.data.iframe.toString(), roles: [], icon: this.data.icon }
+      this.form = { id: this.data.id, component: this.data.component, name: this.data.name, sort: this.data.sort, pid: this.data.pid, path: this.data.path, iframe: this.data.iframe.toString(), roles: [], icon: this.data.icon }
       this.data.roles.forEach(function(data, index) {
         _this.roleIds.push(data.id)
       })
@@ -103,6 +103,7 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.loading = true
           this.form.roles = []
           const _this = this
           this.roleIds.forEach(function(data, index) {
@@ -116,8 +117,14 @@ export default {
               type: 'success',
               duration: 2500
             })
-            _this.sup_this.init()
-            _this.sup_this.getMenus()
+            this.loading = false
+            setTimeout(() => {
+              _this.sup_this.init()
+              _this.sup_this.getMenus()
+            }, 200)
+          }).catch(err => {
+            this.loading = false
+            console.log(err.response.data.message)
           })
         } else {
           return false
@@ -127,7 +134,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { id: '', name: '', soft: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }
+      this.form = { id: '', name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }
       this.roleIds = []
     },
     selected(name) {

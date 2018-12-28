@@ -14,10 +14,6 @@
 </template>
 
 <script>
-// const icons = [
-//   'add', 'index', 'log', 'menu', 'monitor', 'user', 'system', 'sqlMonitor', 'permission',
-//   'zujian', 'icon'
-// ]
 import icons from './requireIcons'
 export default {
   name: 'IconSelect',
@@ -52,6 +48,8 @@ export default {
     width: 100%;
     padding: 10px;
     .icon-list {
+      height: 200px;
+      overflow-y: scroll;
       div {
         height: 30px;
         line-height: 30px;
