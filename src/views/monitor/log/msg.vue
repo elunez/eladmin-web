@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       height: document.documentElement.clientHeight - 132 + 'px;',
-      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date()), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~', exception: '' }],
+      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date()), threadName: 'system-prompt-message', level: 'INFO', className: 'com.vj.EladminApplication' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~', exception: '' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
     }

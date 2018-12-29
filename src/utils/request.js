@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 10000 // 请求超时时间
+  timeout: 5000 // 请求超时时间
 })
 
 // request拦截器
@@ -51,7 +51,7 @@ service.interceptors.response.use(
         return Promise.reject(error)
       }
     }
-    if (code === 403 || code === 401) {
+    if (code === 401) {
       MessageBox.confirm(
         'Token 无效或已经过期，你可以取消继续留在该页面，或者重新登录',
         '提示',
@@ -65,6 +65,15 @@ service.interceptors.response.use(
           location.reload() // 为了重新实例化vue-router对象 避免bug
         })
       })
+    } else if (code === 403) {
+      MessageBox.alert(
+        '你还没有权限哦，先去找管理员申请权限吧！',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          type: 'warning'
+        }
+      )
     } else {
       const errorMsg = error.response.data.message
       if (errorMsg !== undefined) {
