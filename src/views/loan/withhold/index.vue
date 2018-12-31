@@ -3,7 +3,7 @@
     <search :roles="roles" :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
-      <el-table-column prop="id" label="还款编号">
+      <el-table-column prop="id" label="扣款编号">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -13,62 +13,67 @@
           <span>{{ scope.row.applyId }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="termNo" label="还款期数">
+      <el-table-column prop="repayId" label="还款编号">
         <template slot-scope="scope">
-          <span>{{ scope.row.termNo }}</span>
+          <span>{{ scope.row.repayId }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="还款状态">
+      <el-table-column prop="virementStatusMessage" label="状态描述">
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row.virementStatusMessage }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="planRepayTime" label="应还款时间">
+      <el-table-column prop="virementDesc" label="类型描述">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.planRepayTime) }}</span>
+          <span>{{ scope.row.virementDesc }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="planPrincipalAmount" label="应还款本金">
+      <el-table-column prop="virementAmount" label="实扣金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.planPrincipalAmount/100 }}</span>
+          <span>{{ scope.row.virementAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="planInterestAmount" label="应还款利息">
+      <el-table-column prop="principalAmount" label="应扣本金">
         <template slot-scope="scope">
-          <span>{{ scope.row.planInterestAmount/100 }}</span>
+          <span>{{ scope.row.principalAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="serviceAmount" label="应还服务费">
+      <el-table-column prop="interestAmount" label="应扣利息">
+        <template slot-scope="scope">
+          <span>{{ scope.row.interestAmount/100 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="serviceAmount" label="应扣服务费">
         <template slot-scope="scope">
           <span>{{ scope.row.serviceAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="actualRepayTime" label="实还款时间">
+      <el-table-column prop="penaltyAmount" label="应扣罚息">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.actualRepayTime) }}</span>
+          <span>{{ scope.row.penaltyAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="actualPrincipalAmount" label="实还款本金">
+      <el-table-column prop="discountAmount" label="优惠金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.actualPrincipalAmount/100 }}</span>
+          <span>{{ scope.row.discountAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="actualInterestAmount" label="实还款利息">
+      <el-table-column prop="virementTime" label="扣款时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.actualInterestAmount/100 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="actualServiceAmount" label="实还服务费">
-        <template slot-scope="scope">
-          <span>{{ scope.row.actualServiceAmount/100 }}</span>
+          <span>{{ time(scope.row.virementTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" >查看详情</el-button>
+          <el-button type="success" size="mini" @click="visible()">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog :visible.sync="dialogRepayVisible" title="扣款详情" >
+      <div>
+        <el-input v-model="creditAmount" placeholder="例：88888888" clearable />
+      </div>
+    </el-dialog>
     <!--分页组件-->
     <el-pagination
       :total="total"
@@ -90,7 +95,7 @@ export default {
   mixins: [initData],
   data() {
     return {
-      roles: [], delLoading: false, sup_this: this
+      roles: [], delLoading: false, sup_this: this, dialogRepayVisible: false
     }
   },
   created() {
@@ -102,23 +107,31 @@ export default {
   methods: {
     checkPermission,
     beforeInit() {
-      this.url = 'api/repay'
-      const sort = 'id'
+      this.url = 'api/withhold'
+      const sort = 'createTime,desc'
       const query = this.query
       const type = query.type
       const value = query.value
-      const status = query.enabled
+      const virementStatus = query.enabled
       this.params = { page: this.page, size: this.size, sort: sort }
       if (type && value) { this.params[type] = value }
-      if (status !== '' && status !== null) { this.params['status'] = status }
+      if (virementStatus !== '' && virementStatus !== null) { this.params['virementStatus'] = virementStatus }
       if (undefined !== this.$route.query.rows) {
         const applyId = this.$route.query.rows.id
         if (applyId !== '' && applyId !== null) { this.params['applyId'] = applyId }
+      }
+      const time = query.time
+      if (time !== undefined && time !== '' && time !== null) {
+        this.params['beginDate'] = time[0]
+        this.params['endDate'] = time[1]
       }
       return true
     },
     time(time) {
       return parseTime(time)
+    },
+    visible() {
+      this.dialogRepayVisible = true
     },
     getRoles() {
       getRoleTree().then(res => {

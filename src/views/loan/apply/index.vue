@@ -8,11 +8,6 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyStatus" label="订单状态">
-        <template slot-scope="scope">
-          <span>{{ formatStatus(scope.row.applyStatus) }}</span>
-        </template>
-      </el-table-column>
       <el-table-column prop="userName" label="姓名">
         <template slot-scope="scope">
           <span>{{ scope.row.userName }}</span>
@@ -23,14 +18,54 @@
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="申请日期">
+      <el-table-column prop="applyStatus" label="期数">
+        <template slot-scope="scope">
+          <span>{{ scope.row.applyTerm }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="applyStatus" label="利率">
+        <template slot-scope="scope">
+          <span>{{ scope.row.applyRate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="applyStatus" label="申请金额">
+        <template slot-scope="scope">
+          <span>{{ scope.row.applyAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="applyStatus" label="审批金额">
+        <template slot-scope="scope">
+          <span>{{ scope.row.arrivalAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="loanChannel" label="资金渠道">
+        <template slot-scope="scope">
+          <span>{{ formatChannel(scope.row.loanChannel) }}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column prop="applyStatus" label="订单状态">
+        <template slot-scope="scope">
+          <span>{{ scope.row.applyMessage }}</span>
+        </template>
+      </el-table-column>-->
+      <el-table-column prop="applyStatus" label="订单状态">
+        <template slot-scope="scope">
+          <span>{{ formatStatus(scope.row.applyStatus) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="applyTime" label="申请日期">
         <template slot-scope="scope">
           <span>{{ time(scope.row.applyTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="getRepay(scope.row)">查看详情</el-button>
+          <el-tooltip effect="dark" content="点击查看订单详情" placement="top-start">
+            <el-button type="success" size="mini" @click="getRepay(scope.row)">详情</el-button>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="点击查看还款计划" placement="top-start">
+            <el-button type="success" size="mini" @click="getRepay(scope.row)">还款</el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -73,9 +108,16 @@ export default {
       const type = query.type
       const value = query.value
       const applyStatus = query.enabled
+      const loanChannel = query.channel
       this.params = { page: this.page, size: this.size, sort: sort }
       if (type && value) { this.params[type] = value }
       if (applyStatus !== '' && applyStatus !== null) { this.params['applyStatus'] = applyStatus }
+      if (loanChannel !== '' && loanChannel !== null) { this.params['loanChannel'] = loanChannel }
+      const time = query.time
+      if (time !== undefined && time !== '' && time !== null) {
+        this.params['beginDate'] = time[0]
+        this.params['endDate'] = time[1]
+      }
       return true
     },
     time(time) {
@@ -98,7 +140,7 @@ export default {
       } else if (status === '2') {
         return '审批拒绝'
       } else if (status === '3') {
-        return '审批通过|待收款'
+        return '待收款'
       } else if (status === '4') {
         return '拒绝收款'
       } else if (status === '5') {
@@ -113,6 +155,30 @@ export default {
         return '逾期'
       } else if (status === '10') {
         return '放款失败'
+      }
+    },
+    formatChannel(channel) {
+      console.log(channel)
+      if (channel === 'LCC201709190001') {
+        return '新网'
+      } else if (channel === 'LCC201709190002') {
+        return '众安'
+      } else if (channel === 'LCC201709190003') {
+        return 'mock'
+      } else if (channel === 'LCC201709190004') {
+        return '合利宝'
+      } else if (channel === 'LCC201709190005') {
+        return '京东'
+      } else if (channel === 'LCC201709190006') {
+        return '龙信'
+      } else if (channel === 'LCC201709190007') {
+        return '微商'
+      } else if (channel === 'LCC201709190008') {
+        return '微言'
+      } else if (channel === 'LCC201709190009') {
+        return '光大'
+      } else if (channel === 'LCC201709190010') {
+        return '晋商'
       }
     }
   }

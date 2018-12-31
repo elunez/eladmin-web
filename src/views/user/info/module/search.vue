@@ -4,7 +4,7 @@
     <el-select v-model="query.type" clearable placeholder="搜索类型" class="filter-item" style="width: 130px">
       <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
     </el-select>
-    <el-select v-model="query.enabled" clearable placeholder="扣款状态" class="filter-item" style="width: 110px" @change="toQuery">
+    <el-select v-model="query.enabled" clearable placeholder="实名认证" class="filter-item" style="width: 110px" @change="toQuery">
       <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
     </el-select>
     <el-date-picker
@@ -15,7 +15,6 @@
       end-placeholder="结束日期"
       default-time="['00:00:00', '23:59:59']"/>
     <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
-
     <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
   </div>
 </template>
@@ -40,14 +39,15 @@ export default {
     return {
       downloadLoading: false,
       queryTypeOptions: [
-        { key: 'id', display_name: '扣款编号' },
-        { key: 'applyId', display_name: '订单编号' },
-        { key: 'repayId', display_name: '还款编号' }
+        { key: 'realName', display_name: '姓名' },
+        { key: 'phone', display_name: '手机号' },
+        { key: 'id', display_name: '用户编号' },
+        { key: 'queryApplyTime', display_name: '注册时间' }
       ],
       enabledTypeOptions: [
-        { key: '1', display_name: '扣款中' },
-        { key: '2', display_name: '扣款成功' },
-        { key: '3', display_name: '扣款失败' }
+        { key: '已认证', display_name: '已认证' },
+        { key: '未认证', display_name: '未认证' },
+        { key: '未通过', display_name: '未通过' }
       ]
     }
   },
@@ -60,8 +60,8 @@ export default {
     download() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', '用户名', '手机号', '申请时间']
-        const filterVal = ['id', 'userName', 'phone', 'applyTime']
+        const tHeader = ['用户编号', '姓名', '手机号', '注册渠道', '注册时间']
+        const filterVal = ['id', 'realName', 'phone', 'registerChannel', 'createDate']
         const data = this.formatJson(filterVal, this.$parent.data)
         excel.export_json_to_excel({
           header: tHeader,
@@ -73,10 +73,8 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        if (j === 'createTime' || j === 'lastPasswordResetTime') {
+        if (j === 'createDate') {
           return parseTime(v[j])
-        } else if (j === 'enabled') {
-          return parseTime(v[j]) ? '启用' : '禁用'
         } else {
           return v[j]
         }

@@ -13,6 +13,11 @@
           <span>{{ scope.row.applyId }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="applyId" label="扣款编号">
+        <template slot-scope="scope">
+          <span>{{ scope.row.virementId }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="termNo" label="还款期数">
         <template slot-scope="scope">
           <span>{{ scope.row.termNo }}</span>
@@ -61,6 +66,21 @@
       <el-table-column prop="actualServiceAmount" label="实还服务费">
         <template slot-scope="scope">
           <span>{{ scope.row.actualServiceAmount/100 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="penaltyAmount" label="罚息">
+        <template slot-scope="scope">
+          <span>{{ scope.row.penaltyAmount/100 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="discountAmount" label="优惠金额">
+        <template slot-scope="scope">
+          <span>{{ scope.row.discountAmount/100 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="excessAmount" label="溢出金额">
+        <template slot-scope="scope">
+          <span>{{ scope.row.excessAmount/100 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
@@ -114,6 +134,11 @@ export default {
       if (undefined !== this.$route.query.rows) {
         const applyId = this.$route.query.rows.id
         if (applyId !== '' && applyId !== null) { this.params['applyId'] = applyId }
+      }
+      const time = query.time
+      if (time !== undefined && time !== '' && time !== null) {
+        this.params['beginDate'] = time[0]
+        this.params['endDate'] = time[1]
       }
       return true
     },

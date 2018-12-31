@@ -1,12 +1,19 @@
 <template>
   <div class="head-container">
     <el-input v-model="query.value" clearable placeholder="输入关键字搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-    <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
+    <el-select v-model="query.type" clearable placeholder="搜索类型" class="filter-item" style="width: 130px">
       <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
     </el-select>
-    <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 110px" @change="toQuery">
+    <el-select v-model="query.enabled" clearable placeholder="还款状态" class="filter-item" style="width: 110px" @change="toQuery">
       <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
     </el-select>
+    <el-date-picker
+      v-model="query.time"
+      type="datetimerange"
+      align="right"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      default-time="['00:00:00', '23:59:59']"/>
     <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
 
     <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
