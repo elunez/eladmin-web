@@ -21,11 +21,11 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/elunez/eladmin">
+          <router-link to="/user/center">
             <el-dropdown-item>
-              项目地址
+              个人中心
             </el-dropdown-item>
-          </a>
+          </router-link>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>

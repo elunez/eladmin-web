@@ -3,23 +3,26 @@
     <search :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
-      <el-table-column prop="filename" label="文件名"/>
-      <el-table-column prop="username" label="上传者"/>
-      <el-table-column :show-overflow-tooltip="true" prop="url" label="链接地址">
+      <el-table-column :show-overflow-tooltip="true" prop="key" label="文件名"/>
+      <el-table-column prop="bucket" label="空间名称"/>
+      <el-table-column :show-overflow-tooltip="true" prop="url" label="地址/私有空间需下载访问">
         <template slot-scope="scope">
           <a :href="scope.row.url" style="color: #42b983" target="_blank">{{ scope.row.url }}</a>
         </template>
       </el-table-column>
       <el-table-column prop="size" label="文件大小"/>
-      <el-table-column prop="height" label="高度"/>
-      <el-table-column prop="width" label="宽度"/>
-      <el-table-column width="180px" prop="createTime" label="创建日期">
+      <el-table-column prop="type" label="空间类型"/>
+      <el-table-column width="180px" prop="updateTime" label="更新日期">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.createTime) }}</span>
+          <span>{{ time(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center">
+      <el-table-column label="操作" width="160px" align="center">
         <template slot-scope="scope">
+          <el-button
+            :loading="downloadLoading"
+            size="mini"
+            @click="download(scope.row.id)">下载</el-button>
           <el-popover
             v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])"
             v-model="scope.row.delPopover"
@@ -47,8 +50,8 @@
 
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
-import initData from '../../../mixins/initData'
-import { del } from '@/api/picture'
+import initData from '../../../../mixins/initData'
+import { del, download } from '@/api/qiniu'
 import { parseTime } from '@/utils/index'
 import search from './module/search'
 export default {
@@ -56,7 +59,21 @@ export default {
   mixins: [initData],
   data() {
     return {
-      delLoading: false, sup_this: this
+      url: '',
+      // 新窗口的引用
+      newWin: null,
+      downloadLoading: false, delLoading: false, sup_this: this
+    }
+  },
+  watch: {
+    url(newVal, oldVal) {
+      if (newVal && this.newWin) {
+        this.newWin.sessionStorage.clear()
+        this.newWin.location.href = newVal
+        // 重定向后把url和newWin重置
+        this.url = ''
+        this.newWin = null
+      }
     }
   },
   created() {
@@ -67,12 +84,12 @@ export default {
   methods: {
     checkPermission,
     beforeInit() {
-      this.url = 'api/pictures'
+      this.url = 'api/qiNiuContent'
       const sort = 'id,desc'
       const query = this.query
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['filename'] = value }
+      if (value) { this.params['key'] = value }
       return true
     },
     subDelete(index, row) {
@@ -89,6 +106,18 @@ export default {
       }).catch(err => {
         this.delLoading = false
         row.delPopover = false
+        console.log(err.response.data.message)
+      })
+    },
+    download(id) {
+      this.downloadLoading = true
+      // 先打开一个空的新窗口，再请求
+      this.newWin = window.open()
+      download(id).then(res => {
+        this.downloadLoading = false
+        this.url = res
+      }).catch(err => {
+        this.downloadLoading = false
         console.log(err.response.data.message)
       })
     },

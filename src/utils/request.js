@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 import { Notification, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
@@ -51,9 +52,9 @@ service.interceptors.response.use(
         return Promise.reject(error)
       }
     }
-    if (code === 403 || code === 401) {
+    if (code === 401) {
       MessageBox.confirm(
-        'Token 无效或已经过期，你可以取消继续留在该页面，或者重新登录',
+        '登录状态已失效，你可以取消继续留在该页面，或者重新登录',
         '提示',
         {
           confirmButtonText: '重新登录',
@@ -65,6 +66,8 @@ service.interceptors.response.use(
           location.reload() // 为了重新实例化vue-router对象 避免bug
         })
       })
+    } else if (code === 403) {
+      router.push({ path: '/401' })
     } else {
       const errorMsg = error.response.data.message
       if (errorMsg !== undefined) {

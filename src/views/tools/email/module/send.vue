@@ -44,7 +44,10 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'imagesUploadApi'
+      // sm.ms图床
+      'imagesUploadApi',
+      // 七牛云 按需选择
+      'qiNiuUploadApi'
     ])
   },
   mounted() {
@@ -54,6 +57,7 @@ export default {
     editor.customConfig.uploadImgHeaders = this.headers
     // 自定义文件名，不可修改，修改后会上传失败
     editor.customConfig.uploadFileName = 'file'
+    // 上传到哪儿，按需选择
     editor.customConfig.uploadImgServer = this.imagesUploadApi // 上传图片到服务器
     editor.customConfig.onchange = (html) => {
       this.form.content = html

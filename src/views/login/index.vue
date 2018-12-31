@@ -37,7 +37,6 @@
 
 <script>
 import { md5 } from '@/utils/md5'
-
 export default {
   name: 'Login',
   data() {

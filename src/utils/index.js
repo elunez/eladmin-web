@@ -15,7 +15,7 @@ export function parseTime(time) {
     var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
     var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
     // 拼接
-    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+    return year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds
   } else {
     return ''
   }
@@ -92,4 +92,27 @@ export function debounce(func, wait, immediate) {
 
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
+}
+
+// 替换邮箱字符
+export function regEmail(email) {
+  if (String(email).indexOf('@') > 0) {
+    const str = email.split('@')
+    let _s = ''
+    if (str[0].length > 3) {
+      for (var i = 0; i < str[0].length - 3; i++) {
+        _s += '*'
+      }
+    }
+    var new_email = str[0].substr(0, 3) + _s + '@' + str[1]
+  }
+  return new_email
+}
+
+// 替换手机字符
+export function regMobile(mobile) {
+  if (mobile.length > 7) {
+    var new_mobile = mobile.substr(0, 3) + '****' + mobile.substr(7)
+  }
+  return new_mobile
 }

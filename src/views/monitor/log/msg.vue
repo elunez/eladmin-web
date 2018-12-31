@@ -18,7 +18,6 @@
         </span>
         <span style="color: #DE00CC">{{ item.className+' ' }}</span>
         <span v-html="item.body"/>
-        <span>{{ item.exception }}</span>
       </div>
     </div>
   </div>
@@ -34,7 +33,7 @@ export default {
   data() {
     return {
       height: document.documentElement.clientHeight - 132 + 'px;',
-      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date()), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~', exception: '' }],
+      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date()), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
     }
@@ -80,7 +79,6 @@ export default {
       }, 5000)
     },
     connection(_this) {
-      // 建立连接对象，注意部署到线上后也要修改对应的地址
       const socket = new SockJS(this.socketApi)// 连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket)

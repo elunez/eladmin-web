@@ -22,3 +22,26 @@ export function edit(data) {
     data
   })
 }
+
+export function validPass(pass) {
+  return request({
+    url: 'api/users/validPass/' + pass,
+    method: 'get'
+  })
+}
+
+export function updatePass(pass) {
+  return request({
+    url: 'api/users/updatePass/' + pass,
+    method: 'get'
+  })
+}
+
+export function updateEmail(code, data) {
+  return request({
+    url: 'api/users/updateEmail/' + code,
+    method: 'post',
+    data
+  })
+}
+
