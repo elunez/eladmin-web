@@ -100,7 +100,7 @@ export default {
               _this.buttonName = '重新发送'
               _this.time = 60
               _this.isDisabled = false
-              clearInterval(this.timer)
+              clearInterval(_this.timer)
             }
           }, 1000)
         }).catch(err => {
