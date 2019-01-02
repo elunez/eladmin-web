@@ -60,7 +60,7 @@ export default {
   beforeDestroy: function() {
     // 页面离开时断开连接,清除定时器
     this.disconnect()
-    clearInterval(this.timer)
+    window.clearInterval(this.timer)
   },
   methods: {
     time(date) {
@@ -69,7 +69,7 @@ export default {
     initWebSocket() {
       this.connection(this)
       // 断开重连机制,尝试发送消息,捕获异常发生时重连
-      this.timer = setInterval(() => {
+      this.timer = window.setInterval(() => {
         try {
           this.stompClient.send('test')
         } catch (err) {
@@ -103,7 +103,7 @@ export default {
     disconnect() {
       if (this.stompClient != null) {
         this.stompClient.disconnect()
-        clearInterval(this.timer)
+        window.clearInterval(this.timer)
       }
     },
     getColor(level) {

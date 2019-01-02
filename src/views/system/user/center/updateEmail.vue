@@ -60,7 +60,7 @@ export default {
       loading: false, dialog: false, title: '修改邮箱', form: { pass: '', email: '', code: '' },
       user: { email: '', password: '' }, codeLoading: false,
       codeData: { type: 'email', value: '' },
-      buttonName: '获取验证码', isDisabled: false, time: 60,
+      buttonName: '获取验证码', isDisabled: false, time: 5,
       rules: {
         pass: [
           { required: true, validator: validatePass, trigger: 'blur' }
@@ -98,9 +98,9 @@ export default {
             --_this.time
             if (_this.time < 0) {
               _this.buttonName = '重新发送'
-              _this.time = 60
+              _this.time = 5
               _this.isDisabled = false
-              clearInterval(_this.timer)
+              window.clearInterval(_this.timer)
             }
           }, 1000)
         }).catch(err => {
@@ -135,8 +135,8 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      clearInterval(this.timer)
-      this.time = 60
+      window.clearInterval(this.timer)
+      this.time = 5
       this.buttonName = '获取验证码'
       this.isDisabled = false
       this.form = { pass: '', email: '', code: '' }
