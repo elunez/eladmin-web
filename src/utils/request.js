@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 import { Notification, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
@@ -53,7 +54,7 @@ service.interceptors.response.use(
     }
     if (code === 401) {
       MessageBox.confirm(
-        'Token 无效或已经过期，你可以取消继续留在该页面，或者重新登录',
+        '登录状态已失效，你可以取消继续留在该页面，或者重新登录',
         '提示',
         {
           confirmButtonText: '重新登录',
@@ -74,6 +75,7 @@ service.interceptors.response.use(
           type: 'warning'
         }
       )
+      router.push({ path: '/401' })
     } else {
       const errorMsg = error.response.data.message
       if (errorMsg !== undefined) {

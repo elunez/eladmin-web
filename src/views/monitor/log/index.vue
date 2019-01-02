@@ -22,7 +22,7 @@
           <span v-else class="badge">{{ scope.row.logType }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" width="160px">
+      <el-table-column prop="createTime" label="创建日期" width="180px">
         <template slot-scope="scope">
           <span>{{ time(scope.row.createTime) }}</span>
         </template>
