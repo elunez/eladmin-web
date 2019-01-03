@@ -1,13 +1,5 @@
 <template>
   <div class="container">
-    <div class="handle">
-      <div class="buttons">
-        <button class="closes"/>
-        <button class="minimize"/>
-        <button class="maximize"/>
-      </div>
-      <span class="title">real-time console</span>
-    </div>
     <div id="console" :style="'height:'+ height" class="console">
       <div v-for="item in data" :key="item.time">
         <span>{{ item.name }}</span>
@@ -33,7 +25,7 @@ export default {
   data() {
     return {
       height: document.documentElement.clientHeight - 132 + 'px;',
-      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date()), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~' }],
+      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date().getTime()), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
     }
