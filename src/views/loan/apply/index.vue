@@ -38,6 +38,11 @@
           <span>{{ scope.row.arrivalAmount }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="applyTime" label="放款金额">
+        <template slot-scope="scope" >
+          <span>{{ checkApplyStatusAmount(scope.row) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="loanChannel" label="资金渠道">
         <template slot-scope="scope">
           <span>{{ formatChannel(scope.row.loanChannel) }}</span>
@@ -56,6 +61,11 @@
       <el-table-column prop="applyTime" label="申请日期">
         <template slot-scope="scope">
           <span>{{ time(scope.row.applyTime) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="applyTime" label="放款日期">
+        <template slot-scope="scope" >
+          <span>{{ checkApplyStatusTime(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
@@ -180,6 +190,12 @@ export default {
       } else if (channel === 'LCC201709190010') {
         return '晋商'
       }
+    },
+    checkApplyStatusTime(row) {
+      if (row.applyStatus === '7' || row.applyStatus === '8' || row.applyStatus === '9') { return this.time(row.loanControlOrderEntity.loanTime) }
+    },
+    checkApplyStatusAmount(row) {
+      if (row.applyStatus === '7' || row.applyStatus === '8' || row.applyStatus === '9') { return row.loanControlOrderEntity.loanAmount / 100 }
     }
   }
 }

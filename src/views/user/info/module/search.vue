@@ -18,7 +18,6 @@
     <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
   </div>
 </template>
-
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import { parseTime } from '@/utils/index'

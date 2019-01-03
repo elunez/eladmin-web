@@ -40,11 +40,8 @@
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-tooltip effect="dark" content="点击查看订单详情" placement="top-start">
+          <el-tooltip effect="dark" content="点击查看用户详情" placement="top-start">
             <el-button type="success" size="mini" @click="getRepay(scope.row)">详情</el-button>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="点击查看还款计划" placement="top-start">
-            <el-button type="success" size="mini" @click="getRepay(scope.row)">还款</el-button>
           </el-tooltip>
         </template>
       </el-table-column>
