@@ -3,6 +3,7 @@
     <el-date-picker
       :picker-options="pickerOptions2"
       v-model="query.time"
+      class="el-date-picker"
       type="daterange"
       align="right"
       unlink-panels

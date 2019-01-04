@@ -48,9 +48,9 @@
           <span>{{ formatChannel(scope.row.loanChannel) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="channelId" label="来源渠道">
+      <el-table-column prop="channelName" label="来源渠道">
         <template slot-scope="scope">
-          <span>{{ scope.row.channelId }}</span>
+          <span>{{ scope.row.channelName }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="applyStatus" label="订单状态">

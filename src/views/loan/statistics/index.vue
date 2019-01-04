@@ -13,7 +13,7 @@
           <span>{{ scope.row.creditNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="loanNum" label="扣款数">
+      <el-table-column prop="loanNum" label="放款数">
         <template slot-scope="scope">
           <span>{{ scope.row.loanNum }}</span>
         </template>
