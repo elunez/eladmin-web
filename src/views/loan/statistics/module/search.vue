@@ -11,7 +11,7 @@
       end-placeholder="结束日期"
       value-format="yyyy-MM-dd"
       @change="toQuery"/>
-    <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
+    <el-button v-if="checkPermission(['ADMIN','OPERATION','COLLECTION','FINANCE'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
   </div>
 </template>
 

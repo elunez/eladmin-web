@@ -16,7 +16,7 @@
       default-time="['00:00:00', '23:59:59']"/>
     <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
 
-    <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
+    <el-button v-if="checkPermission(['ADMIN','OPERATION','COLLECTION','FINANCE'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
   </div>
 </template>
 

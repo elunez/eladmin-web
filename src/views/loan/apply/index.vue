@@ -23,22 +23,22 @@
           <span>{{ scope.row.applyTerm }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyStatus" label="利率">
+      <el-table-column prop="applyRate" label="利率">
         <template slot-scope="scope">
           <span>{{ scope.row.applyRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyStatus" label="申请金额">
+      <el-table-column prop="applyAmount" label="申请金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.applyAmount }}</span>
+          <span>{{ scope.row.applyAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyStatus" label="审批金额">
+      <el-table-column prop="arrivalAmount" label="审批金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.arrivalAmount }}</span>
+          <span>{{ scope.row.arrivalAmount/100 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyTime" label="放款金额">
+      <el-table-column prop="loanAmount" label="放款金额">
         <template slot-scope="scope" >
           <span>{{ checkApplyStatusAmount(scope.row) }}</span>
         </template>
@@ -48,14 +48,34 @@
           <span>{{ formatChannel(scope.row.loanChannel) }}</span>
         </template>
       </el-table-column>
-      <!--<el-table-column prop="applyStatus" label="订单状态">
+      <el-table-column prop="channelId" label="来源渠道">
         <template slot-scope="scope">
-          <span>{{ scope.row.applyMessage }}</span>
+          <span>{{ scope.row.channelId }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
       <el-table-column prop="applyStatus" label="订单状态">
         <template slot-scope="scope">
           <span>{{ formatStatus(scope.row.applyStatus) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="backCardNo" label="还款卡">
+        <template slot-scope="scope">
+          <span>{{ checkApplyStatusBackCardNo(scope.row) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="backCardName" label="所属银行">
+        <template slot-scope="scope">
+          <span>{{ checkApplyStatusBackCardName(scope.row) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="loanCardNo" label="放款卡">
+        <template slot-scope="scope">
+          <span>{{ checkApplyStatusLoanCardNo(scope.row) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="loanCardName" label="所属银行">
+        <template slot-scope="scope">
+          <span>{{ checkApplyStatusLoanCardName(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="applyTime" label="申请日期">
@@ -63,7 +83,7 @@
           <span>{{ time(scope.row.applyTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyTime" label="放款日期">
+      <el-table-column prop="loanTime" label="放款日期">
         <template slot-scope="scope" >
           <span>{{ checkApplyStatusTime(scope.row) }}</span>
         </template>
@@ -168,7 +188,6 @@ export default {
       }
     },
     formatChannel(channel) {
-      console.log(channel)
       if (channel === 'LCC201709190001') {
         return '新网'
       } else if (channel === 'LCC201709190002') {
@@ -196,6 +215,26 @@ export default {
     },
     checkApplyStatusAmount(row) {
       if (row.applyStatus === '7' || row.applyStatus === '8' || row.applyStatus === '9') { return row.loanControlOrderEntity.loanAmount / 100 }
+    },
+    checkApplyStatusBackCardNo(row) {
+      if (row.bankCardId !== '' && row.bankCardId !== null) {
+        return row.backAccountUserCardEntity.bankCardNo
+      }
+    },
+    checkApplyStatusBackCardName(row) {
+      if (row.bankCardId !== '' && row.bankCardId !== null) {
+        return row.backAccountUserCardEntity.bankName
+      }
+    },
+    checkApplyStatusLoanCardNo(row) {
+      if (row.loanCardId !== '' && row.loanCardId !== null) {
+        return row.loanAccountUserCardEntity.bankCardNo
+      }
+    },
+    checkApplyStatusLoanCardName(row) {
+      if (row.loanCardId !== '' && row.loanCardId !== null) {
+        return row.loanAccountUserCardEntity.bankName
+      }
     }
   }
 }

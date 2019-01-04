@@ -19,7 +19,7 @@
       default-time="['00:00:00', '23:59:59']"/>
     <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
 
-    <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
+    <el-button v-if="checkPermission(['ADMIN','OPERATION','COLLECTION','FINANCE'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
   </div>
 </template>
 
@@ -80,13 +80,13 @@ export default {
     download() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['借款编号', '姓名', '手机号', '资金渠道', '申请时间']
-        const filterVal = ['id', 'userName', 'phone', 'loanChannel', 'applyTime']
+        const tHeader = ['订单编号', '姓名', '手机号', '期数', '利率', '申请金额', '审批金额', '放款金额', '资金渠道', '来源渠道', '订单状态', '还款卡', '所属银行', '放款卡', '所属银行', '申请时间', '放款时间']
+        const filterVal = ['id', 'userName', 'phone', 'applyTerm', 'applyRate', 'applyAmount', 'arrivalAmount', 'loanAmount', 'loanChannel', 'channelId', 'applyStatus', 'backCardNo', 'backCardName', 'loanCardNo', 'loanCardName', 'applyTime', 'loanTime']
         const data = this.formatJson(filterVal, this.$parent.data)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'table-list'
+          filename: '订单信息'
         })
         this.downloadLoading = false
       })
@@ -97,6 +97,22 @@ export default {
           return parseTime(v[j])
         } else if (j === 'loanChannel') {
           return this.$parent.formatChannel(v[j])
+        } else if (j === 'applyStatus') {
+          return this.$parent.formatStatus(v[j])
+        } else if (j === 'loanTime') {
+          return this.$parent.checkApplyStatusTime(v)
+        } else if (j === 'loanAmount') {
+          return this.$parent.checkApplyStatusAmount(v)
+        } else if (j === 'applyAmount' || j === 'arrivalAmount') {
+          return v[j] / 100
+        } else if (j === 'backCardNo') {
+          return this.$parent.checkApplyStatusBackCardNo(v)
+        } else if (j === 'backCardName') {
+          return this.$parent.checkApplyStatusBackCardName(v)
+        } else if (j === 'loanCardNo') {
+          return this.$parent.checkApplyStatusLoanCardNo(v)
+        } else if (j === 'loanCardName') {
+          return this.$parent.checkApplyStatusLoanCardName(v)
         } else {
           return v[j]
         }
