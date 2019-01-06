@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <search :roles="roles" :menus="menus" :query="query"/>
+    <eHeader :roles="roles" :menus="menus" :query="query"/>
     <!--表格渲染-->
     <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" border size="small">
       <el-table-column prop="icon" label="图标" align="center" width="80px">
@@ -54,10 +54,10 @@ import treeTable from '@/components/TreeTable'
 import initData from '../../../mixins/initData'
 import { del, getMenusTree } from '@/api/menu'
 import { parseTime } from '@/utils/index'
-import search from './module/search'
+import eHeader from './module/header'
 import edit from './module/edit'
 export default {
-  components: { search, edit, treeTable },
+  components: { eHeader, edit, treeTable },
   mixins: [initData],
   data() {
     return {

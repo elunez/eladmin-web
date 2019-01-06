@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <search :permissions="permissions" :query="query"/>
+    <eHeader :permissions="permissions" :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
       <el-table-column prop="name" label="名称"/>
@@ -39,15 +39,15 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
+import checkPermission from '@/utils/permission'
 import initData from '../../../mixins/initData'
 import { del } from '@/api/role'
 import { getPermissionTree } from '@/api/permission'
 import { parseTime } from '@/utils/index'
-import search from './module/search'
+import eHeader from './module/header'
 import edit from './module/edit'
 export default {
-  components: { search, edit },
+  components: { eHeader, edit },
   mixins: [initData],
   data() {
     return {

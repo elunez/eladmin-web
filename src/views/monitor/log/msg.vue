@@ -24,8 +24,8 @@ export default {
   name: 'Msg',
   data() {
     return {
-      height: document.documentElement.clientHeight - 132 + 'px;',
-      data: [{ name: 'elAdmin-', timestamp: parseTime(new Date().getTime()), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: '(*^ω^*) 欢迎使用，暂无日志输出~' }],
+      height: document.documentElement.clientHeight - 95 + 'px;',
+      data: [{ name: 'elAdmin-', timestamp: new Date(), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: 'Welcome, no log output~' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
     }
@@ -99,7 +99,6 @@ export default {
       }
     },
     getColor(level) {
-      // INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000',
       if (level === 'INFO') {
         return this.INFO
       } else if (level === 'WARN') {
@@ -115,5 +114,5 @@ export default {
 </script>
 
 <style scoped>
-  textarea,input,button{outline:0}.container .buttons .closes,.container .buttons .minimize,.container .buttons .maximize{padding:0;margin:0;margin-right:6px;width:12px;height:12px;border:1px solid rgba(0,0,0,0);border-radius:6px}.container{width:100%;margin:5px}.container .handle{height:38px;background:#f9f9f9;border:1px solid #eee;border-top-left-radius:3px;border-top-right-radius:3px;font-family:'consolas';font-size:13px;line-height:38px;text-align:center}.container .buttons{position:absolute;float:left;margin:0 8px}.container .buttons .closes{background-color:#fc625d}.container .buttons .minimize{margin-left:8px;background-color:#fdbc40}.container .buttons .maximize{margin-left:8px;background-color:#35cd4b}.container .console{font-family:consolas;overflow-y:scroll;background:#494949;color:#f7f7f7;padding:10px;font-size:14px}
+  button,input,textarea{outline:0}.container .buttons .closes,.container .buttons .maximize,.container .buttons .minimize{padding:0;margin:0;margin-right:6px;width:12px;height:12px;border:1px solid transparent;border-radius:6px}.container{width:100%;margin:5px}.container .console{font-family:consolas;overflow-y:scroll;background:#494949;color:#f7f7f7;padding:10px;font-size:14px}
 </style>

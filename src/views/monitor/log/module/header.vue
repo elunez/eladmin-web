@@ -9,7 +9,6 @@
 </template>
 
 <script>
-// 查询条件
 export default {
   props: {
     query: {

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <search :query="query"/>
+    <eHeader :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
       <el-table-column :show-overflow-tooltip="true" prop="key" label="文件名"/>
@@ -53,9 +53,9 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '../../../../mixins/initData'
 import { del, download } from '@/api/qiniu'
 import { parseTime } from '@/utils/index'
-import search from './module/search'
+import eHeader from './module/header'
 export default {
-  components: { search },
+  components: { eHeader },
   mixins: [initData],
   data() {
     return {

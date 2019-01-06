@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <search :permissions="permissions" :query="query"/>
+    <eHeader :permissions="permissions" :query="query"/>
     <!--表格渲染-->
     <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" border size="small">
       <el-table-column prop="createTime" label="创建日期">
@@ -36,10 +36,10 @@ import initData from '../../../mixins/initData'
 import { del } from '@/api/permission'
 import { getPermissionTree } from '@/api/permission'
 import { parseTime } from '@/utils/index'
-import search from './module/search'
+import eHeader from './module/header'
 import edit from './module/edit'
 export default {
-  components: { search, edit, treeTable },
+  components: { eHeader, edit, treeTable },
   mixins: [initData],
   data() {
     return {

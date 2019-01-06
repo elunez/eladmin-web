@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div id="content-main" :style="'width:'+width">
+    <div id="content-main" style="width:600px;">
       <el-card shadow="never" class="box-card user-info">
         <div class="avatar-content">
           <el-upload
@@ -54,7 +54,6 @@ export default {
   components: { updatePass, updateEmail },
   data() {
     return {
-      width: document.documentElement.clientWidth - 180 + 'px;',
       headers: {
         'Authorization': 'Bearer ' + getToken()
       }
@@ -95,78 +94,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-.box-card{
-  border: 0px;
-  border-bottom: 1px solid #ECEDFE;
-  border-radius: unset;
-  h4{
-    height: 26px;
-    margin: 0 0 7px;
-    line-height: 26px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #444242;
-    display: inline-block;
-  }
-  p{
-    font-family: Lantinghei;
-    font-size: 90%;
-    color: #747474;
-  }
-  ul{
-    padding: 0;
-    margin: 7px 0 0;
-    list-style: none;
-    font-size: 80%;
-  }
-  li {
-    float: left;
-    margin: 0 30px 10px 0!important;
-  }
-  li:before {
-    width: 8px;
-    height: 8px;
-    background-color: #52acd9;
-    color: #52acd9;
-    display: inline-block;
-    border-radius: 50%;
-    margin-right: 5px;
-    content: '';
-    box-sizing: border-box;
-  }
-}
-
-.user-info{
-  height: 170px;
-}
-
-.reset-email{
-  border-bottom: 0px;
-}
-
-.avatar-content, .user-info-content {
-  float: left;
-}
-.user-info-content{
-  font-family: Lantinghei;
-  position: relative;
-  font-size: 14px;
-  margin: 25px;
-  div{
-    margin-bottom: 15px;
-  }
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  width: 120px;
-  height: 120px;
-  line-height: 120px;
-  text-align: center;
-}
-.avatar {
-  width: 120px;
-  height: 120px;
-  display: block;
-  border-radius: 50%;
-}
+  .box-card{border:0;border-bottom:1px solid #ECEDFE;border-radius:unset;h4{height:26px;margin:0 0 7px;line-height:26px;font-size:1.1rem;font-weight:500;color:#444242;display:inline-block}p{font-family:Lantinghei;font-size:90%;color:#747474}ul{padding:0;margin:7px 0 0;list-style:none;font-size:80%}li{float:left;margin:0 30px 10px 0!important}li:before{width:8px;height:8px;background-color:#52acd9;color:#52acd9;display:inline-block;border-radius:50%;margin-right:5px;content:'';box-sizing:border-box}}.user-info{height:170px}.reset-email{border-bottom:0}.avatar-content,.user-info-content{float:left}.user-info-content{font-family:Lantinghei;position:relative;font-size:14px;margin:25px;div{margin-bottom:15px}}.avatar-uploader-icon{font-size:28px;width:120px;height:120px;line-height:120px;text-align:center}.avatar{width:120px;height:120px;display:block;border-radius:50%}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <search :query="query"/>
+    <eHeader :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
       <el-table-column label="序号" width="80" align="center">
@@ -44,10 +44,10 @@ import initData from '../../../mixins/initData'
 import { del } from '@/api/redis'
 import { getPermissionTree } from '@/api/permission'
 import { parseTime } from '@/utils/index'
-import search from './module/search'
+import eHeader from './module/header'
 import edit from './module/edit'
 export default {
-  components: { search, edit },
+  components: { eHeader, edit },
   mixins: [initData],
   data() {
     return {

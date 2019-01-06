@@ -1,27 +1,25 @@
 <template>
-  <div>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-upload" @click="dialog = true">上传图片</el-button>
-    <el-dialog :visible.sync="dialog" width="600px" @close="doSubmit">
-      <el-upload
-        :on-preview="handlePictureCardPreview"
-        :before-remove="handleBeforeRemove"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :headers="headers"
-        :file-list="fileList"
-        :action="imagesUploadApi"
-        list-type="picture-card">
-        <i class="el-icon-plus"/>
-      </el-upload>
-      <el-dialog :visible.sync="dialogVisible">
-        <img :src="dialogImageUrl" width="100%" alt="">
-      </el-dialog>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="doSubmit">确认</el-button>
-      </div>
+  <el-dialog :visible.sync="dialog" width="600px" @close="doSubmit">
+    <el-upload
+      :on-preview="handlePictureCardPreview"
+      :before-remove="handleBeforeRemove"
+      :on-success="handleSuccess"
+      :on-error="handleError"
+      :headers="headers"
+      :file-list="fileList"
+      :action="imagesUploadApi"
+      list-type="picture-card">
+      <i class="el-icon-plus"/>
+    </el-upload>
+    <el-dialog :visible.sync="dialogVisible">
+      <img :src="dialogImageUrl" width="100%" alt="">
     </el-dialog>
-  </div>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="doSubmit">确认</el-button>
+    </div>
+  </el-dialog>
 </template>
+
 <script>
 import { mapGetters } from 'vuex'
 import { del } from '@/api/picture'
@@ -84,9 +82,5 @@ export default {
 </script>
 
 <style scoped>
-  div{
-    display: inline-block;
-    margin-left: 5px;
-    margin-right: 5px;
-  }
+
 </style>

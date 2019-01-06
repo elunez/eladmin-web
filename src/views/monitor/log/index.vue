@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <search :query="query"/>
+    <eHeader :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
       <el-table-column prop="username" label="用户名"/>
@@ -8,7 +8,7 @@
       <el-table-column prop="description" label="描述"/>
       <el-table-column :show-overflow-tooltip="true" prop="method" label="方法名称"/>
       <el-table-column :show-overflow-tooltip="true" prop="params" label="参数"/>
-      <el-table-column :show-overflow-tooltip="true" prop="exceptionDetail" label="异常详细"/>
+      <el-table-column :show-overflow-tooltip="true" prop="exceptionDetail" label="异常堆栈信息"/>
       <el-table-column prop="time" label="请求耗时" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
@@ -41,9 +41,9 @@
 <script>
 import initData from '../../../mixins/initData'
 import { parseTime } from '@/utils/index'
-import search from './module/search'
+import eHeader from './module/header'
 export default {
-  components: { search },
+  components: { eHeader },
   mixins: [initData],
   created() {
     this.$nextTick(() => {
