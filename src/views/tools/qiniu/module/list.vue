@@ -14,7 +14,7 @@
       <el-table-column prop="type" label="空间类型"/>
       <el-table-column width="180px" prop="updateTime" label="更新日期">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.updateTime) }}</span>
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160px" align="center">
@@ -82,6 +82,7 @@ export default {
     })
   },
   methods: {
+    parseTime,
     checkPermission,
     beforeInit() {
       this.url = 'api/qiNiuContent'
@@ -120,9 +121,6 @@ export default {
         this.downloadLoading = false
         console.log(err.response.data.message)
       })
-    },
-    time(time) {
-      return parseTime(time)
     }
   }
 }

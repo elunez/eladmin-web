@@ -15,7 +15,7 @@
       <el-table-column prop="width" label="宽度"/>
       <el-table-column width="180px" prop="createTime" label="创建日期">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100px" align="center">
@@ -65,6 +65,7 @@ export default {
     })
   },
   methods: {
+    parseTime,
     checkPermission,
     beforeInit() {
       this.url = 'api/pictures'
@@ -91,9 +92,6 @@ export default {
         row.delPopover = false
         console.log(err.response.data.message)
       })
-    },
-    time(time) {
-      return parseTime(time)
     }
   }
 }

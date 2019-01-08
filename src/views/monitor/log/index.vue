@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期" width="180px">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -51,6 +51,7 @@ export default {
     })
   },
   methods: {
+    parseTime,
     beforeInit() {
       this.url = 'api/logs'
       const sort = 'id,desc'
@@ -61,9 +62,6 @@ export default {
       if (username && username) { this.params['username'] = username }
       if (logType !== '' && logType !== null) { this.params['logType'] = logType }
       return true
-    },
-    time(time) {
-      return parseTime(time)
     }
   }
 }

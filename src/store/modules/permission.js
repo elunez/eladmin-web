@@ -38,7 +38,7 @@ export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由�
 }
 
 export const loadView = (view) => { // 路由懒加载
-  return () => import(/* webpackChunkName: "view-[request]" */ `@/views/${view}.vue`)
+  return () => import(`@/views/${view}`)
 }
 
 export default permission

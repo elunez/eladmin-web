@@ -7,7 +7,7 @@
       <el-table-column prop="remark" label="描述"/>
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
-          <span>{{ time(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
@@ -61,6 +61,7 @@ export default {
     })
   },
   methods: {
+    parseTime,
     checkPermission,
     beforeInit() {
       this.url = 'api/roles'
@@ -87,9 +88,6 @@ export default {
         row.delPopover = false
         console.log(err.response.data.message)
       })
-    },
-    time(time) {
-      return parseTime(time)
     },
     getPermissions() {
       getPermissionTree().then(res => {

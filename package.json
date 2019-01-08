@@ -28,7 +28,7 @@
     "vue-count-to": "1.0.13",
     "echarts": "4.1.0",
     "screenfull": "3.3.3",
-    "vue-router": "3.0.1",
+    "vue-router": "3.0.2",
     "vuex": "3.0.1",
     "xlsx": "^0.11.16",
     "jszip": "3.1.5",

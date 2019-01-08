@@ -8,10 +8,14 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(key) {
+  const data = {
+    key
+  }
   return request({
-    url: 'api/redis/' + id,
-    method: 'delete'
+    url: 'api/redis/',
+    method: 'delete',
+    data
   })
 }
 
