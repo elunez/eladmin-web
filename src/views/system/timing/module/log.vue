@@ -32,6 +32,7 @@
     <!--分页组件-->
     <el-pagination
       :total="total"
+      :page-size="6"
       style="margin-top:8px;"
       layout="total, prev, pager, next"
       @size-change="sizeChange"
