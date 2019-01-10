@@ -6,11 +6,8 @@ eladmin 前端源码
 - 码云: [https://gitee.com/elunez/eladmin](https://gitee.com/elunez/eladmin)
 - github: [https://github.com/elunez/eladmin](https://github.com/elunez/eladmin)
 
-#### 初始模板
-基于PanJiaChen的：[https://github.com/PanJiaChen/vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
-
-#### 前端参考文档
-[https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
+#### eladmin开发文档
+[http://docs.auauz.net/#/](http://docs.auauz.net/#/)
 
 ## Build Setup
 ``` bash
