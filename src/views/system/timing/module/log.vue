@@ -15,7 +15,11 @@
       <el-table-column :show-overflow-tooltip="true" prop="methodName" width="80px" label="执行方法"/>
       <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数"/>
       <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式"/>
-      <el-table-column :show-overflow-tooltip="true" prop="exceptionDetail" width="90px" label="异常详情"/>
+      <el-table-column prop="createTime" label="异常详情" width="90px">
+        <template slot-scope="scope">
+          <el-button v-show="scope.row.exceptionDetail" size="mini" type="text" @click="info(scope.row.exceptionDetail)">查看详情</el-button>
+        </template>
+      </el-table-column>
       <el-table-column :show-overflow-tooltip="true" align="center" prop="time" width="100px" label="耗时(毫秒)"/>
       <el-table-column align="center" prop="isSuccess" width="80px" label="状态">
         <template slot-scope="scope">
@@ -29,6 +33,11 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog :visible.sync="errorDialog" append-to-body style="margin-left: 100px" title="异常详情" width="85%">
+      <span>
+        {{ errorInfo }}
+      </span>
+    </el-dialog>
     <!--分页组件-->
     <el-pagination
       :total="total"
@@ -42,12 +51,13 @@
 
 <script>
 import checkPermission from '@/utils/permission'
-import initData from '../../../../mixins/initData'
+import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
 export default {
   mixins: [initData],
   data() {
     return {
+      errorInfo: '', errorDialog: false,
       dialog: false, delLoading: false, sup_this: this,
       enabledTypeOptions: [
         { key: 'true', display_name: '成功' },
@@ -78,6 +88,10 @@ export default {
       if (value) { this.params['jobName'] = value }
       if (isSuccess !== '' && isSuccess !== null) { this.params['isSuccess'] = isSuccess }
       return true
+    },
+    info(errorInfo) {
+      this.errorInfo = errorInfo
+      this.errorDialog = true
     }
   }
 }

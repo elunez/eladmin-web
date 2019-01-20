@@ -104,6 +104,7 @@ export default {
             }
           }, 1000)
         }).catch(err => {
+          this.resetForm()
           this.codeLoading = false
           console.log(err.response.data.message)
         })

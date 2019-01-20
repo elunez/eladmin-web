@@ -3,21 +3,20 @@
     <eHeader :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
-      <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="requestIp" label="IP"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column :show-overflow-tooltip="true" prop="method" label="方法名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="params" label="参数"/>
-      <el-table-column prop="time" label="请求耗时" align="center">
+      <el-table-column label="序号" width="80" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
-          <el-tag v-else-if="scope.row.time <= 1000" type="warning">{{ scope.row.time }}ms</el-tag>
-          <el-tag v-else type="danger">{{ scope.row.time }}ms</el-tag>
+          <div>{{ scope.$index + 1 }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" width="180px">
+      <el-table-column :show-overflow-tooltip="true" prop="tableName" label="表名"/>
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="160px" align="center">
+        <template slot-scope="scope">
+          <Generator :name="scope.row.tableName"/>
         </template>
       </el-table-column>
     </el-table>
@@ -35,8 +34,9 @@
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
 import eHeader from './module/header'
+import Generator from './module/generator'
 export default {
-  components: { eHeader },
+  components: { eHeader, Generator },
   mixins: [initData],
   created() {
     this.$nextTick(() => {
@@ -46,12 +46,11 @@ export default {
   methods: {
     parseTime,
     beforeInit() {
-      this.url = 'api/logs'
-      const sort = 'id,desc'
+      this.url = 'api/generator/tables'
       const query = this.query
-      const username = query.username
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (username && username) { this.params['username'] = username }
+      const name = query.name
+      this.params = { page: this.page, size: this.size }
+      if (name) { this.params['name'] = name }
       return true
     }
   }

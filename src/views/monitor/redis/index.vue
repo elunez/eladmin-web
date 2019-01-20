@@ -8,22 +8,34 @@
           <div>{{ scope.$index + 1 }}</div>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="key" label="KEY"/>
-      <el-table-column :show-overflow-tooltip="true" prop="value" label="VALUE"/>
+      <el-table-column prop="key" label="KEY">
+        <template slot-scope="scope">
+          <div style="word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            {{ scope.row.key }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="value" label="VALUE">
+        <template slot-scope="scope">
+          <div style="word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            {{ scope.row.value }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <edit v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
             v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_DELETE'])"
-            v-model="scope.row.delPopover"
+            :ref="scope.$index"
             placement="top"
             width="180">
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="scope.row.delPopover = false">取消</el-button>
+              <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini" @click="scope.row.delPopover = true">删除</el-button>
+            <el-button slot="reference" type="danger" size="mini">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -40,10 +52,9 @@
 
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
-import initData from '../../../mixins/initData'
+import initData from '@/mixins/initData'
 import { del } from '@/api/redis'
 import { getPermissionTree } from '@/api/permission'
-import { parseTime } from '@/utils/index'
 import eHeader from './module/header'
 import edit from './module/edit'
 export default {
@@ -78,7 +89,7 @@ export default {
       this.delLoading = true
       del(row.key).then(res => {
         this.delLoading = false
-        row.delPopover = false
+        this.$refs[index].doClose()
         this.init()
         this.$notify({
           title: '删除成功',
@@ -87,12 +98,9 @@ export default {
         })
       }).catch(err => {
         this.delLoading = false
-        row.delPopover = false
+        this.$refs[index].doClose()
         console.log(err.response.data.message)
       })
-    },
-    time(time) {
-      return parseTime(time)
     },
     getPermissions() {
       getPermissionTree().then(res => {

@@ -3,7 +3,7 @@ import { initData } from '@/api/data'
 export default {
   data() {
     return {
-      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}
+      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 170
     }
   },
   methods: {
@@ -18,7 +18,7 @@ export default {
           this.data = res.content
           setTimeout(() => {
             this.loading = false
-          }, 230)
+          }, this.time)
           resolve(res)
         }).catch(err => {
           this.loading = false

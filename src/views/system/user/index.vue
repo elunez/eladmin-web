@@ -25,15 +25,15 @@
           <edit v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT'])" :data="scope.row" :roles="roles" :sup_this="sup_this"/>
           <el-popover
             v-if="checkPermission(['ADMIN','USER_ALL','USER_DELETE'])"
-            v-model="scope.row.delPopover"
+            :ref="scope.row.id"
             placement="top"
             width="180">
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="scope.row.delPopover = false">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row)">确定</el-button>
+              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" size="mini" @click="scope.row.delPopover = true">删除</el-button>
+            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" size="mini">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -50,7 +50,7 @@
 
 <script>
 import checkPermission from '@/utils/permission'
-import initData from '../../../mixins/initData'
+import initData from '@/mixins/initData'
 import { del } from '@/api/user'
 import { getRoleTree } from '@/api/role'
 import { parseTime } from '@/utils/index'
@@ -85,11 +85,11 @@ export default {
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
-    subDelete(index, row) {
+    subDelete(id) {
       this.delLoading = true
-      del(row.id).then(res => {
+      del(id).then(res => {
         this.delLoading = false
-        row.delPopover = false
+        this.$refs[id].doClose()
         this.init()
         this.$notify({
           title: '删除成功',
@@ -98,7 +98,7 @@ export default {
         })
       }).catch(err => {
         this.delLoading = false
-        row.delPopover = false
+        this.$refs[id].doClose()
         console.log(err.response.data.message)
       })
     },

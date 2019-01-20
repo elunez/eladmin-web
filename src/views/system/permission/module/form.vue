@@ -77,10 +77,8 @@ export default {
           duration: 2500
         })
         this.loading = false
-        setTimeout(() => {
-          this.$parent.$parent.init()
-          this.$parent.$parent.getPermissions()
-        }, 200)
+        this.$parent.$parent.init()
+        this.$parent.$parent.getPermissions()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -95,10 +93,8 @@ export default {
           duration: 2500
         })
         this.loading = false
-        setTimeout(() => {
-          this.sup_this.init()
-          this.sup_this.getPermissions()
-        }, 200)
+        this.sup_this.init()
+        this.sup_this.getPermissions()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)

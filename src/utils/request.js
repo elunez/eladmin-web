@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '@/router'
 import { Notification, MessageBox } from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+import { getToken, getStorageToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -13,8 +13,10 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    if (store.getters.token) {
+    if (getToken()) {
       config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    } else if (getStorageToken()) {
+      config.headers['Authorization'] = 'Bearer ' + getStorageToken()
     }
     config.headers['Content-Type'] = 'application/json'
     return config
@@ -54,8 +56,8 @@ service.interceptors.response.use(
     }
     if (code === 401) {
       MessageBox.confirm(
-        '登录状态已失效，你可以取消继续留在该页面，或者重新登录',
-        '提示',
+        '登录状态过期了哦，您可以继续留在该页面，或者重新登录',
+        '系统提示',
         {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',

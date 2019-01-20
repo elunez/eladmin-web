@@ -6,7 +6,7 @@
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-if="checkPermission(['ADMIN','ROLE_ALL','ROLE_CREATE'])"
+        v-if="checkPermission(['ADMIN','ROLES_ALL','ROLES_CREATE'])"
         class="filter-item"
         size="mini"
         type="primary"

@@ -22,15 +22,15 @@
         <template slot-scope="scope">
           <el-popover
             v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])"
-            v-model="scope.row.delPopover"
+            :ref="scope.row.id"
             placement="top"
             width="180">
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="scope.row.delPopover = false">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row)">确定</el-button>
+              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini" @click="scope.row.delPopover = true">删除</el-button>
+            <el-button slot="reference" type="danger" size="mini">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -47,7 +47,7 @@
 
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
-import initData from '../../../mixins/initData'
+import initData from '@/mixins/initData'
 import { del } from '@/api/picture'
 import { parseTime } from '@/utils/index'
 import eHeader from './module/header'
@@ -76,11 +76,11 @@ export default {
       if (value) { this.params['filename'] = value }
       return true
     },
-    subDelete(index, row) {
+    subDelete(id) {
       this.delLoading = true
-      del(row.id).then(res => {
+      del(id).then(res => {
         this.delLoading = false
-        row.delPopover = false
+        this.$refs[id].doClose()
         this.init()
         this.$notify({
           title: '删除成功',
@@ -89,7 +89,7 @@ export default {
         })
       }).catch(err => {
         this.delLoading = false
-        row.delPopover = false
+        this.$refs[id].doClose()
         console.log(err.response.data.message)
       })
     }

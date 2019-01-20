@@ -1,9 +1,8 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
-import { getToken } from '@/utils/auth' // getToken from cookie
+import { getToken, getStorageToken } from '@/utils/auth' // getToken from cookie
 import { buildMenus } from '@/api/menu'
 import { filterAsyncRouter } from './store/modules/permission'
 
@@ -11,16 +10,9 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 
 const whiteList = ['/login']// no redirect whitelist
 
-// auth judge function
-function hasPermission(roles, permissionRoles) {
-  if (roles.indexOf('ADMIN') >= 0) return true // admin auth passed directly
-  if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
-}
-
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  if (getToken()) {
+  if (getToken() || getStorageToken()) {
     // 已登录且要跳转的页面是登录页
     if (to.path === '/login') {
       next({ path: '/' })
@@ -37,18 +29,13 @@ router.beforeEach((to, from, next) => {
             })
           })
         }).catch((err) => {
+          console.log(err)
           store.dispatch('LogOut').then(() => {
-            Message.error(err || 'Verification failed, please login again')
-            next({ path: '/' })
+            location.reload() // 为了重新实例化vue-router对象 避免bug
           })
         })
       } else {
-        // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, to.meta.roles)) {
-          next()
-        } else {
-          next({ path: '/401', replace: true, query: { noGoBack: true }})
-        }
+        next()
       }
     }
   } else {

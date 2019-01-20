@@ -8,19 +8,22 @@
       <el-table-column prop="description" label="描述"/>
       <el-table-column :show-overflow-tooltip="true" prop="method" label="方法名称"/>
       <el-table-column :show-overflow-tooltip="true" prop="params" label="参数"/>
-      <el-table-column prop="time" label="请求耗时" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
-          <el-tag v-else-if="scope.row.time <= 1000" type="warning">{{ scope.row.time }}ms</el-tag>
-          <el-tag v-else type="danger">{{ scope.row.time }}ms</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" width="180px">
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="createTime" label="异常详情" width="120px">
+        <template slot-scope="scope">
+          <el-button size="mini" type="text" @click="info(scope.row.exceptionDetail)">查看详情</el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    <el-dialog :visible.sync="dialog" style="margin-left: 100px" title="异常详情" top="0" width="85%">
+      <span>
+        {{ errorInfo }}
+      </span>
+    </el-dialog>
     <!--分页组件-->
     <el-pagination
       :total="total"
@@ -38,6 +41,11 @@ import eHeader from './module/header'
 export default {
   components: { eHeader },
   mixins: [initData],
+  data() {
+    return {
+      errorInfo: '', dialog: false
+    }
+  },
   created() {
     this.$nextTick(() => {
       this.init()
@@ -46,13 +54,19 @@ export default {
   methods: {
     parseTime,
     beforeInit() {
-      this.url = 'api/logs'
+      this.url = 'api/logs/error'
       const sort = 'id,desc'
       const query = this.query
       const username = query.username
+      const logType = query.logType
       this.params = { page: this.page, size: this.size, sort: sort }
       if (username && username) { this.params['username'] = username }
+      if (logType !== '' && logType !== null) { this.params['logType'] = logType }
       return true
+    },
+    info(errorInfo) {
+      this.errorInfo = errorInfo
+      this.dialog = true
     }
   }
 }

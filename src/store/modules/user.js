@@ -1,5 +1,5 @@
 import { login, getInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, setStorageToken, removeToken } from '@/utils/auth'
 import { parseTime } from '@/utils/index'
 
 const user = {
@@ -36,11 +36,16 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const username = userInfo.username
+      const password = userInfo.password
+      const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(res => {
+        login(username, password).then(res => {
           setToken(res.token)
           commit('SET_TOKEN', res.token)
+          if (rememberMe) {
+            setStorageToken(res.token)
+          }
           resolve()
         }).catch(error => {
           reject(error)
@@ -49,7 +54,7 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit, state }) {
+    GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           commit('SET_ROLES', res.roles)
@@ -65,7 +70,7 @@ const user = {
     },
 
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({ commit }) {
       return new Promise((resolve, reject) => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
