@@ -2,7 +2,7 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
-import { getToken, getStorageToken } from '@/utils/auth' // getToken from cookie
+import { getToken } from '@/utils/auth' // getToken from cookie
 import { buildMenus } from '@/api/menu'
 import { filterAsyncRouter } from './store/modules/permission'
 
@@ -12,7 +12,7 @@ const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  if (getToken() || getStorageToken()) {
+  if (getToken()) {
     // 已登录且要跳转的页面是登录页
     if (to.path === '/login') {
       next({ path: '/' })

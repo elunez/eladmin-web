@@ -1,5 +1,5 @@
 import { login, getInfo } from '@/api/login'
-import { getToken, setToken, setStorageToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken } from '@/utils/auth'
 import { parseTime } from '@/utils/index'
 
 const user = {
@@ -41,11 +41,8 @@ const user = {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
         login(username, password).then(res => {
-          setToken(res.token)
+          setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
-          if (rememberMe) {
-            setStorageToken(res.token)
-          }
           resolve()
         }).catch(error => {
           reject(error)

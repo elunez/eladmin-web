@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '@/router'
 import { Notification, MessageBox } from 'element-ui'
 import store from '../store'
-import { getToken, getStorageToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -15,8 +15,6 @@ service.interceptors.request.use(
   config => {
     if (getToken()) {
       config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-    } else if (getStorageToken()) {
-      config.headers['Authorization'] = 'Bearer ' + getStorageToken()
     }
     config.headers['Content-Type'] = 'application/json'
     return config

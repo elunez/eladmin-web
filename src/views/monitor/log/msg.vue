@@ -1,5 +1,8 @@
 <template>
-  <div class="container">
+  <div :style="'width:' + width" class="container">
+    <el-tooltip :content="content" class="lock item" effect="dark" placement="left">
+      <el-button type="info" size="mini" circle @click="doLock"><svg-icon :icon-class="ico"/></el-button>
+    </el-tooltip>
     <div id="console" :style="'height:'+ height" class="console">
       <div v-for="item in data" :key="item.time">
         <span>{{ item.name }}</span>
@@ -24,7 +27,9 @@ export default {
   name: 'Msg',
   data() {
     return {
-      height: document.documentElement.clientHeight - 95 + 'px;',
+      ico: 'unlock', unlock: true, content: '锁定滚动条',
+      height: document.documentElement.clientHeight - 94.5 + 'px;',
+      width: document.documentElement.clientWidth - 185 + 'px;',
       data: [{ name: 'elAdmin-', timestamp: new Date(), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: 'Welcome, no log output~' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
@@ -40,8 +45,10 @@ export default {
     data: {
       handler(val, oldVal) {
         this.$nextTick(() => {
-          var div = document.getElementById('console')
-          div.scrollTop = div.scrollHeight
+          if (this.unlock) {
+            var div = document.getElementById('console')
+            div.scrollTop = div.scrollHeight
+          }
         })
       }
     }
@@ -106,11 +113,21 @@ export default {
       } else {
         return this.ERROR
       }
+    },
+    doLock() {
+      if (this.unlock) {
+        this.content = '解除锁定'
+        this.ico = 'lock'
+      } else {
+        this.content = '锁定滚动条'
+        this.ico = 'unlock'
+      }
+      this.unlock = !this.unlock
     }
   }
 }
 </script>
 
 <style scoped>
-  button,input,textarea{outline:0}.container .buttons .closes,.container .buttons .maximize,.container .buttons .minimize{padding:0;margin:0;margin-right:6px;width:12px;height:12px;border:1px solid transparent;border-radius:6px}.container{width:100%;margin:5px}.container .console{font-family:consolas;overflow-y:scroll;background:#494949;color:#f7f7f7;padding:10px;font-size:14px}
+  button,input,textarea{outline:0}.container .buttons .closes,.container .buttons .maximize,.container .buttons .minimize{padding:0;margin:0;margin-right:6px;width:12px;height:12px;border:1px solid transparent;border-radius:6px}.container{width:100%;margin:5px}.container .console{font-family:consolas;overflow-y:scroll;background:#494949;color:#f7f7f7;padding:10px;font-size:14px}  .lock {position: fixed;right: 45px;bottom: 6.8%;z-index: 100000}
 </style>
