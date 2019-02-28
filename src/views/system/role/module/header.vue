@@ -12,7 +12,7 @@
         type="primary"
         icon="el-icon-plus"
         @click="$refs.form.dialog = true">新增</el-button>
-      <eForm ref="form" :permissions="permissions" :is-add="true"/>
+      <eForm ref="form" :is-add="true"/>
     </div>
     <!-- 导出 -->
     <el-button v-if="checkPermission(['ADMIN'])" :loading="downloadLoading" size="mini" class="filter-item" type="primary" icon="el-icon-download" @click="download">导出</el-button>
@@ -29,10 +29,6 @@ export default {
   props: {
     query: {
       type: Object,
-      required: true
-    },
-    permissions: {
-      type: Array,
       required: true
     }
   },

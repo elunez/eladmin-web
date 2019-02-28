@@ -1,9 +1,9 @@
 {
   "name": "eladmin-qt",
-  "version": "1.2.0",
+  "version": "1.6.0",
   "license": "Apache License 2.0",
   "description": "eladmin 前端代码",
-  "author": "jie <zhengjie@tom.com>",
+  "author": "jie <elunez@qq.com>",
   "scripts": {
     "dev": "cross-env BABEL_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=production env_config=prod node build/build.js",
@@ -32,7 +32,7 @@
     "vuex": "3.0.1",
     "xlsx": "^0.11.16",
     "jszip": "3.1.5",
-    "@riophae/vue-treeselect": "0.0.37",
+    "@riophae/vue-treeselect": "0.0.38",
     "file-saver": "1.3.8",
     "sockjs-client": "1.3.0",
     "stompjs": "2.3.3",

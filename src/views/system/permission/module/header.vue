@@ -40,7 +40,6 @@ export default {
   methods: {
     checkPermission,
     toQuery() {
-      console.log(this.query)
       this.$parent.page = 0
       this.$parent.init()
     }

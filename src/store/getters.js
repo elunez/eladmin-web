@@ -9,6 +9,7 @@ const getters = {
   createTime: state => state.user.createTime,
   email: state => state.user.email,
   roles: state => state.user.roles,
+  loadMenus: state => state.user.loadMenus,
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   socketApi: state => state.api.socketApi,

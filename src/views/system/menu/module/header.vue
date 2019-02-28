@@ -12,7 +12,7 @@
         type="primary"
         icon="el-icon-plus"
         @click="$refs.form.dialog = true">新增</el-button>
-      <eForm ref="form" :roles="roles" :menus="menus" :is-add="true"/>
+      <eForm ref="form" :menus="menus" :is-add="true"/>
     </div>
   </div>
 </template>
@@ -30,10 +30,6 @@ export default {
     menus: {
       type: Array,
       required: true
-    },
-    roles: {
-      type: Array,
-      required: true
     }
   },
   data() {
@@ -44,7 +40,6 @@ export default {
   methods: {
     checkPermission,
     toQuery() {
-      console.log(this.query)
       this.$parent.page = 0
       this.$parent.init()
     }

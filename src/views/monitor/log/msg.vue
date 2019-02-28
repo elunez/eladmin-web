@@ -30,7 +30,7 @@ export default {
       ico: 'unlock', unlock: true, content: '锁定滚动条',
       height: document.documentElement.clientHeight - 94.5 + 'px;',
       width: document.documentElement.clientWidth - 185 + 'px;',
-      data: [{ name: 'elAdmin-', timestamp: new Date(), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: 'Welcome, no log output~' }],
+      data: [{ name: 'elAdmin-', timestamp: new Date(), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: 'Welcome, no log output' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
     }
@@ -129,5 +129,29 @@ export default {
 </script>
 
 <style scoped>
-  button,input,textarea{outline:0}.container .buttons .closes,.container .buttons .maximize,.container .buttons .minimize{padding:0;margin:0;margin-right:6px;width:12px;height:12px;border:1px solid transparent;border-radius:6px}.container{width:100%;margin:5px}.container .console{font-family:consolas;overflow-y:scroll;background:#494949;color:#f7f7f7;padding:10px;font-size:14px}  .lock {position: fixed;right: 45px;bottom: 6.8%;z-index: 100000}
+  button,input,textarea {
+    outline: 0
+  }
+
+  .container {
+    width: 100%;
+    margin: 5px
+  }
+
+  .container .console {
+    font-family: "Interstate", "Hind", -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    overflow-y: scroll;
+    background: #494949;
+    color: #f7f7f7;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 3px 1px 3px 3px;
+  }
+
+  .lock {
+    position: fixed;
+    right: 45px;
+    bottom: 6.8%;
+    z-index: 100000
+  }
 </style>

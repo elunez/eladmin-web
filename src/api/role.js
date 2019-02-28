@@ -16,6 +16,13 @@ export function add(data) {
   })
 }
 
+export function get(id) {
+  return request({
+    url: 'api/roles/' + id,
+    method: 'get'
+  })
+}
+
 export function del(id) {
   return request({
     url: 'api/roles/' + id,
@@ -26,6 +33,22 @@ export function del(id) {
 export function edit(data) {
   return request({
     url: 'api/roles',
+    method: 'put',
+    data
+  })
+}
+
+export function editPermission(data) {
+  return request({
+    url: 'api/roles/permission',
+    method: 'put',
+    data
+  })
+}
+
+export function editMenu(data) {
+  return request({
+    url: 'api/roles/menu',
     method: 'put',
     data
   })

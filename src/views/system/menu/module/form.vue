@@ -33,9 +33,6 @@
       <el-form-item label="上级类目">
         <treeselect v-model="form.pid" :options="menus" style="width: 460px;" placeholder="选择上级类目" />
       </el-form-item>
-      <el-form-item style="margin-top: -10px;margin-bottom: 0px;" label="选择角色">
-        <treeselect v-model="roleIds" :multiple="true" :options="roles" style="width: 460px;" placeholder="请选择角色" />
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -56,10 +53,6 @@ export default {
       type: Array,
       required: true
     },
-    roles: {
-      type: Array,
-      required: true
-    },
     isAdd: {
       type: Boolean,
       required: true
@@ -72,7 +65,7 @@ export default {
   data() {
     return {
       loading: false, dialog: false,
-      form: { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }, roleIds: [],
+      form: { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -94,12 +87,6 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.form.roles = []
-          const _this = this
-          this.roleIds.forEach(function(data, index) {
-            const role = { id: data }
-            _this.form.roles.push(role)
-          })
           if (this.isAdd) {
             this.doAdd()
           } else this.doEdit()
@@ -144,7 +131,6 @@ export default {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }
-      this.roleIds = []
     },
     selected(name) {
       this.form.icon = name

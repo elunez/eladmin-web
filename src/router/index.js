@@ -21,6 +21,7 @@ import Layout from '../views/layout/Layout'
 
 export const constantRouterMap = [
   { path: '/login',
+    meta: { title: '登录', noCache: true },
     component: () => import('@/views/login/index'),
     hidden: true
   },

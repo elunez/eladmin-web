@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button size="mini" type="success" @click="to">编辑</el-button>
-    <eForm ref="form" :roles="roles" :menus="menus" :sup_this="sup_this" :is-add="false"/>
+    <eForm ref="form" :menus="menus" :sup_this="sup_this" :is-add="false"/>
   </div>
 </template>
 <script>
@@ -20,20 +20,12 @@ export default {
     menus: {
       type: Array,
       required: true
-    },
-    roles: {
-      type: Array,
-      required: true
     }
   },
   methods: {
     to() {
       const _this = this.$refs.form
-      _this.roleIds = []
       _this.form = { id: this.data.id, component: this.data.component, name: this.data.name, sort: this.data.sort, pid: this.data.pid, path: this.data.path, iframe: this.data.iframe.toString(), roles: [], icon: this.data.icon }
-      this.data.roles.forEach(function(data, index) {
-        _this.roleIds.push(data.id)
-      })
       _this.dialog = true
     }
   }

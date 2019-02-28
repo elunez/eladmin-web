@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-button :disabled="data.id === 1" size="mini" type="success" @click="to">编辑</el-button>
-    <eForm ref="form" :permissions="permissions" :sup_this="sup_this" :is-add="false"/>
+    <el-button size="mini" type="success" @click="to">编辑</el-button>
+    <eForm ref="form" :sup_this="sup_this" :is-add="false"/>
   </div>
 </template>
 <script>
@@ -16,20 +16,12 @@ export default {
     sup_this: {
       type: Object,
       required: true
-    },
-    permissions: {
-      type: Array,
-      required: true
     }
   },
   methods: {
     to() {
       const _this = this.$refs.form
-      _this.permissionIds = []
       _this.form = { id: this.data.id, name: this.data.name, remark: this.data.remark, permissions: [] }
-      this.data.permissions.forEach(function(data, index) {
-        _this.permissionIds.push(data.id)
-      })
       _this.dialog = true
     }
   }

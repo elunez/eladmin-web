@@ -8,7 +8,7 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码">
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon" style="height: 39px;width: 13px;margin-left: 2px;" />
         </el-input>
       </el-form-item>

@@ -9,7 +9,9 @@ const user = {
     email: '',
     avatar: '',
     createTime: '',
-    roles: []
+    roles: [],
+    // 第一次加载菜单时用到
+    loadMenus: false
   },
 
   mutations: {
@@ -30,6 +32,9 @@ const user = {
     },
     SET_EMAIL: (state, email) => {
       state.email = email
+    },
+    SET_LOAD_MENUS: (state, loadMenus) => {
+      state.loadMenus = loadMenus
     }
   },
 
@@ -43,6 +48,9 @@ const user = {
         login(username, password).then(res => {
           setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
+          setUserInfo(res.user, commit)
+          // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
+          commit('SET_LOAD_MENUS', true)
           resolve()
         }).catch(error => {
           reject(error)
@@ -54,11 +62,7 @@ const user = {
     GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
-          commit('SET_ROLES', res.roles)
-          commit('SET_NAME', res.username)
-          commit('SET_AVATAR', res.avatar)
-          commit('SET_EMAIL', res.email)
-          commit('SET_CREATE_TIME', parseTime(res.createTime))
+          setUserInfo(res, commit)
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -74,8 +78,27 @@ const user = {
         removeToken()
         resolve()
       })
+    },
+
+    updateLoadMenus({ commit }) {
+      return new Promise((resolve, reject) => {
+        commit('SET_LOAD_MENUS', false)
+      })
     }
   }
+}
+
+export const setUserInfo = (res, commit) => {
+  // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
+  if (res.roles.length === 0) {
+    commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
+  } else {
+    commit('SET_ROLES', res.roles)
+  }
+  commit('SET_NAME', res.username)
+  commit('SET_AVATAR', res.avatar)
+  commit('SET_EMAIL', res.email)
+  commit('SET_CREATE_TIME', parseTime(res.createTime))
 }
 
 export default user

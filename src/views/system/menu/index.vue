@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <eHeader :roles="roles" :menus="menus" :query="query"/>
+    <eHeader :menus="menus" :query="query"/>
     <!--表格渲染-->
     <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" border size="small">
       <el-table-column prop="icon" label="图标" align="center" width="80px">
@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT'])" :roles="roles" :menus="menus" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT'])" :menus="menus" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
             v-if="checkPermission(['ADMIN','MENU_ALL','MENU_DELETE'])"
             :ref="scope.row.id"
@@ -49,7 +49,6 @@
 
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
-import { getRoleTree } from '@/api/role'
 import treeTable from '@/components/TreeTable'
 import initData from '@/mixins/initData'
 import { del, getMenusTree } from '@/api/menu'
@@ -67,11 +66,10 @@ export default {
           value: 'name'
         }
       ],
-      delLoading: false, sup_this: this, menus: [], roles: []
+      delLoading: false, sup_this: this, menus: []
     }
   },
   created() {
-    this.getRoles()
     this.getMenus()
     this.$nextTick(() => {
       this.init()
@@ -112,12 +110,6 @@ export default {
         const menu = { id: 0, label: '顶级类目', children: [] }
         menu.children = res
         this.menus.push(menu)
-      })
-    },
-    getRoles() {
-      this.roles = []
-      getRoleTree().then(res => {
-        this.roles = res
       })
     }
   }

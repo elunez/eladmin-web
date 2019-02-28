@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button :disabled="data.id === 1" size="mini" type="success" @click="to">编辑</el-button>
+    <el-button size="mini" type="success" @click="to">编辑</el-button>
     <eForm ref="form" :permissions="permissions" :sup_this="sup_this" :is-add="false"/>
   </div>
 </template>
