@@ -19,7 +19,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialog" style="margin-left: 100px" title="异常详情" top="0" width="85%">
+    <el-dialog :append-to-body="true" :visible.sync="dialog" title="异常详情" top="0" width="85%">
       <span>
         {{ errorInfo }}
       </span>

@@ -24,6 +24,7 @@ export default {
 
 <style scoped>
   .app-main {
+    z-index: 88;
     /*84 = navbar + tags-view = 50 +34 */
     min-height: calc(100vh - 84px);
     width: 100%;
