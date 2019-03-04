@@ -1,7 +1,7 @@
 <template>
   <div style="display: inline-block">
     <el-button size="mini" class="button" type="info" @click="dialog = true">修改</el-button>
-    <el-dialog :visible.sync="dialog" :title="title" width="475px" @close="cancel">
+    <el-dialog :append-to-body="true" :visible.sync="dialog" :title="title" width="475px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
         <el-form-item label="新邮箱" prop="email">
           <el-input v-model="form.email" auto-complete="on" style="width: 200px;"/>
