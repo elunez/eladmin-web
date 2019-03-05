@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增角色' : '编辑角色'" width="500px">
+  <el-dialog :visible.sync="dialog" :title="isAdd ? '新增角色' : '编辑角色'" append-to-body width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="66px">
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;"/>

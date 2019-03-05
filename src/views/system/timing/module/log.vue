@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" title="执行日志" width="88%">
+  <el-dialog :visible.sync="dialog" append-to-body title="执行日志" width="88%">
     <!-- 搜索 -->
     <div class="head-container">
       <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>

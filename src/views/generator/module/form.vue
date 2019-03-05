@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" title="生成器配置" width="550px">
+  <el-dialog :visible.sync="dialog" title="生成器配置" append-to-body width="550px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="78px">
       <el-form-item label="作者名称" prop="author">
         <el-input v-model="form.author" style="width: 420px;"/>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="dialog" width="500px" @close="doSubmit">
+  <el-dialog :visible.sync="dialog" append-to-body width="500px" @close="doSubmit">
     <el-upload
       :before-remove="handleBeforeRemove"
       :on-success="handleSuccess"

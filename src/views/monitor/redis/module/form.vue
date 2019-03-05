@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增缓存' : '编辑缓存'" width="500px">
+  <el-dialog :visible.sync="dialog" :title="isAdd ? '新增缓存' : '编辑缓存'" append-to-body width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="66px">
       <el-form-item label="key" prop="key">
         <el-input v-model="form.key" style="width: 370px;"/>
