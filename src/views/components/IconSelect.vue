@@ -1,7 +1,7 @@
 <template>
   <div class="icons-container">
     <p class="warn-content">
-      <a href="https://panjiachen.github.io/vue-element-admin-site/guide/advanced/icon.html" target="_blank">Add and use</a>
+      使用教程参考 <a href="https://panjiachen.github.io/vue-element-admin-site/guide/advanced/icon.html" target="_blank">Documentation</a>
     </p>
     <div class="icons-wrapper">
       <div v-for="item of iconsMap" :key="item" @click="handleClipboard(generateIconCode(item),$event)">
