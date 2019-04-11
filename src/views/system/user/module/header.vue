@@ -80,7 +80,7 @@ export default {
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = ['ID', '用户名', '邮箱', '头像地址', '状态', '注册日期', '最后修改密码日期']
         const filterVal = ['id', 'username', 'email', 'avatar', 'enabled', 'createTime', 'lastPasswordResetTime']
-        const data = this.formatJson(filterVal, this.$parent.data)
+        const data = this.formatJson(filterVal, this.sup_this.data)
         excel.export_json_to_excel({
           header: tHeader,
           data,
