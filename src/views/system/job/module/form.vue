@@ -26,10 +26,8 @@ import { getDepts } from '@/api/dept'
 import { add, edit } from '@/api/job'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import initDict from '@/mixins/initDict'
 export default {
   components: { Treeselect },
-  mixins: [initDict],
   props: {
     isAdd: {
       type: Boolean,
@@ -38,6 +36,10 @@ export default {
     sup_this: {
       type: Object,
       default: null
+    },
+    dicts: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -60,12 +62,6 @@ export default {
         ]
       }
     }
-  },
-  created() {
-    this.$nextTick(() => {
-      // 加载数据字典
-      this.getDict('job_status')
-    })
   },
   methods: {
     cancel() {

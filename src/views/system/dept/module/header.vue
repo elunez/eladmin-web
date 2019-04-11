@@ -15,7 +15,7 @@
         type="primary"
         icon="el-icon-plus"
         @click="add">新增</el-button>
-      <eForm ref="form" :is-add="true"/>
+      <eForm ref="form" :is-add="true" :dicts="dicts"/>
     </div>
   </div>
 </template>
@@ -28,6 +28,10 @@ export default {
   props: {
     query: {
       type: Object,
+      required: true
+    },
+    dicts: {
+      type: Array,
       required: true
     }
   },

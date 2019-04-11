@@ -18,7 +18,7 @@
         type="primary"
         icon="el-icon-plus"
         @click="add">新增</el-button>
-      <eForm ref="form" :sup_this="sup_this" :is-add="true"/>
+      <eForm ref="form" :sup_this="sup_this" :is-add="true" :dicts="dicts"/>
     </div>
     <!-- 导出 -->
     <el-button
@@ -46,6 +46,10 @@ export default {
     },
     sup_this: {
       type: Object,
+      required: true
+    },
+    dicts: {
+      type: Array,
       required: true
     }
   },

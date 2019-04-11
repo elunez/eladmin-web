@@ -20,12 +20,10 @@
 
 <script>
 import { add, edit, getDepts } from '@/api/dept'
-import initDict from '@/mixins/initDict'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   components: { Treeselect },
-  mixins: [initDict],
   props: {
     isAdd: {
       type: Boolean,
@@ -34,6 +32,10 @@ export default {
     sup_this: {
       type: Object,
       default: null
+    },
+    dicts: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -51,12 +53,6 @@ export default {
         ]
       }
     }
-  },
-  created() {
-    this.$nextTick(() => {
-      // 加载数据字典
-      this.getDict('dept_status')
-    })
   },
   methods: {
     cancel() {

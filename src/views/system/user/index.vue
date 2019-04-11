@@ -8,7 +8,7 @@
         <el-tree :data="depts" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick"/>
       </el-col>
       <el-col :xs="24" :sm="24" :md="20" :lg="20" :xl="20">
-        <eHeader :query="query" :sup_this="sup_this"/>
+        <eHeader :query="query" :sup_this="sup_this" :dicts="dicts"/>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
           <el-table-column prop="username" label="用户名"/>
@@ -33,7 +33,7 @@
           </el-table-column>
           <el-table-column label="操作" width="140" align="center">
             <template slot-scope="scope">
-              <edit v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
+              <edit v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT'])" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
               <el-popover
                 v-if="checkPermission(['ADMIN','USER_ALL','USER_DELETE'])"
                 :ref="scope.row.id"
@@ -85,7 +85,6 @@ export default {
   },
   created() {
     this.getDeptDatas()
-    console.log(this.dicts)
     this.$nextTick(() => {
       this.init()
       // 加载数据字典

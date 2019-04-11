@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <eHeader :query="query"/>
+    <eHeader :query="query" :dicts="dicts"/>
     <!--表格渲染-->
     <tree-table v-loading="loading" :expand-all="true" :data="data" :columns="columns" size="small">
       <el-table-column label="状态" align="center">
@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_EDIT'])" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
             v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_DELETE'])"
             :ref="scope.row.id"
