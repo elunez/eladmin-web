@@ -1,6 +1,5 @@
 <template>
-  <div style="display: inline-block">
-    <el-button size="mini" class="button" type="info" @click="dialog = true">修改</el-button>
+  <div style="display: inline-block;">
     <el-dialog :visible.sync="dialog" :title="title" append-to-body width="475px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
         <el-form-item label="新邮箱" prop="email">
@@ -24,7 +23,6 @@
 
 <script>
 import store from '@/store'
-import { md5 } from '@/utils/md5'
 import { validatEmail } from '@/utils/validate'
 import { validPass, updateEmail } from '@/api/user'
 import { resetEmail } from '@/api/code'
@@ -37,7 +35,7 @@ export default {
   },
   data() {
     const validatePass = (rule, value, callback) => {
-      validPass(md5(value)).then(res => {
+      validPass(value).then(res => {
         if (res.status === 200) {
           callback()
         } else {
@@ -114,7 +112,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.user = { email: this.form.email, password: md5(this.form.pass) }
+          this.user = { email: this.form.email, password: this.form.pass }
           updateEmail(this.form.code, this.user).then(res => {
             this.loading = false
             this.resetForm()

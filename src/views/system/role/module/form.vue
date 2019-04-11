@@ -1,10 +1,22 @@
 <template>
   <el-dialog :visible.sync="dialog" :title="isAdd ? '新增角色' : '编辑角色'" append-to-body width="500px">
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="66px">
-      <el-form-item label="名称" prop="name">
+    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
+      <el-form-item label="角色名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;"/>
       </el-form-item>
-      <el-form-item style="margin-top: -10px;" label="描述">
+      <el-form-item label="数据范围">
+        <el-select v-model="form.dataScope" style="width: 370px" placeholder="请选择数据范围" @change="changeScope">
+          <el-option
+            v-for="item in dateScopes"
+            :key="item"
+            :label="item"
+            :value="item"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="form.dataScope === '自定义'" label="数据权限">
+        <treeselect v-model="deptIds" :options="depts" multiple style="width: 370px" placeholder="请选择" />
+      </el-form-item>
+      <el-form-item label="描述信息">
         <el-input v-model="form.remark" style="width: 370px;" rows="5" type="textarea"/>
       </el-form-item>
     </el-form>
@@ -16,8 +28,12 @@
 </template>
 
 <script>
+import { getDepts } from '@/api/dept'
 import { add, edit } from '@/api/role'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
+  components: { Treeselect },
   props: {
     isAdd: {
       type: Boolean,
@@ -30,8 +46,9 @@ export default {
   },
   data() {
     return {
-      loading: false, dialog: false,
-      form: { name: '', permissions: [], remark: '' },
+      dateScopes: ['全部', '本级', '自定义'],
+      loading: false, dialog: false, depts: [], deptIds: [],
+      form: { name: '', depts: [], remark: '', dataScope: '本级' },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -44,16 +61,31 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          if (this.isAdd) {
-            this.doAdd()
-          } else this.doEdit()
-        } else {
-          return false
+      if (this.form.dataScope === '自定义' && this.deptIds.length === 0) {
+        this.$message({
+          message: '自定义数据权限不能为空',
+          type: 'warning'
+        })
+      } else {
+        this.form.depts = []
+        if (this.form.dataScope === '自定义') {
+          for (let i = 0; i < this.deptIds.length; i++) {
+            this.form.depts.push({
+              id: this.deptIds[i]
+            })
+          }
         }
-      })
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            if (this.isAdd) {
+              this.doAdd()
+            } else this.doEdit()
+          } else {
+            return false
+          }
+        })
+      }
     },
     doAdd() {
       add(this.form).then(res => {
@@ -88,7 +120,17 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', permissions: [], remark: '' }
+      this.form = { name: '', depts: [], remark: '', dataScope: '本级' }
+    },
+    getDepts() {
+      getDepts({ enabled: true }).then(res => {
+        this.depts = res.content
+      })
+    },
+    changeScope() {
+      if (this.form.dataScope === '自定义') {
+        this.getDepts()
+      }
     }
   }
 }

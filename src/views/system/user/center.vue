@@ -1,43 +1,53 @@
 <template>
   <div class="app-container">
-    <div id="content-main" style="width:600px;">
-      <el-card shadow="never" class="box-card user-info">
-        <div class="avatar-content">
-          <el-upload
-            :show-file-list="false"
-            :on-success="handleSuccess"
-            :on-error="handleError"
-            :headers="headers"
-            :action="updateAvatarApi"
-            class="avatar-uploader">
-            <img v-if="avatar" :src="avatar" title="点击上传头像" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"/>
-          </el-upload>
-        </div>
-        <div class="user-info-content">
-          <div>登录账号：{{ name }}</div>
-          <div>注册时间：{{ createTime }}</div>
-          <div>账号状态：<span style="color: #909399">正常</span></div>
-        </div>
-      </el-card>
-
-      <el-card shadow="never" class="box-card reset-pass">
-        <h4 class="account-label-icon">登录密码：</h4>
-        <updatePass/>
-        <p>安全性高的密码可使账号更安全，建议设置同时包含字母，数字，符号的密码。</p>
-      </el-card>
-
-      <el-card shadow="never" class="box-card reset-email">
-        <h4 class="account-label-icon">邮箱验证：</h4>
-        <updateEmail :email="email"/>
-        <p>你的邮箱：{{ formatEmail(email) }} </p>
-        <h4>绑定邮箱可用于</h4>
-        <ul>
-          <li>安全管理，密码重置与修改</li>
-          <li>账号使用，使用邮箱登录系统</li>
-        </ul>
-      </el-card>
-    </div>
+    <el-row :gutter="20">
+      <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="5">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>个人信息</span>
+          </div>
+          <div>
+            <div style="text-align: center">
+              <el-upload
+                :show-file-list="false"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+                :headers="headers"
+                :action="updateAvatarApi"
+                class="avatar-uploader">
+                <img v-if="user.avatar" :src="user.avatar" title="点击上传头像" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>
+            </div>
+            <ul class="user-info">
+              <li><svg-icon icon-class="user1" /> 用户名称 <div class="user-right">{{ user.username }}</div></li>
+              <li><svg-icon icon-class="phone" /> 手机号码 <div class="user-right">{{ user.phone }}</div></li>
+              <li><svg-icon icon-class="email" /> 用户邮箱 <div class="user-right">{{ user.email }}</div></li>
+              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ user.dept }} / {{ user.job }}</div></li>
+              <li><svg-icon icon-class="date" /> 创建日期 <div class="user-right">{{ parseTime(user.createTime) }}</div></li>
+              <li>
+                <svg-icon icon-class="anq" /> 安全设置
+                <div class="user-right">
+                  <a @click="$refs.pass.dialog = true">修改密码</a>
+                  <a @click="$refs.email.dialog = true">修改邮箱</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>操作日志</span>
+            <div style="display:inline-block;float: right;cursor: pointer" @click="refresh"><i :class="ico"/></div>
+          </div>
+          <log ref="log"/>
+        </el-card>
+      </el-col>
+    </el-row>
+    <updateEmail ref="email" :email="user.email"/>
+    <updatePass ref="pass"/>
   </div>
 </template>
 
@@ -46,13 +56,16 @@ import { mapGetters } from 'vuex'
 import { regEmail } from '@/utils/index'
 import updatePass from './center/updatePass'
 import updateEmail from './center/updateEmail'
+import log from './center/log'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
+import { parseTime } from '@/utils/index'
 export default {
   name: 'Center',
-  components: { updatePass, updateEmail },
+  components: { updatePass, updateEmail, log },
   data() {
     return {
+      ico: 'el-icon-refresh',
       headers: {
         'Authorization': 'Bearer ' + getToken()
       }
@@ -60,14 +73,15 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'avatar',
-      'name',
-      'email',
-      'createTime',
+      'user',
       'updateAvatarApi'
     ])
   },
+  created() {
+    store.dispatch('GetInfo').then(() => {})
+  },
   methods: {
+    parseTime,
     formatEmail(mail) {
       return regEmail(mail)
     },
@@ -87,11 +101,48 @@ export default {
         type: 'error',
         duration: 2500
       })
+    },
+    refresh() {
+      this.ico = 'el-icon-loading'
+      this.$refs.log.init()
+      setTimeout(() => {
+        this.ico = 'el-icon-refresh'
+      }, 300)
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .box-card{border:0;border-bottom:1px solid #ECEDFE;border-radius:unset;h4{height:26px;margin:0 0 7px;line-height:26px;font-size:1.1rem;font-weight:500;color:#444242;display:inline-block}p{font-family:Lantinghei;font-size:90%;color:#747474}ul{padding:0;margin:7px 0 0;list-style:none;font-size:80%}li{float:left;margin:0 30px 10px 0!important}li:before{width:8px;height:8px;background-color:#52acd9;color:#52acd9;display:inline-block;border-radius:50%;margin-right:5px;content:'';box-sizing:border-box}}.user-info{height:170px}.reset-email{border-bottom:0}.avatar-content,.user-info-content{float:left}.user-info-content{font-family:Lantinghei;position:relative;font-size:14px;margin:25px;div{margin-bottom:15px}}.avatar-uploader-icon{font-size:28px;width:120px;height:120px;line-height:120px;text-align:center}.avatar{width:120px;height:120px;display:block;border-radius:50%}
+  .avatar-uploader-icon {
+    font-size: 28px;
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+    text-align: center
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+    display: block;
+    border-radius: 50%
+  }
+  .user-info {
+    padding-left: 0px;
+    list-style: none;
+    li{
+      border-bottom: 1px solid #F0F3F4;
+      border-top: 1px solid #F0F3F4;
+      padding: 11px 0px;
+      font-size: 13px;
+    }
+    .user-right {
+      float: right;
+
+      a{
+        color: #317EF3;
+      }
+    }
+  }
 </style>

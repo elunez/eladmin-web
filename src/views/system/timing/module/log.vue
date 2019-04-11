@@ -9,7 +9,7 @@
       <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;margin-top: -10px;">
+    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;margin-top: -10px;">
       <el-table-column :show-overflow-tooltip="true" prop="jobName" label="任务名称"/>
       <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称"/>
       <el-table-column :show-overflow-tooltip="true" prop="methodName" label="执行方法"/>

@@ -192,6 +192,12 @@ export default {
         '\n' +
         '# application:\n'
     }
+  },
+  mounted() {
+    const that = this
+    window.onresize = function temp() {
+      that.height = document.documentElement.clientHeight - 210 + 'px'
+    }
   }
 }
 </script>

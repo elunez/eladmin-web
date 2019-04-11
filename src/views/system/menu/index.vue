@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <eHeader :menus="menus" :query="query"/>
+    <eHeader :query="query"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" border size="small">
+    <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" size="small">
       <el-table-column prop="icon" label="图标" align="center" width="80px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT'])" :menus="menus" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
             v-if="checkPermission(['ADMIN','MENU_ALL','MENU_DELETE'])"
             :ref="scope.row.id"
@@ -51,7 +51,7 @@
 import checkPermission from '@/utils/permission' // 权限判断函数
 import treeTable from '@/components/TreeTable'
 import initData from '@/mixins/initData'
-import { del, getMenusTree } from '@/api/menu'
+import { del } from '@/api/menu'
 import { parseTime } from '@/utils/index'
 import eHeader from './module/header'
 import edit from './module/edit'
@@ -66,11 +66,10 @@ export default {
           value: 'name'
         }
       ],
-      delLoading: false, sup_this: this, menus: []
+      delLoading: false, sup_this: this
     }
   },
   created() {
-    this.getMenus()
     this.$nextTick(() => {
       this.init()
     })
@@ -102,14 +101,6 @@ export default {
         this.delLoading = false
         this.$refs[id].doClose()
         console.log(err.response.data.message)
-      })
-    },
-    getMenus() {
-      getMenusTree().then(res => {
-        this.menus = []
-        const menu = { id: 0, label: '顶级类目', children: [] }
-        menu.children = res
-        this.menus.push(menu)
       })
     }
   }

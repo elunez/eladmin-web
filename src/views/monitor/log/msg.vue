@@ -1,5 +1,5 @@
 <template>
-  <div :style="'width:' + width" class="container">
+  <div :style="'min-width:' + width" class="container">
     <el-tooltip :content="content" class="lock item" effect="dark" placement="left">
       <el-button type="info" size="mini" circle @click="doLock"><svg-icon :icon-class="ico"/></el-button>
     </el-tooltip>
@@ -55,6 +55,10 @@ export default {
   },
   mounted: function() {
     this.initWebSocket()
+    const that = this
+    window.onresize = function temp() {
+      that.height = document.documentElement.clientHeight - 94.5 + 'px;'
+    }
   },
   beforeDestroy: function() {
     // 页面离开时断开连接,清除定时器
@@ -65,15 +69,6 @@ export default {
     parseTime,
     initWebSocket() {
       this.connection(this)
-      // 断开重连机制,尝试发送消息,捕获异常发生时重连
-      this.timer = window.setInterval(() => {
-        try {
-          this.stompClient.send('test')
-        } catch (err) {
-          console.log('断线了: ' + err)
-          this.connection()
-        }
-      }, 5000)
     },
     connection(_this) {
       const socket = new SockJS(this.socketApi)// 连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息

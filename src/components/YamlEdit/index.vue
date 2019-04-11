@@ -32,6 +32,9 @@ export default {
       if (value !== editorValue) {
         this.editor.setValue(this.value)
       }
+    },
+    height(value) {
+      this.editor.setSize('auto', this.height)
     }
   },
   mounted() {

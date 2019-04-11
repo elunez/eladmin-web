@@ -1,6 +1,5 @@
 <template>
   <div style="display: inline-block">
-    <el-button size="mini" class="button" type="info" @click="dialog = true">修改</el-button>
     <el-dialog :visible.sync="dialog" :title="title" append-to-body width="500px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
         <el-form-item label="旧密码" prop="oldPass">
@@ -23,12 +22,11 @@
 
 <script>
 import store from '@/store'
-import { md5 } from '@/utils/md5'
 import { validPass, updatePass } from '@/api/user'
 export default {
   data() {
     const validatePass = (rule, value, callback) => {
-      validPass(md5(value)).then(res => {
+      validPass(value).then(res => {
         if (res.status === 200) {
           callback()
         } else {
@@ -67,7 +65,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          updatePass(md5(this.form.confirmPass)).then(res => {
+          updatePass(this.form.confirmPass).then(res => {
             this.resetForm()
             this.$notify({
               title: '密码修改成功，请重新登录',

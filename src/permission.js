@@ -1,5 +1,6 @@
 import router from './router'
 import store from './store'
+import Config from '@/config'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import { getToken } from '@/utils/auth' // getToken from cookie
@@ -12,7 +13,7 @@ const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title + ' - eladmin'
+    document.title = to.meta.title + ' - ' + Config.webName
   }
   NProgress.start() // start progress bar
   if (getToken()) {

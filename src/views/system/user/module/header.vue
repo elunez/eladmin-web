@@ -17,8 +17,8 @@
         size="mini"
         type="primary"
         icon="el-icon-plus"
-        @click="$refs.form.dialog = true">新增</el-button>
-      <eForm ref="form" :roles="roles" :is-add="true"/>
+        @click="add">新增</el-button>
+      <eForm ref="form" :sup_this="sup_this" :is-add="true"/>
     </div>
     <!-- 导出 -->
     <el-button
@@ -40,11 +40,11 @@ import eForm from './form'
 export default {
   components: { eForm },
   props: {
-    roles: {
-      type: Array,
+    query: {
+      type: Object,
       required: true
     },
-    query: {
+    sup_this: {
       type: Object,
       required: true
     }
@@ -64,10 +64,15 @@ export default {
   },
   methods: {
     checkPermission,
+    add() {
+      this.$refs.form.getDepts()
+      this.$refs.form.getRoles()
+      this.$refs.form.dialog = true
+    },
     // 去查询
     toQuery() {
-      this.$parent.page = 0
-      this.$parent.init()
+      this.sup_this.page = 0
+      this.sup_this.init()
     },
     // 导出
     download() {

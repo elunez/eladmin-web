@@ -25,13 +25,12 @@
 </template>
 
 <script>
-import { md5 } from '@/utils/md5'
+import Config from '@/config'
 import Cookies from 'js-cookie'
 export default {
   name: 'Login',
   data() {
     return {
-      md5Pwd: '',
       loginForm: {
         username: '',
         password: '',
@@ -59,27 +58,25 @@ export default {
   methods: {
     getCookie() {
       const username = Cookies.get('username')
-      const password = Cookies.get('password')
+      let password = Cookies.get('password')
       const rememberMe = Cookies.get('rememberMe')
       // 保存cookie里面的加密后的密码
-      this.md5Pwd = password === undefined ? '' : password
+      password = password === undefined ? '' : password
       this.loginForm = {
         username: username === undefined ? '' : username,
-        password: this.md5Pwd,
+        password: password,
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       }
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        let pass = this.loginForm.password
-        if (pass !== this.md5Pwd) { pass = md5(pass) }
-        const user = { username: this.loginForm.username, password: pass, rememberMe: this.loginForm.rememberMe }
+        const user = this.loginForm
         if (valid) {
           this.loading = true
           if (user.rememberMe) {
-            Cookies.set('username', user.username, { expires: 1 })
-            Cookies.set('password', user.password, { expires: 1 })
-            Cookies.set('rememberMe', user.rememberMe, { expires: 1 })
+            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
+            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
+            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
           } else {
             Cookies.remove('username')
             Cookies.remove('password')
@@ -106,11 +103,12 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image:url(	https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/1547428971990.jpg);
     height: 100%;
+    background-image:url(	https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/1547428971990.jpg);
+    background-size: cover;
   }
   .title {
-    margin: 0px auto 40px auto;
+    margin: 0px auto 30px auto;
     text-align: center;
     color: #707070;
   }

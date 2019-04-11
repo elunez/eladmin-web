@@ -10,7 +10,7 @@
       class="upload-demo"
       multiple>
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，且文件不超过5M</div>
+      <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，且文件不超过15M</div>
     </el-upload>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="doSubmit">确认</el-button>

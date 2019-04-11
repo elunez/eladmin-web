@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <eHeader :permissions="permissions" :query="query"/>
+    <eHeader :query="query"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" border size="small">
+    <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" size="small">
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -10,7 +10,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_EDIT'])" :permissions="permissions" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
             v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_DELETE'])"
             :ref="scope.row.id"
@@ -34,7 +34,6 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import treeTable from '@/components/TreeTable'
 import initData from '@/mixins/initData'
 import { del } from '@/api/permission'
-import { getPermissionTree } from '@/api/permission'
 import { parseTime } from '@/utils/index'
 import eHeader from './module/header'
 import edit from './module/edit'
@@ -53,11 +52,10 @@ export default {
           value: 'alias'
         }
       ],
-      delLoading: false, sup_this: this, permissions: []
+      delLoading: false, sup_this: this
     }
   },
   created() {
-    this.getPermissions()
     this.$nextTick(() => {
       this.init()
     })
@@ -89,14 +87,6 @@ export default {
         this.delLoading = false
         this.$refs[id].doClose()
         console.log(err.response.data.message)
-      })
-    },
-    getPermissions() {
-      getPermissionTree().then(res => {
-        this.permissions = []
-        const permission = { id: 0, label: '顶级类目', children: [] }
-        permission.children = res
-        this.permissions.push(permission)
       })
     }
   }

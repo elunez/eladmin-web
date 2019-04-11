@@ -4,6 +4,11 @@
     <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
+      <template>
+        <el-tooltip content="更新公告" effect="dark" placement="bottom">
+          <Placard class="screenfull right-menu-item"/>
+        </el-tooltip>
+      </template>
       <template v-if="device!=='mobile'">
         <el-tooltip content="全屏" effect="dark" placement="bottom">
           <screenfull class="screenfull right-menu-item"/>
@@ -12,7 +17,7 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <img :src="user.avatar" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -40,17 +45,19 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
+import Placard from '@/components/placard'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
+    Placard,
     Screenfull
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
+      'user',
       'device'
     ])
   },

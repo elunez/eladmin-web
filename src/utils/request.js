@@ -3,11 +3,12 @@ import router from '@/router'
 import { Notification, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
+import Config from '@/config'
 
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 900000 // 请求超时时间
+  timeout: Config.timeout // 请求超时时间
 })
 
 // request拦截器

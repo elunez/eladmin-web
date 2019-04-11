@@ -2,7 +2,7 @@
   <div class="app-container">
     <eHeader :query="query"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
+    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column label="序号" width="80" align="center">
         <template slot-scope="scope">
           <div>{{ scope.$index + 1 }}</div>

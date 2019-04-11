@@ -2,17 +2,21 @@
   <div class="app-container">
     <eHeader :query="query"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
-      <el-table-column :show-overflow-tooltip="true" prop="key" label="文件名"/>
-      <el-table-column prop="bucket" label="空间名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="url" label="地址/私有空间需下载访问">
+    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+      <el-table-column :show-overflow-tooltip="true" label="文件名">
         <template slot-scope="scope">
-          <a :href="scope.row.url" style="color: #42b983" target="_blank">{{ scope.row.url }}</a>
+          <span>{{ scope.row.key }}</span>
         </template>
       </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" label="文件类型">
+        <template slot-scope="scope">
+          <span>{{ getExtensionName(scope.row.key) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="bucket" label="空间名称"/>
       <el-table-column prop="size" label="文件大小"/>
       <el-table-column prop="type" label="空间类型"/>
-      <el-table-column width="180px" prop="updateTime" label="更新日期">
+      <el-table-column width="180px" prop="updateTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
@@ -116,11 +120,18 @@ export default {
       this.newWin = window.open()
       download(id).then(res => {
         this.downloadLoading = false
-        this.url = res
+        this.url = res.url
       }).catch(err => {
         this.downloadLoading = false
         console.log(err.response.data.message)
       })
+    },
+    getExtensionName(name) {
+      const dot = name.lastIndexOf('.')
+      if ((dot > -1) && (dot < (name.length - 1))) {
+        return name.substring(dot + 1)
+      }
+      return name
     }
   }
 }

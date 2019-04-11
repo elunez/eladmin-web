@@ -29,6 +29,10 @@ export default {
   },
   mounted() {
     this.$refs.md.$refs.toolbar_left.img_file = []
+    const that = this
+    window.onresize = function temp() {
+      that.height = document.documentElement.clientHeight - 200 + 'px'
+    }
   },
   methods: {
     imgAdd(pos, $file) {

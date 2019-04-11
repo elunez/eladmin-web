@@ -19,16 +19,12 @@
 </template>
 
 <script>
-import { add, edit } from '@/api/permission'
+import { add, edit, getPermissionTree } from '@/api/permission'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   components: { Treeselect },
   props: {
-    permissions: {
-      type: Array,
-      required: true
-    },
     isAdd: {
       type: Boolean,
       required: true
@@ -40,7 +36,7 @@ export default {
   },
   data() {
     return {
-      loading: false, dialog: false,
+      loading: false, dialog: false, permissions: [],
       form: { name: '', alias: '', pid: 0 },
       rules: {
         name: [
@@ -78,7 +74,6 @@ export default {
         })
         this.loading = false
         this.$parent.$parent.init()
-        this.$parent.$parent.getPermissions()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -94,7 +89,6 @@ export default {
         })
         this.loading = false
         this.sup_this.init()
-        this.sup_this.getPermissions()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -104,6 +98,14 @@ export default {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { name: '', alias: '', pid: 0 }
+    },
+    getPermissions() {
+      getPermissionTree().then(res => {
+        this.permissions = []
+        const permission = { id: 0, label: '顶级类目', children: [] }
+        permission.children = res
+        this.permissions.push(permission)
+      })
     }
   }
 }

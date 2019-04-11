@@ -21,7 +21,14 @@ export default {
   methods: {
     to() {
       const _this = this.$refs.form
-      _this.form = { id: this.data.id, name: this.data.name, remark: this.data.remark, permissions: [] }
+      _this.deptIds = []
+      _this.form = { id: this.data.id, name: this.data.name, remark: this.data.remark, depts: this.data.depts, dataScope: this.data.dataScope }
+      if (_this.form.dataScope === '自定义') {
+        _this.getDepts()
+      }
+      for (let i = 0; i < _this.form.depts.length; i++) {
+        _this.deptIds[i] = _this.form.depts[i].id
+      }
       _this.dialog = true
     }
   }

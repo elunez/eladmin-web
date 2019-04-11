@@ -11,8 +11,8 @@
         size="mini"
         type="primary"
         icon="el-icon-plus"
-        @click="$refs.form.dialog = true">新增</el-button>
-      <eForm ref="form" :permissions="permissions" :is-add="true"/>
+        @click="add">新增</el-button>
+      <eForm ref="form" :is-add="true"/>
     </div>
   </div>
 </template>
@@ -26,10 +26,6 @@ export default {
     query: {
       type: Object,
       required: true
-    },
-    permissions: {
-      type: Array,
-      required: true
     }
   },
   data() {
@@ -42,6 +38,10 @@ export default {
     toQuery() {
       this.$parent.page = 0
       this.$parent.init()
+    },
+    add() {
+      this.$refs.form.getPermissions()
+      this.$refs.form.dialog = true
     }
   }
 }
