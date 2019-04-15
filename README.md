@@ -2,14 +2,23 @@
 
 eladmin 前端源码
 
-#### 后端源码
-- 码云: [https://gitee.com/elunez/eladmin](https://gitee.com/elunez/eladmin)
-- github: [https://github.com/elunez/eladmin](https://github.com/elunez/eladmin)
+#### 项目源码
 
-#### eladmin开发文档
-[http://docs.auauz.net/#/](http://docs.auauz.net/#/)
+|     |   后端源码  |   前端源码  |
+|---  |--- | --- |
+|  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-qd   |
+|  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
 
-## Build Setup
+#### 开发文档
+[https://docs.auauz.net/#/](https://docs.auauz.net/#/)
+
+#### 前端模板
+
+初始模板基于： [https://github.com/PanJiaChen/vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
+
+模板文档： [https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
+
+#### Build Setup
 ``` bash
 # 安装依赖
 npm install
@@ -23,6 +32,4 @@ npm run build
 
 #### 反馈交流
 
-- QQ交流群：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=90830191a40600e3a07acdcc4864890fca50c8e3ca1772e7e288a561d576f6c4"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="Quella/el-admin" title="Quella/el-admin"></a>
-
-- 作者邮箱：elunez@qq.com
+- QQ交流群：891137268
