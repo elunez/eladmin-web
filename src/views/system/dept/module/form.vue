@@ -61,10 +61,17 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.loading = true
-          if (this.isAdd) {
-            this.doAdd()
-          } else this.doEdit()
+          if (this.form.pid) {
+            this.loading = true
+            if (this.isAdd) {
+              this.doAdd()
+            } else this.doEdit()
+          } else {
+            this.$message({
+              message: '上级部门不能为空',
+              type: 'warning'
+            })
+          }
         }
       })
     },

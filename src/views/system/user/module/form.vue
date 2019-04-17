@@ -110,26 +110,26 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      if (this.deptId === null || this.deptId === undefined) {
-        this.$message({
-          message: '部门不能为空',
-          type: 'warning'
-        })
-      } else if (this.jobId === null) {
-        this.$message({
-          message: '岗位不能为空',
-          type: 'warning'
-        })
-      } else if (this.roleIds.length === 0) {
-        this.$message({
-          message: '角色不能为空',
-          type: 'warning'
-        })
-      } else {
-        this.form.dept.id = this.deptId
-        this.form.job.id = this.jobId
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
+      this.form.dept.id = this.deptId
+      this.form.job.id = this.jobId
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.deptId === null || this.deptId === undefined) {
+            this.$message({
+              message: '部门不能为空',
+              type: 'warning'
+            })
+          } else if (this.jobId === null) {
+            this.$message({
+              message: '岗位不能为空',
+              type: 'warning'
+            })
+          } else if (this.roleIds.length === 0) {
+            this.$message({
+              message: '角色不能为空',
+              type: 'warning'
+            })
+          } else {
             this.loading = true
             this.form.roles = []
             const _this = this
@@ -140,11 +140,11 @@ export default {
             if (this.isAdd) {
               this.doAdd()
             } else this.doEdit()
-          } else {
-            return false
           }
-        })
-      }
+        } else {
+          return false
+        }
+      })
     },
     doAdd() {
       add(this.form).then(res => {

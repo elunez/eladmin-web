@@ -7,8 +7,8 @@
       <el-form-item label="字典值">
         <el-input v-model="form.value" style="width: 370px;"/>
       </el-form-item>
-      <el-form-item label="排序">
-        <el-input v-model="form.sort" style="width: 370px;"/>
+      <el-form-item label="排序" prop="sort">
+        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -42,11 +42,14 @@ export default {
         id: '',
         label: '',
         value: '',
-        sort: '999'
+        sort: 999
       },
       rules: {
         label: [
           { required: true, message: '请输入字典标签', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
         ]
       }
     }
@@ -110,6 +113,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>

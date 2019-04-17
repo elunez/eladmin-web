@@ -18,7 +18,7 @@
         <el-input v-model="form.name" placeholder="名称" style="width: 460px;"/>
       </el-form-item>
       <el-form-item label="菜单排序" prop="sort">
-        <el-input v-model.number="form.sort" placeholder="序号越小越靠前" style="width: 460px;"/>
+        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 460px;"/>
       </el-form-item>
       <el-form-item label="内部菜单" prop="iframe">
         <el-radio v-model="form.iframe" label="false">是</el-radio>
@@ -141,6 +141,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>

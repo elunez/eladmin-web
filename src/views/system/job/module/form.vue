@@ -5,7 +5,7 @@
         <el-input v-model="form.name" style="width: 370px;"/>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input v-model.number="form.sort" placeholder="序号越小越靠前" style="width: 370px;"/>
+        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;"/>
       </el-form-item>
       <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
         <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
@@ -68,22 +68,22 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      if (this.deptId === null || this.deptId === undefined) {
-        this.$message({
-          message: '所属部门不能为空',
-          type: 'warning'
-        })
-      } else {
-        this.form.dept.id = this.deptId
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
+      this.form.dept.id = this.deptId
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.deptId === null || this.deptId === undefined) {
+            this.$message({
+              message: '所属部门不能为空',
+              type: 'warning'
+            })
+          } else {
             this.loading = true
             if (this.isAdd) {
               this.doAdd()
             } else this.doEdit()
           }
-        })
-      }
+        }
+      })
     },
     doAdd() {
       add(this.form).then(res => {
@@ -137,6 +137,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>
