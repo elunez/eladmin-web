@@ -47,14 +47,14 @@ service.interceptors.response.use(
     } catch (e) {
       if (error.toString().indexOf('Error: timeout') !== -1) {
         Notification.error({
-          title: '请求超时，请重试',
+          title: '网络请求超时',
           duration: 2500
         })
         return Promise.reject(error)
       }
       if (error.toString().indexOf('Error: Network Error') !== -1) {
         Notification.error({
-          title: '网络错误，请联系网站管理员恢复',
+          title: '网络请求错误',
           duration: 2500
         })
         return Promise.reject(error)

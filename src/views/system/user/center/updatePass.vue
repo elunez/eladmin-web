@@ -26,13 +26,17 @@ import { validPass, updatePass } from '@/api/user'
 export default {
   data() {
     const validatePass = (rule, value, callback) => {
-      validPass(value).then(res => {
-        if (res.status === 200) {
-          callback()
-        } else {
-          callback(new Error('旧密码错误，请检查'))
-        }
-      })
+      if (value) {
+        validPass(value).then(res => {
+          if (res.status === 200) {
+            callback()
+          } else {
+            callback(new Error('旧密码错误，请检查'))
+          }
+        })
+      } else {
+        callback(new Error('请输入旧密码'))
+      }
     }
     const confirmPass = (rule, value, callback) => {
       if (this.form.newPass !== value) {
@@ -64,6 +68,7 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          alert(1)
           this.loading = true
           updatePass(this.form.confirmPass).then(res => {
             this.resetForm()
