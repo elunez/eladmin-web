@@ -68,7 +68,6 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          alert(1)
           this.loading = true
           updatePass(this.form.confirmPass).then(res => {
             this.resetForm()
