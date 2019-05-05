@@ -61,7 +61,7 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.pid) {
+          if (this.form.pid !== undefined) {
             this.loading = true
             if (this.isAdd) {
               this.doAdd()
