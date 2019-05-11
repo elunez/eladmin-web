@@ -56,7 +56,8 @@ const tagsView = {
     },
 
     DEL_ALL_VISITED_VIEWS: state => {
-      state.visitedViews = []
+      const affixTags = state.visitedViews.filter(tag => tag.meta.affix)
+      state.visitedViews = affixTags
     },
     DEL_ALL_CACHED_VIEWS: state => {
       state.cachedViews = []
@@ -129,7 +130,6 @@ const tagsView = {
         resolve([...state.cachedViews])
       })
     },
-
     delAllViews({ dispatch, state }, view) {
       return new Promise(resolve => {
         dispatch('delAllVisitedViews', view)

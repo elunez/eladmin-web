@@ -12,21 +12,22 @@
         @click.middle.native="closeSelectedTag(tag)"
         @contextmenu.prevent.native="openMenu(tag,$event)">
         {{ tag.title }}
-        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+        <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li @click="closeSelectedTag(selectedTag)">关闭</li>
+      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">关闭</li>
       <li @click="closeOthersTags">关闭其他</li>
-      <li @click="closeAllTags">关闭所有</li>
+      <li @click="closeAllTags(selectedTag)">关闭所有</li>
     </ul>
   </div>
 </template>
 
 <script>
 import ScrollPane from '@/components/ScrollPane'
-
+import path from 'path'
+import { constantRouterMap } from '@/router'
 export default {
   components: { ScrollPane },
   data() {
@@ -34,6 +35,7 @@ export default {
       visible: false,
       top: 0,
       left: 0,
+      affixTags: [],
       selectedTag: {}
     }
   },
@@ -56,11 +58,42 @@ export default {
     }
   },
   mounted() {
+    this.initTags()
     this.addViewTags()
   },
   methods: {
     isActive(route) {
       return route.path === this.$route.path
+    },
+    filterAffixTags(routes, basePath = '/') {
+      let tags = []
+      routes.forEach(route => {
+        if (route.meta && route.meta.affix) {
+          const tagPath = path.resolve(basePath, route.path)
+          tags.push({
+            fullPath: tagPath,
+            path: tagPath,
+            name: route.name,
+            meta: { ...route.meta }
+          })
+        }
+        if (route.children) {
+          const tempTags = this.filterAffixTags(route.children, route.path)
+          if (tempTags.length >= 1) {
+            tags = [...tags, ...tempTags]
+          }
+        }
+      })
+      return tags
+    },
+    initTags() {
+      const affixTags = this.affixTags = this.filterAffixTags(constantRouterMap)
+      for (const tag of affixTags) {
+        // Must have tag name
+        if (tag.name) {
+          this.$store.dispatch('addVisitedView', tag)
+        }
+      }
     },
     addViewTags() {
       const { name } = this.$route
@@ -114,9 +147,28 @@ export default {
         this.moveToCurrentTag()
       })
     },
-    closeAllTags() {
-      this.$store.dispatch('delAllViews')
-      this.$router.push('/')
+    closeAllTags(view) {
+      this.$store.dispatch('delAllViews').then(({ visitedViews }) => {
+        if (this.affixTags.some(tag => tag.path === view.path)) {
+          return
+        }
+        this.toLastView(visitedViews, view)
+      })
+    },
+    toLastView(visitedViews, view) {
+      const latestView = visitedViews.slice(-1)[0]
+      if (latestView) {
+        this.$router.push(latestView)
+      } else {
+        // now the default is to redirect to the home page if there is no tags-view,
+        // you can adjust it according to your needs.
+        if (view.name === '首页') {
+          // to reload home page
+          this.$router.replace({ path: '/redirect' + view.fullPath })
+        } else {
+          this.$router.push('/')
+        }
+      }
     },
     openMenu(tag, e) {
       const menuMinWidth = 105

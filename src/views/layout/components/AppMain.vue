@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .app-main {
     z-index: 88;
     /*84 = navbar + tags-view = 50 +34 */
@@ -30,6 +30,20 @@ export default {
     width: 100%;
     position: relative;
     overflow: hidden;
+  }
+
+  .fixed-header+.app-main {
+    padding-top: 50px;
+  }
+
+  .hasTagsView {
+  .app-main {
+    min-height: calc(100vh - 84px);
+  }
+
+  .fixed-header+.app-main {
+    padding-top: 84px;
+  }
   }
 </style>
 
