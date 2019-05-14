@@ -37,5 +37,10 @@ export default {
   /**
    * @description 是否显示logo
    */
-  sidebarLogo: true
+  sidebarLogo: true,
+
+  /**
+   * 是否显示设置的悬浮按钮
+   */
+  settingBtn: false
 }

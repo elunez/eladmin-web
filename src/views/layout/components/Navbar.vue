@@ -5,9 +5,6 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <el-tooltip content="更新公告" effect="dark" placement="bottom">
-          <Placard class="screenfull right-menu-item"/>
-        </el-tooltip>
         <el-tooltip content="全屏" effect="dark" placement="bottom">
           <screenfull class="screenfull right-menu-item"/>
         </el-tooltip>
@@ -47,13 +44,11 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-import Placard from '@/components/placard'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    Placard,
     Screenfull
   },
   computed: {

@@ -1,11 +1,14 @@
 import Config from '@/config'
+import variables from '@/styles/element-variables.scss'
 
 const settings = {
   state: {
     showRightPanel: false,
     tagsView: Config.tagsView,
     fixedHeader: Config.fixedHeader,
-    sidebarLogo: Config.sidebarLogo
+    sidebarLogo: Config.sidebarLogo,
+    theme: variables.theme,
+    settingBtn: Config.settingBtn
   },
   mutations: {
     CHANGE_SETTING: (state, { key, value }) => {

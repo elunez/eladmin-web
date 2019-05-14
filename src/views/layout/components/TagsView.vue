@@ -27,7 +27,7 @@
 <script>
 import ScrollPane from '@/components/ScrollPane'
 import path from 'path'
-import { constantRouterMap } from '@/router'
+import { constantRouterMap } from '@/router/routers'
 export default {
   components: { ScrollPane },
   data() {

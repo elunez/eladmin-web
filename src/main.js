@@ -10,11 +10,11 @@ import 'mavon-editor/dist/css/index.css'
 import '@/styles/index.scss' // global css
 
 import App from './App'
-import router from './router'
+import router from './router/routers'
 import store from './store'
 
 import '@/icons' // icon
-import './permission' // permission control
+import './router/index' // permission control
 
 Vue.use(mavonEditor)
 Vue.use(ElementUI, { locale })

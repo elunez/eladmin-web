@@ -1,4 +1,4 @@
-import { constantRouterMap } from '@/router'
+import { constantRouterMap } from '@/router/routers'
 import Layout from '@/views/layout/Layout'
 
 const permission = {

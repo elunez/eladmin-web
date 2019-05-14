@@ -17,6 +17,11 @@
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
 
+      <div class="drawer-item">
+        <span>显示 SettingBtn</span>
+        <el-switch v-model="settingBtn" class="drawer-switch" />
+      </div>
+
     </div>
   </div>
 </template>
@@ -56,6 +61,17 @@ export default {
       set(val) {
         this.$store.dispatch('changeSetting', {
           key: 'sidebarLogo',
+          value: val
+        })
+      }
+    },
+    settingBtn: {
+      get() {
+        return this.$store.state.settings.settingBtn
+      },
+      set(val) {
+        this.$store.dispatch('changeSetting', {
+          key: 'settingBtn',
           value: val
         })
       }
