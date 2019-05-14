@@ -19,6 +19,7 @@ import './router/index' // permission control
 Vue.use(mavonEditor)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
+require('babel-polyfill')
 
 new Vue({
   el: '#app',

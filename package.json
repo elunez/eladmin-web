@@ -39,7 +39,8 @@
     "wangeditor": ">=3.0.0",
     "codemirror": "^5.38.0",
     "mavon-editor": "^2.7.0",
-    "path-to-regexp": "2.4.0"
+    "path-to-regexp": "2.4.0",
+    "babel-polyfill": "^6.26.0"
   },
   "devDependencies": {
     "autoprefixer": "8.5.0",
