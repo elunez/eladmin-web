@@ -1,7 +1,7 @@
 {
-  "name": "eladmin-qt",
+  "name": "eladmin",
   "version": "1.8.0",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "description": "eladmin 前端代码",
   "author": "jie <elunez@qq.com>",
   "scripts": {
@@ -53,6 +53,7 @@
     "babel-plugin-transform-vue-jsx": "3.7.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-stage-2": "6.24.1",
+    "babel-polyfill": "^6.26.0",
     "cross-env": "5.2.0",
     "chalk": "2.4.1",
     "copy-webpack-plugin": "4.5.2",
@@ -70,7 +71,6 @@
     "node-sass": "^4.7.2",
     "optimize-css-assets-webpack-plugin": "5.0.0",
     "ora": "3.0.0",
-    "path-to-regexp": "2.4.0",
     "portfinder": "1.0.16",
     "postcss-import": "12.0.0",
     "postcss-loader": "2.1.6",
@@ -82,18 +82,17 @@
     "semver": "5.5.0",
     "shelljs": "0.8.2",
     "svg-sprite-loader": "3.8.0",
-    "svgo": "1.0.5",
+    "svgo": "1.2.2",
     "uglifyjs-webpack-plugin": "1.2.7",
     "url-loader": "1.0.1",
     "vue-loader": "15.3.0",
     "vue-style-loader": "4.1.2",
     "vue-template-compiler": "2.5.17",
     "webpack": "4.16.5",
-    "webpack-bundle-analyzer": "2.13.1",
+    "webpack-bundle-analyzer": "3.3.2",
     "webpack-cli": "3.1.0",
-    "webpack-dev-server": ">= 3.1.11",
-    "webpack-merge": "4.1.4",
-    "babel-polyfill": "^6.26.0"
+    "webpack-dev-server": "3.3.1",
+    "webpack-merge": "4.1.4"
   },
   "engines": {
     "node": ">= 6.0.0",
