@@ -23,17 +23,25 @@ export function edit(data) {
   })
 }
 
-export function validPass(pass) {
+export function validPass(password) {
+  const data = {
+    password
+  }
   return request({
-    url: 'api/users/validPass/' + pass,
-    method: 'get'
+    url: 'api/users/validPass/',
+    method: 'post',
+    data
   })
 }
 
-export function updatePass(pass) {
+export function updatePass(password) {
+  const data = {
+    password
+  }
   return request({
-    url: 'api/users/updatePass/' + pass,
-    method: 'get'
+    url: 'api/users/updatePass/',
+    method: 'post',
+    data
   })
 }
 
