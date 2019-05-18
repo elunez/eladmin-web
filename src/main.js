@@ -11,12 +11,14 @@ import '@/styles/index.scss' // global css
 
 import App from './App'
 import router from './router/routers'
+import permission from './components/permission'
 import store from './store'
 
 import '@/icons' // icon
 import './router/index' // permission control
 
 Vue.use(mavonEditor)
+Vue.use(permission)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 require('babel-polyfill')

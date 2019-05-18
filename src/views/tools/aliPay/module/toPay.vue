@@ -11,7 +11,9 @@
       <el-form-item label="商品描述" prop="body">
         <el-input v-model="form.body" style="width: 35%" rows="8" type="textarea"/>
       </el-form-item>
-      <el-button :loading="loading" style="margin-left:2%;" size="medium" type="success" @click="doSubmit">去支付</el-button>
+      <el-form-item label="">
+        <el-button :loading="loading" size="medium" type="primary" @click="doSubmit">去支付</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>

@@ -6,7 +6,7 @@
       <el-select v-model="query.isSuccess" placeholder="日志状态" clearable class="filter-item" style="width: 110px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
-      <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;margin-top: -10px;">

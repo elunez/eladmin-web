@@ -6,7 +6,7 @@
           <svg-icon icon-class="visits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">New Visits</div>
+          <div class="card-panel-text">Daily Pv</div>
           <count-to :start-val="0" :end-val="count.newVisits" :duration="2600" class="card-panel-num"/>
         </div>
       </div>
@@ -17,7 +17,7 @@
           <svg-icon icon-class="ipvisits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">New Ip</div>
+          <div class="card-panel-text">Daily Ip</div>
           <count-to :start-val="0" :end-val="count.newIp" :duration="3000" class="card-panel-num"/>
         </div>
       </div>
@@ -28,7 +28,7 @@
           <svg-icon icon-class="visits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Recent Visits</div>
+          <div class="card-panel-text">Weekly Pv</div>
           <count-to :start-val="0" :end-val="count.recentVisits" :duration="3200" class="card-panel-num"/>
         </div>
       </div>
@@ -39,7 +39,7 @@
           <svg-icon icon-class="ipvisits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Recent Ip</div>
+          <div class="card-panel-text">Weekly Ip</div>
           <count-to :start-val="0" :end-val="count.recentIp" :duration="3600" class="card-panel-num"/>
         </div>
       </div>

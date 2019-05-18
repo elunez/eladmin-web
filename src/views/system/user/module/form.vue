@@ -29,6 +29,7 @@
         <el-select v-model="roleIds" style="width: 450px;" multiple placeholder="请选择">
           <el-option
             v-for="(item, index) in roles"
+            :disabled="level !== 1 && item.level <= level"
             :key="item.name + index"
             :label="item.name"
             :value="item.id"/>
@@ -46,7 +47,7 @@
 
 import { add, edit } from '@/api/user'
 import { getDepts } from '@/api/dept'
-import { getAll } from '@/api/role'
+import { getAll, getLevel } from '@/api/role'
 import { getAllJob } from '@/api/job'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
@@ -78,7 +79,7 @@ export default {
     }
     return {
       dialog: false, loading: false, form: { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null },
-      roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], style: 'width: 184px',
+      roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], style: 'width: 184px', level: 3,
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -210,6 +211,14 @@ export default {
     },
     selectFun(node, instanceId) {
       this.getJobs(node.id)
+    },
+    getRoleLevel() {
+      getLevel().then(res => {
+        console.log(res)
+        this.level = res.level
+      }).catch(err => {
+        console.log(err.response.data.message)
+      })
     }
   }
 }

@@ -24,7 +24,9 @@
       <el-input v-model="form.notifyUrl" style="width: 40%;"/>
       <span style="color: #C0C0C0;margin-left: 10px;">支付结果异步通知地址</span>
     </el-form-item>
-    <el-button :loading="loading" style="margin-left:5%;" size="medium" type="success" @click="doSubmit">保存配置</el-button>
+    <el-form-item label="">
+      <el-button :loading="loading" size="medium" type="primary" @click="doSubmit">保存配置</el-button>
+    </el-form-item>
   </el-form>
 </template>
 

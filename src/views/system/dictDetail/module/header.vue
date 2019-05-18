@@ -2,7 +2,7 @@
   <div class="head-container">
     <!-- 搜索 -->
     <el-input v-model="query.value" clearable placeholder="输入字典标签查询" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <div style="display: inline-block;margin: 0px 2px;">
       <eForm ref="form" :is-add="true" :dict-id="dictId"/>
     </div>

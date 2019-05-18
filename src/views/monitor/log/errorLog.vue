@@ -13,7 +13,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="异常详情" width="120px">
+      <el-table-column prop="createTime" label="异常详情" width="100px">
         <template slot-scope="scope">
           <el-button size="mini" type="text" @click="info(scope.row.exceptionDetail)">查看详情</el-button>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT'])" type="success" size="mini" @click="to">生成代码</el-button>
+    <el-button type="primary" size="mini" @click="to">生成代码</el-button>
     <el-dialog :visible.sync="dialog" title="代码生成配置" append-to-body width="800px">
       <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
         <el-table-column label="序号" width="80" align="center">
@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import { generator } from '@/api/generator'
 export default {
@@ -67,7 +66,6 @@ export default {
     }
   },
   methods: {
-    checkPermission,
     to() {
       this.dialog = true
       this.time = 130

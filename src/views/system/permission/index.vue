@@ -2,17 +2,17 @@
   <div class="app-container">
     <eHeader :query="query"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="true" :columns="columns" size="small">
+    <tree-table v-loading="loading" :data="data" :expand-all="expand" :columns="columns" size="small">
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_EDIT','PERMISSION_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_EDIT']" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
-            v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_DELETE'])"
+            v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_DELETE']"
             :ref="scope.row.id"
             placement="top"
             width="200">
@@ -21,7 +21,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>
@@ -52,7 +52,7 @@ export default {
           value: 'alias'
         }
       ],
-      delLoading: false, sup_this: this
+      delLoading: false, sup_this: this, expand: true
     }
   },
   created() {

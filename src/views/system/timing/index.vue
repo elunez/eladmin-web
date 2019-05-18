@@ -19,15 +19,15 @@
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT','JOB_DELETE'])" label="操作" width="180px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
-          <el-button v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT'])" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
-          <el-button v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT'])" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
+          <edit v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" :data="scope.row" :sup_this="sup_this"/>
+          <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
+          <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
             {{ scope.row.isPause ? '恢复' : '暂停' }}
           </el-button>
           <el-popover
-            v-if="checkPermission(['ADMIN','JOB_ALL','JOB_DELETE'])"
+            v-permission="['ADMIN','JOB_ALL','JOB_DELETE']"
             :ref="scope.row.id"
             placement="top"
             width="200">

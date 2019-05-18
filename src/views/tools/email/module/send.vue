@@ -13,7 +13,7 @@
         <el-button style="margin-left:0px;" icon="el-icon-minus" @click.prevent="removeDomain(domain)"/>
       </el-form-item>
       <div ref="editor" class="editor"/>
-      <el-button :loading="loading" style="margin-left:2%;" size="medium" type="success" @click="doSubmit">发送邮件</el-button>
+      <el-button :loading="loading" style="margin-left:1.6%;" size="medium" type="primary" @click="doSubmit">发送邮件</el-button>
     </el-form>
   </div>
 </template>

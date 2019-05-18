@@ -2,11 +2,11 @@
   <div class="head-container">
     <!-- 搜索 -->
     <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-if="checkPermission(['ADMIN','JOB_ALL','JOB_CREATE'])"
+        v-permission="['ADMIN','JOB_ALL','JOB_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
 import eForm from './form'
 import Log from './log'
 // 查询条件
@@ -46,7 +45,6 @@ export default {
     }
   },
   methods: {
-    checkPermission,
     toQuery() {
       this.$parent.page = 0
       this.$parent.init()

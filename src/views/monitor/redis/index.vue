@@ -16,11 +16,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT','REDIS_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT'])" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-permission="['ADMIN','REDIS_ALL','REDIS_EDIT']" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
-            v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_DELETE'])"
+            v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']"
             :ref="scope.$index"
             placement="top"
             width="180">
@@ -29,7 +29,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>

@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
+      <el-col :xs="7" :sm="6" :md="4" :lg="4" :xl="4">
         <div class="head-container">
           <el-input v-model="deptName" clearable placeholder="输入部门名称搜索" prefix-icon="el-icon-search" style="width: 100%;" class="filter-item" @input="getDeptDatas"/>
         </div>
         <el-tree :data="depts" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick"/>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="20" :lg="20" :xl="20">
+      <el-col :xs="17" :sm="18" :md="20" :lg="20" :xl="20">
         <eHeader :query="query" :sup_this="sup_this" :dicts="dicts"/>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
@@ -31,11 +31,11 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="140" align="center">
+          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center">
             <template slot-scope="scope">
-              <edit v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT'])" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
+              <edit v-permission="['ADMIN','USER_ALL','USER_EDIT']" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
               <el-popover
-                v-if="checkPermission(['ADMIN','USER_ALL','USER_DELETE'])"
+                v-permission="['ADMIN','USER_ALL','USER_DELETE']"
                 :ref="scope.row.id"
                 placement="top"
                 width="180">
@@ -44,7 +44,7 @@
                   <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
                   <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
                 </div>
-                <el-button slot="reference" type="danger" size="mini">删除</el-button>
+                <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
               </el-popover>
             </template>
           </el-table-column>

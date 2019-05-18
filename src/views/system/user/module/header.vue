@@ -8,11 +8,11 @@
     <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
       <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
     </el-select>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-if="checkPermission(['ADMIN','USER_ALL','USER_CREATE'])"
+        v-permission="['ADMIN','USER_ALL','USER_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"
@@ -22,18 +22,17 @@
     </div>
     <!-- 导出 -->
     <el-button
-      v-if="checkPermission(['ADMIN'])"
+      v-permission="['ADMIN']"
       :loading="downloadLoading"
       size="mini"
       class="filter-item"
-      type="primary"
+      type="warning"
       icon="el-icon-download"
       @click="download">导出</el-button>
   </div>
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 // 查询条件
@@ -67,10 +66,10 @@ export default {
     }
   },
   methods: {
-    checkPermission,
     add() {
       this.$refs.form.getDepts()
       this.$refs.form.getRoles()
+      this.$refs.form.getRoleLevel()
       this.$refs.form.dialog = true
     },
     // 去查询

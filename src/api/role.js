@@ -23,6 +23,13 @@ export function get(id) {
   })
 }
 
+export function getLevel() {
+  return request({
+    url: 'api/roles/level',
+    method: 'get'
+  })
+}
+
 export function del(id) {
   return request({
     url: 'api/roles/' + id,

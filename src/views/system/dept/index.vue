@@ -2,7 +2,7 @@
   <div class="app-container">
     <eHeader :query="query" :dicts="dicts"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :expand-all="true" :data="data" :columns="columns" size="small">
+    <tree-table v-loading="loading" :expand-all="expand" :data="data" :columns="columns" size="small">
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <div v-for="item in dicts" :key="item.id">
@@ -15,11 +15,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_EDIT','DEPT_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_EDIT'])" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-permission="['ADMIN','DEPT_ALL','DEPT_EDIT']" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
-            v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_DELETE'])"
+            v-permission="['ADMIN','DEPT_ALL','DEPT_DELETE']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -28,7 +28,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>
@@ -56,7 +56,7 @@ export default {
           value: 'name'
         }
       ],
-      delLoading: false, sup_this: this
+      delLoading: false, sup_this: this, expand: true
     }
   },
   created() {

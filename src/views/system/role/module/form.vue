@@ -4,6 +4,9 @@
       <el-form-item label="角色名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;"/>
       </el-form-item>
+      <el-form-item label="角色级别" prop="sort">
+        <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 370px;"/>
+      </el-form-item>
       <el-form-item label="数据范围">
         <el-select v-model="form.dataScope" style="width: 370px" placeholder="请选择数据范围" @change="changeScope">
           <el-option
@@ -48,7 +51,7 @@ export default {
     return {
       dateScopes: ['全部', '本级', '自定义'],
       loading: false, dialog: false, depts: [], deptIds: [],
-      form: { name: '', depts: [], remark: '', dataScope: '本级' },
+      form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3 },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -120,7 +123,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', depts: [], remark: '', dataScope: '本级' }
+      this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3 }
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {
@@ -136,5 +139,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>

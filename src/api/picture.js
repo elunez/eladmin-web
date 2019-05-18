@@ -6,3 +6,11 @@ export function del(id) {
     method: 'delete'
   })
 }
+
+export function delAll(ids) {
+  return request({
+    url: 'api/pictures/',
+    method: 'delete',
+    data: ids
+  })
+}

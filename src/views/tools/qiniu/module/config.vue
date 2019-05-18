@@ -31,7 +31,7 @@
       <el-radio v-model="form.type" label="私有" >私有</el-radio>
       <span style="color: #C0C0C0;margin-left: 10px;">公开和私有仅对 Bucket 的读文件生效，修改、删除、写入等对 Bucket 的操作均需要拥有者的授权才能进行操作</span>
     </el-form-item>
-    <el-button :loading="loading" style="margin-left:5%;" size="medium" type="success" @click="doSubmit">保存配置</el-button>
+    <el-button :loading="loading" style="margin-left:5%;" size="medium" type="primary" @click="doSubmit">保存配置</el-button>
   </el-form>
 </template>
 

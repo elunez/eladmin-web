@@ -2,11 +2,11 @@
   <div class="head-container">
     <!-- 搜索 -->
     <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_CREATE'])"
+        v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"
@@ -14,11 +14,19 @@
         @click="add">新增</el-button>
       <eForm ref="form" :is-add="true"/>
     </div>
+    <div style="display: inline-block;margin: 0px 2px;">
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="warning"
+        icon="el-icon-more"
+        @click="expand">展开/折叠</el-button>
+      <eForm ref="form" :is-add="true"/>
+    </div>
   </div>
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
 import eForm from './form'
 export default {
   components: { eForm },
@@ -34,7 +42,6 @@ export default {
     }
   },
   methods: {
-    checkPermission,
     toQuery() {
       this.$parent.page = 0
       this.$parent.init()
@@ -42,6 +49,10 @@ export default {
     add() {
       this.$refs.form.getPermissions()
       this.$refs.form.dialog = true
+    },
+    expand() {
+      this.$parent.expand = !this.$parent.expand
+      this.$parent.init()
     }
   }
 }

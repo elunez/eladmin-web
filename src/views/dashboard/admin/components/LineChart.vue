@@ -106,10 +106,10 @@ export default {
           }
         },
         legend: {
-          data: ['visits', 'ip']
+          data: ['pv', 'ip']
         },
         series: [{
-          name: 'visits', itemStyle: {
+          name: 'pv', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {

@@ -7,14 +7,19 @@
       <eHeader ref="header" :query="query" :dict-id="dictId"/>
       <!--表格渲染-->
       <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+        <el-table-column label="所属字典">
+          <template slot-scope="scope">
+            {{ dictName }}
+          </template>
+        </el-table-column>
         <el-table-column prop="label" label="字典标签"/>
         <el-table-column prop="value" label="字典值"/>
         <el-table-column prop="sort" label="排序"/>
-        <el-table-column label="操作" width="150px" align="center">
+        <el-table-column v-if="checkPermission(['ADMIN','DICT_ALL','DICT_EDIT','DICT_DELETE'])" label="操作" width="130px" align="center">
           <template slot-scope="scope">
-            <edit v-if="checkPermission(['ADMIN','DICT_ALL','DICT_EDIT'])" :dict-id="dictId" :data="scope.row" :sup_this="sup_this"/>
+            <edit v-permission="['ADMIN','DICT_ALL','DICT_EDIT']" :dict-id="dictId" :data="scope.row" :sup_this="sup_this"/>
             <el-popover
-              v-if="checkPermission(['ADMIN','DICT_ALL','DICT_DELETE'])"
+              v-permission="['ADMIN','DICT_ALL','DICT_DELETE']"
               :ref="scope.row.id"
               placement="top"
               width="180">
@@ -23,7 +28,7 @@
                 <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
                 <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
               </div>
-              <el-button slot="reference" type="danger" size="mini">删除</el-button>
+              <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
             </el-popover>
           </template>
         </el-table-column>

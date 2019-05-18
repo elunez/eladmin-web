@@ -1,13 +1,13 @@
 <template>
   <div class="head-container">
     <el-input v-model="query.name" clearable placeholder="请输入表名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
       <el-button
         class="filter-item"
         size="mini"
-        type="primary"
+        type="warning"
         icon="el-icon-setting"
         @click="to">生成器配置</el-button>
       <eForm ref="form"/>

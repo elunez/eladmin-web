@@ -35,3 +35,11 @@ export function sync() {
     method: 'post'
   })
 }
+
+export function delAll(ids) {
+  return request({
+    url: 'api/qiNiuContent/',
+    method: 'delete',
+    data: ids
+  })
+}

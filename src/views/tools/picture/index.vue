@@ -2,10 +2,11 @@
   <div class="app-container">
     <eHeader :query="query"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55"/>
       <el-table-column prop="filename" label="文件名"/>
       <el-table-column prop="username" label="上传者"/>
-      <el-table-column :show-overflow-tooltip="true" prop="url" label="缩略图">
+      <el-table-column ref="table" :show-overflow-tooltip="true" prop="url" label="缩略图">
         <template slot-scope="scope">
           <a :href="scope.row.url" style="color: #42b983" target="_blank"><img :src="scope.row.url" alt="点击打开" class="el-avatar"></a>
         </template>
@@ -18,10 +19,9 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="100px" align="center">
         <template slot-scope="scope">
           <el-popover
-            v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -30,7 +30,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>
@@ -71,9 +71,10 @@ export default {
       this.url = 'api/pictures'
       const sort = 'id,desc'
       const query = this.query
+      const type = query.type
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['filename'] = value }
+      if (type && value) { this.params[type] = value }
       return true
     },
     subDelete(id) {

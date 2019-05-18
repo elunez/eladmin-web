@@ -2,7 +2,8 @@
   <div class="app-container">
     <eHeader :query="query"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55"/>
       <el-table-column :show-overflow-tooltip="true" label="文件名">
         <template slot-scope="scope">
           <span>{{ scope.row.key }}</span>
@@ -21,14 +22,16 @@
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="160px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
           <el-button
             :loading="downloadLoading"
             size="mini"
-            @click="download(scope.row.id)">下载</el-button>
+            type="primary"
+            icon="el-icon-download"
+            @click="download(scope.row.id)"/>
           <el-popover
-            v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])"
+            v-permission="['ADMIN','PICTURE_ALL','PICTURE_DELETE']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -37,7 +40,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>

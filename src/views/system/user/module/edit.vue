@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="mini" type="success" @click="to">编辑</el-button>
+    <el-button size="mini" type="primary" icon="el-icon-edit" @click="to"/>
     <eForm ref="form" :sup_this="sup_this" :is-add="false" :dicts="dicts"/>
   </div>
 </template>
@@ -28,6 +28,7 @@ export default {
       const _this = this.$refs.form
       _this.getRoles()
       _this.getDepts()
+      _this.getRoleLevel()
       _this.roleIds = []
       _this.form = { id: this.data.id, username: this.data.username, phone: this.data.phone, email: this.data.email, enabled: this.data.enabled.toString(), roles: [], dept: { id: this.data.dept.id }, job: { id: this.data.job.id }}
       this.data.roles.forEach(function(data, index) {

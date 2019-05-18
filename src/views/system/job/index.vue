@@ -26,11 +26,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_EDIT','USERJOB_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_EDIT'])" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-permission="['ADMIN','USERJOB_ALL','USERJOB_EDIT']" :dicts="dicts" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
-            v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_DELETE'])"
+            v-permission="['ADMIN','USERJOB_ALL','USERJOB_DELETE']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -39,7 +39,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>

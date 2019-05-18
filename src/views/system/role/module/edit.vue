@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="mini" type="success" @click="to">编辑</el-button>
+    <el-button size="mini" type="primary" icon="el-icon-edit" @click="to"/>
     <eForm ref="form" :sup_this="sup_this" :is-add="false"/>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     to() {
       const _this = this.$refs.form
       _this.deptIds = []
-      _this.form = { id: this.data.id, name: this.data.name, remark: this.data.remark, depts: this.data.depts, dataScope: this.data.dataScope }
+      _this.form = { id: this.data.id, name: this.data.name, remark: this.data.remark, depts: this.data.depts, dataScope: this.data.dataScope, level: this.data.level }
       if (_this.form.dataScope === '自定义') {
         _this.getDepts()
       }
