@@ -24,7 +24,7 @@
         type="warning"
         icon="el-icon-more"
         @click="expand">展开/折叠</el-button>
-      <eForm ref="form" :is-add="true"/>
+      <eForm ref="form" :is-add="true" :dicts="dicts"/>
     </div>
   </div>
 </template>
