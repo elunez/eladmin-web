@@ -7,9 +7,8 @@
     </el-select>
     <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
-    <div style="display: inline-block;margin: 0px 2px;">
+    <div v-permission="['ADMIN','USERJOB_ALL','USERJOB_CREATE']" style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-permission="['ADMIN','USERJOB_ALL','USERJOB_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"

@@ -10,9 +10,8 @@
     </el-select>
     <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
-    <div style="display: inline-block;margin: 0px 2px;">
+    <div v-permission="['ADMIN','USER_ALL','USER_CREATE']" style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-permission="['ADMIN','USER_ALL','USER_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"
@@ -21,14 +20,16 @@
       <eForm ref="form" :sup_this="sup_this" :is-add="true" :dicts="dicts"/>
     </div>
     <!-- 导出 -->
-    <el-button
-      v-permission="['ADMIN']"
-      :loading="downloadLoading"
-      size="mini"
-      class="filter-item"
-      type="warning"
-      icon="el-icon-download"
-      @click="download">导出</el-button>
+    <div style="display: inline-block;">
+      <el-button
+        v-permission="['ADMIN']"
+        :loading="downloadLoading"
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-download"
+        @click="download">导出</el-button>
+    </div>
   </div>
 </template>
 

@@ -4,6 +4,7 @@
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
+      :unique-opened="$store.state.settings.uniqueOpened"
       mode="vertical"
       background-color="#304156"
       text-color="#bfcbd9"

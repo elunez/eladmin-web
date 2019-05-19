@@ -17,15 +17,16 @@
         @click="$refs.form.dialog = true">上传图片</el-button>
       <eForm ref="form"/>
     </div>
-    <el-button
-      v-permission="['ADMIN','PICTURE_ALL','PICTURE_DELETE']"
-      :loading="delLoading"
-      :disabled="$parent.data.length === 0 || $parent.$refs.table.selection.length === 0"
-      class="filter-item"
-      size="mini"
-      type="danger"
-      icon="el-icon-delete"
-      @click="open">删除</el-button>
+    <div v-permission="['ADMIN','PICTURE_ALL','PICTURE_DELETE']" style="display: inline-block;">
+      <el-button
+        :loading="delLoading"
+        :disabled="$parent.data.length === 0 || $parent.$refs.table.selection.length === 0"
+        class="filter-item"
+        size="mini"
+        type="danger"
+        icon="el-icon-delete"
+        @click="open">删除</el-button>
+    </div>
   </div>
 </template>
 

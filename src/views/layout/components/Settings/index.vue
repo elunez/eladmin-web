@@ -2,24 +2,26 @@
   <div class="drawer-container">
     <div>
       <h3 class="drawer-title">系统布局配置</h3>
-      <div class="drawer-item">
-        <span>开启 Tags-Views</span>
-        <el-switch v-model="tagsView" class="drawer-switch" />
-      </div>
-
-      <div class="drawer-item">
-        <span>固定 Header</span>
-        <el-switch v-model="fixedHeader" class="drawer-switch" />
-      </div>
 
       <div class="drawer-item">
         <span>显示 Logo</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
-
+      <div class="drawer-item">
+        <span>固定 Header</span>
+        <el-switch v-model="fixedHeader" class="drawer-switch" />
+      </div>
+      <div class="drawer-item">
+        <span>开启 Tags-Views</span>
+        <el-switch v-model="tagsView" class="drawer-switch" />
+      </div>
       <div class="drawer-item">
         <span>显示 SettingBtn</span>
         <el-switch v-model="settingBtn" class="drawer-switch" />
+      </div>
+      <div class="drawer-item">
+        <span>菜单 uniqueOpened</span>
+        <el-switch v-model="uniqueOpened" class="drawer-switch" />
       </div>
 
     </div>
@@ -72,6 +74,17 @@ export default {
       set(val) {
         this.$store.dispatch('changeSetting', {
           key: 'settingBtn',
+          value: val
+        })
+      }
+    },
+    uniqueOpened: {
+      get() {
+        return this.$store.state.settings.uniqueOpened
+      },
+      set(val) {
+        this.$store.dispatch('changeSetting', {
+          key: 'uniqueOpened',
           value: val
         })
       }

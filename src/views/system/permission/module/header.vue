@@ -4,9 +4,8 @@
     <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
     <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     <!-- 新增 -->
-    <div style="display: inline-block;margin: 0px 2px;">
+    <div v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_CREATE']" style="display: inline-block;margin: 0px 2px 0px">
       <el-button
-        v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"
@@ -14,13 +13,13 @@
         @click="add">新增</el-button>
       <eForm ref="form" :is-add="true"/>
     </div>
-    <div style="display: inline-block;margin: 0px 2px;">
+    <div style="display: inline-block;">
       <el-button
         class="filter-item"
         size="mini"
         type="warning"
         icon="el-icon-more"
-        @click="expand">展开/折叠</el-button>
+        @click="expand">{{ $parent.expand ? '折叠' : '展开' }}</el-button>
       <eForm ref="form" :is-add="true"/>
     </div>
   </div>

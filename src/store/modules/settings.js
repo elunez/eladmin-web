@@ -8,7 +8,8 @@ const settings = {
     fixedHeader: Config.fixedHeader,
     sidebarLogo: Config.sidebarLogo,
     theme: variables.theme,
-    settingBtn: Config.settingBtn
+    settingBtn: Config.settingBtn,
+    uniqueOpened: Config.uniqueOpened
   },
   mutations: {
     CHANGE_SETTING: (state, { key, value }) => {
