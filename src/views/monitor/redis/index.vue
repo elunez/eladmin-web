@@ -48,7 +48,6 @@
 import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
 import { del } from '@/api/redis'
-import { getPermissionTree } from '@/api/permission'
 import eHeader from './module/header'
 import edit from './module/edit'
 export default {
@@ -60,7 +59,6 @@ export default {
     }
   },
   created() {
-    this.getPermissions()
     this.$nextTick(() => {
       this.init()
     })
@@ -94,11 +92,6 @@ export default {
         this.delLoading = false
         this.$refs[index].doClose()
         console.log(err.response.data.message)
-      })
-    },
-    getPermissions() {
-      getPermissionTree().then(res => {
-        this.permissions = res
       })
     }
   }

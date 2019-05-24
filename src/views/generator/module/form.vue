@@ -4,11 +4,14 @@
       <el-form-item label="作者名称" prop="author">
         <el-input v-model="form.author" style="width: 420px;"/>
       </el-form-item>
-      <el-form-item label="至于包下" prop="pack">
-        <el-input v-model="form.pack" style="width: 420px;"/>
+      <el-form-item label="去表前缀" prop="prefix">
+        <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 420px;"/>
       </el-form-item>
       <el-form-item label="模块名称" prop="moduleName">
         <el-input v-model="form.moduleName" style="width: 420px;"/>
+      </el-form-item>
+      <el-form-item label="至于包下" prop="pack">
+        <el-input v-model="form.pack" style="width: 420px;"/>
       </el-form-item>
       <el-form-item label="前端路径" prop="path">
         <el-input v-model="form.path" style="width: 420px;"/>
@@ -34,7 +37,7 @@ export default {
   data() {
     return {
       loading: false, dialog: false,
-      form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '' },
+      form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
           { required: true, message: '作者不能为空', trigger: 'blur' }
@@ -88,7 +91,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '' }
+      this.form = { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' }
     }
   }
 }
