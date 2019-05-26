@@ -15,7 +15,7 @@
       </el-table-column>
       <el-table-column prop="createTime" label="异常详情" width="100px">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="info(scope.row.exceptionDetail)">查看详情</el-button>
+          <el-button size="mini" type="text" @click="info(scope.row.id)">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -37,6 +37,7 @@
 <script>
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
+import { getErrDetail } from '@/api/log'
 import eHeader from './module/header'
 export default {
   components: { eHeader },
@@ -64,9 +65,11 @@ export default {
       if (logType !== '' && logType !== null) { this.params['logType'] = logType }
       return true
     },
-    info(errorInfo) {
-      this.errorInfo = errorInfo
+    info(id) {
       this.dialog = true
+      getErrDetail(id).then(res => {
+        this.errorInfo = res.exception
+      })
     }
   }
 }
