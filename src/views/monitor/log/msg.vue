@@ -1,5 +1,5 @@
 <template>
-  <div :style="'min-width:' + width" class="container">
+  <div class="container">
     <el-tooltip :content="content" class="lock item" effect="dark" placement="left">
       <el-button type="info" size="mini" circle @click="doLock"><svg-icon :icon-class="ico"/></el-button>
     </el-tooltip>
@@ -28,8 +28,7 @@ export default {
   data() {
     return {
       ico: 'unlock', unlock: true, content: '锁定滚动条',
-      height: document.documentElement.clientHeight - 140 + 'px;',
-      width: document.documentElement.clientWidth - 210 + 'px;',
+      height: '0px',
       data: [{ name: 'elAdmin-', timestamp: new Date(), threadName: 'system-prompt-message', level: 'INFO', className: 'me.zhengjie.AppRun' + ' :', body: 'Welcome, no log output' }],
       // level
       INFO: '#0000ff', WARN: '#FFFF00', ERROR: '#FF0000', DEBUG: '#DEA000'
@@ -38,7 +37,10 @@ export default {
   computed: {
     ...mapGetters([
       'socketApi'
-    ])
+    ]),
+    tagsView() {
+      return this.$store.state.settings.tagsView
+    }
   },
   // 监听控制滚动条
   watch: {
@@ -51,13 +53,19 @@ export default {
           }
         })
       }
+    },
+    tagsView(newVal, oldVal) {
+      this.height = this.tagsView ? document.documentElement.clientHeight - 95 + 'px;' : document.documentElement.clientHeight - 65 + 'px;'
     }
+  },
+  created() {
+    this.height = this.tagsView ? document.documentElement.clientHeight - 95 + 'px;' : document.documentElement.clientHeight - 65 + 'px;'
   },
   mounted: function() {
     this.initWebSocket()
     const that = this
     window.onresize = function temp() {
-      that.height = document.documentElement.clientHeight - 94.5 + 'px;'
+      that.height = that.tagsView ? document.documentElement.clientHeight - 95 + 'px;' : document.documentElement.clientHeight - 65 + 'px;'
     }
   },
   beforeDestroy: function() {
@@ -129,8 +137,7 @@ export default {
   }
 
   .container {
-    width: 100%;
-    margin: 5px
+    margin: 2px
   }
 
   .container .console {
