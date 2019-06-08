@@ -34,8 +34,6 @@
     "jszip": "3.1.5",
     "@riophae/vue-treeselect": "0.0.38",
     "file-saver": "1.3.8",
-    "sockjs-client": "1.3.0",
-    "stompjs": "2.3.3",
     "wangeditor": ">=3.0.0",
     "codemirror": "^5.38.0",
     "mavon-editor": "^2.7.0",

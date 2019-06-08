@@ -18,7 +18,6 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT','REDIS_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <edit v-permission="['ADMIN','REDIS_ALL','REDIS_EDIT']" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
             v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']"
             :ref="scope.$index"
@@ -49,9 +48,8 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
 import { del } from '@/api/redis'
 import eHeader from './module/header'
-import edit from './module/edit'
 export default {
-  components: { eHeader, edit },
+  components: { eHeader },
   mixins: [initData],
   data() {
     return {
