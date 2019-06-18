@@ -194,6 +194,7 @@ export default {
       })
     },
     getJobs(id) {
+      this.jobId=null
       getAllJob(id).then(res => {
         this.jobs = res.content
       }).catch(err => {
