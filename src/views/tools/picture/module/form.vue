@@ -11,7 +11,7 @@
       list-type="picture-card">
       <i class="el-icon-plus"/>
     </el-upload>
-    <el-dialog :visible.sync="dialogVisible">
+    <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
       <img :src="dialogImageUrl" width="100%" alt="">
     </el-dialog>
     <div slot="footer" class="dialog-footer">
