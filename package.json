@@ -17,7 +17,7 @@
     "url": "https://github.com/elunez/eladmin-qd"
   },
   "dependencies": {
-    "axios": "0.18.0",
+    "axios": ">=0.18.1",
     "element-ui": "2.4.6",
     "connect": "3.6.6",
     "js-cookie": "2.2.0",
