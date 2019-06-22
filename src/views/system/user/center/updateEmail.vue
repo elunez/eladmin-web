@@ -35,16 +35,20 @@ export default {
   },
   data() {
     const validatePass = (rule, value, callback) => {
-      validPass(value).then(res => {
-        if (res.status === 200) {
-          callback()
-        } else {
-          callback(new Error('密码错误，请重新输入'))
-        }
-      })
+      if (value === '' || value === null) {
+        callback(new Error('密码不能为空'))
+      } else {
+        validPass(value).then(res => {
+          if (res.status === 200) {
+            callback()
+          } else {
+            callback(new Error('密码错误，请重新输入'))
+          }
+        })
+      }
     }
     const validMail = (rule, value, callback) => {
-      if (value === '') {
+      if (value === '' || value === null) {
         callback(new Error('新邮箱不能为空'))
       } else if (value === this.email) {
         callback(new Error('新邮箱不能与旧邮箱相同'))
