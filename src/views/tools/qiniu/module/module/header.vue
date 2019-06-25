@@ -81,6 +81,7 @@ export default {
       }
       delAll(ids).then(res => {
         this.delLoading = false
+        this.$parent.dleChangePage(ids.length)
         this.$parent.init()
         this.$notify({
           title: '删除成功',

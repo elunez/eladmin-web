@@ -36,6 +36,7 @@
     <!--分页组件-->
     <el-pagination
       :total="total"
+      :current-page="page + 1"
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
@@ -80,6 +81,7 @@ export default {
       del(row.key).then(res => {
         this.delLoading = false
         this.$refs[index].doClose()
+        this.dleChangePage()
         this.init()
         this.$notify({
           title: '删除成功',
