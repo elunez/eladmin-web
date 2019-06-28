@@ -1,6 +1,51 @@
 <template>
   <div class="app-container">
-    <eHeader :query="query"/>
+    <!--工具栏-->
+    <div class="head-container">
+      <!--搜索-->
+      <el-input v-model="query.filename" clearable placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <!-- 上传 -->
+      <div style="display: inline-block;margin: 0px 2px;">
+        <el-button
+          v-permission="['ADMIN','PICTURE_ALL','PICTURE_UPLOAD']"
+          class="filter-item"
+          size="mini"
+          type="primary"
+          icon="el-icon-upload"
+          @click="dialog = true">上传图片</el-button>
+      </div>
+      <div v-permission="['ADMIN','PICTURE_ALL','PICTURE_DELETE']" style="display: inline-block;">
+        <el-button
+          :loading="delAllLoading"
+          :disabled="data.length === 0 || $refs.table.selection.length === 0"
+          class="filter-item"
+          size="mini"
+          type="danger"
+          icon="el-icon-delete"
+          @click="open">删除</el-button>
+      </div>
+    </div>
+    <!--上传图片-->
+    <el-dialog :visible.sync="dialog" append-to-body width="600px" @close="doSubmit">
+      <el-upload
+        :on-preview="handlePictureCardPreview"
+        :before-remove="handleBeforeRemove"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :headers="headers"
+        :file-list="fileList"
+        :action="imagesUploadApi"
+        list-type="picture-card">
+        <i class="el-icon-plus"/>
+      </el-upload>
+      <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
+        <img :src="dialogImageUrl" width="100%" alt="">
+      </el-dialog>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="doSubmit">确认</el-button>
+      </div>
+    </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
       <el-table-column type="selection" width="55"/>
@@ -49,16 +94,30 @@
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
-import { del } from '@/api/picture'
 import { parseTime } from '@/utils/index'
-import eHeader from './module/header'
+import { mapGetters } from 'vuex'
+import { del, delAll } from '@/api/picture'
+import { getToken } from '@/utils/auth'
 export default {
-  components: { eHeader },
   mixins: [initData],
   data() {
     return {
-      delLoading: false, sup_this: this
+      delLoading: false, downloadLoading: false,
+      delAllLoading: false,
+      headers: {
+        'Authorization': 'Bearer ' + getToken()
+      },
+      dialog: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      fileList: [],
+      pictures: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'imagesUploadApi'
+    ])
   },
   created() {
     this.$nextTick(() => {
@@ -72,10 +131,9 @@ export default {
       this.url = 'api/pictures'
       const sort = 'id,desc'
       const query = this.query
-      const type = query.type
-      const value = query.value
+      const filename = query.filename
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (type && value) { this.params[type] = value }
+      if (filename) { this.params[filename] = filename }
       return true
     },
     subDelete(id) {
@@ -94,6 +152,74 @@ export default {
         this.delLoading = false
         this.$refs[id].doClose()
         console.log(err.response.data.message)
+      })
+    },
+    toQuery() {
+      this.page = 0
+      this.init()
+    },
+    doDelete() {
+      this.delAllLoading = true
+      const data = this.$refs.table.selection
+      const ids = []
+      for (let i = 0; i < data.length; i++) {
+        ids.push(data[i].id)
+      }
+      delAll(ids).then(res => {
+        this.delAllLoading = false
+        this.init()
+        this.dleChangePage(ids.length)
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(err => {
+        this.delAllLoading = false
+        console.log(err.response.data.message)
+      })
+    },
+    open() {
+      this.$confirm('你确定删除选中的数据吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.doDelete()
+      })
+    },
+    handleSuccess(response, file, fileList) {
+      const uid = file.uid
+      const id = response.id
+      this.pictures.push({ uid, id })
+    },
+    handleBeforeRemove(file, fileList) {
+      for (let i = 0; i < this.pictures.length; i++) {
+        if (this.pictures[i].uid === file.uid) {
+          del(this.pictures[i].id).then(res => {})
+          return true
+        }
+      }
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    // 刷新列表数据
+    doSubmit() {
+      this.fileList = []
+      this.dialogVisible = false
+      this.dialogImageUrl = ''
+      this.dialog = false
+      this.init()
+    },
+    // 监听上传失败
+    handleError(e, file, fileList) {
+      const msg = JSON.parse(e.message)
+      this.$notify({
+        title: msg.message,
+        type: 'error',
+        duration: 2500
       })
     }
   }

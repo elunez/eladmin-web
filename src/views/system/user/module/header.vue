@@ -81,7 +81,7 @@ export default {
     // 导出
     download() {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
+      import('@/utils/export2Excel').then(excel => {
         const tHeader = ['ID', '用户名', '邮箱', '头像地址', '状态', '注册日期', '最后修改密码日期']
         const filterVal = ['id', 'username', 'email', 'avatar', 'enabled', 'createTime', 'lastPasswordResetTime']
         const data = this.formatJson(filterVal, this.sup_this.data)

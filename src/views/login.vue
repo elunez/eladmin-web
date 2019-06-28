@@ -1,19 +1,21 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
-      <h3 class="title">el-admin 后台管理系统</h3>
+      <h3 class="title">EL-ADMIN 后台管理系统</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon" style="height: 39px;width: 13px;margin-left: 2px;" />
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon" style="height: 39px;width: 13px;margin-left: 2px;" />
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="code">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 60%" @keyup.enter.native="handleLogin"/>
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+        </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode">
         </div>
@@ -122,7 +124,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(	https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/1547428971990.jpg);
+    background-image:url(	https://docs-1255840532.cos.ap-shanghai.myqcloud.com/3968.jpg );
     background-size: cover;
   }
   .title {
@@ -134,13 +136,16 @@ export default {
   .login-form {
     border-radius: 6px;
     background: #ffffff;
-    width: 380px;
+    width: 400px;
     padding: 25px 25px 5px 25px;
     .el-input {
       height: 38px;
       input {
         height: 38px;
       }
+    }
+    .input-icon{
+      height: 39px;width: 14px;margin-left: 2px;
     }
   }
   .login-tip {
