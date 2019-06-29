@@ -1,5 +1,6 @@
 import { login, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { decrypt } from '@/utils/rsaEncrypt'
 
 const user = {
   state: {
@@ -29,7 +30,7 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username
-      const password = userInfo.password
+      const password = decrypt(userInfo.password)
       const code = userInfo.code
       const uuid = userInfo.uuid
       const rememberMe = userInfo.rememberMe

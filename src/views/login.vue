@@ -20,7 +20,7 @@
           <img :src="codeUrl" @click="getCode">
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住我</el-checkbox>
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
@@ -28,6 +28,7 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <!--  底部  -->
     <div v-if="$store.state.settings.showFooter" id="el-login-footer">
       <span v-html="$store.state.settings.footerTxt"/>
       <span> ⋅ </span>
@@ -37,6 +38,7 @@
 </template>
 
 <script>
+import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/config'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
@@ -45,6 +47,7 @@ export default {
   data() {
     return {
       codeUrl: '',
+      cookiePass: '',
       loginForm: {
         username: 'admin',
         password: '123456',
@@ -84,6 +87,8 @@ export default {
       const username = Cookies.get('username')
       let password = Cookies.get('password')
       const rememberMe = Cookies.get('rememberMe')
+      // 保存cookie里面的加密后的密码
+      this.cookiePass = password === undefined ? '' : password
       password = password === undefined ? this.loginForm.password : password
       this.loginForm = {
         username: username === undefined ? this.loginForm.username : username,
@@ -94,7 +99,18 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        const user = this.loginForm
+        const user = {
+          username: this.loginForm.username,
+          password: this.loginForm.password,
+          rememberMe: this.loginForm.rememberMe,
+          code: this.loginForm.code,
+          uuid: this.loginForm.uuid
+        }
+        console.log(this.cookiePass)
+        if (user.password !== this.cookiePass) {
+          user.password = encrypt(user.password)
+        }
+        console.log(user.password)
         if (valid) {
           this.loading = true
           if (user.rememberMe) {
