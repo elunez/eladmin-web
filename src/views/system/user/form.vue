@@ -58,10 +58,6 @@ export default {
       type: Boolean,
       required: true
     },
-    sup_this: {
-      type: Object,
-      default: null
-    },
     dicts: {
       type: Array,
       required: true
@@ -157,7 +153,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -172,7 +168,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -194,7 +190,6 @@ export default {
       })
     },
     getJobs(id) {
-      this.jobId = null
       getAllJob(id).then(res => {
         this.jobs = res.content
       }).catch(err => {
@@ -215,7 +210,6 @@ export default {
     },
     getRoleLevel() {
       getLevel().then(res => {
-        console.log(res)
         this.level = res.level
       }).catch(err => {
         console.log(err.response.data.message)

@@ -3,7 +3,7 @@ import { initData } from '@/api/data'
 export default {
   data() {
     return {
-      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 170
+      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 170, isAdd: false
     }
   },
   methods: {
@@ -46,6 +46,10 @@ export default {
       if (this.data.length === size && this.page !== 0) {
         this.page = this.page - 1
       }
+    },
+    toQuery() {
+      this.page = 0
+      this.init()
     }
   }
 }

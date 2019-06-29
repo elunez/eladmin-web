@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <eHeader :query="query"/>
+    <Search :query="query"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column prop="username" label="用户名"/>
@@ -39,9 +39,9 @@
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
 import { getErrDetail } from '@/api/log'
-import eHeader from './module/header'
+import Search from './search'
 export default {
-  components: { eHeader },
+  components: { Search },
   mixins: [initData],
   data() {
     return {
@@ -59,11 +59,10 @@ export default {
       this.url = 'api/logs/error'
       const sort = 'id,desc'
       const query = this.query
-      const username = query.username
-      const logType = query.logType
+      const type = query.type
+      const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (username && username) { this.params['username'] = username }
-      if (logType !== '' && logType !== null) { this.params['logType'] = logType }
+      if (type && value) { this.params[type] = value }
       return true
     },
     info(id) {

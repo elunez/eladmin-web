@@ -1,6 +1,31 @@
 <template>
   <div class="app-container">
-    <eHeader :query="query"/>
+    <!--工具栏-->
+    <div class="head-container">
+      <!-- 搜索 -->
+      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <!-- 新增 -->
+      <div v-permission="['ADMIN','MENU_ALL','MENU_CREATE']" style="display: inline-block;margin: 0px 2px;">
+        <el-button
+          class="filter-item"
+          size="mini"
+          type="primary"
+          icon="el-icon-plus"
+          @click="add">新增</el-button>
+      </div>
+      <div style="display: inline-block;">
+        <el-button
+          class="filter-item"
+          size="mini"
+          type="warning"
+          icon="el-icon-more"
+          @click="changExpand">{{ $parent.expand ? '折叠' : '展开' }}</el-button>
+        <eForm ref="form" :is-add="true"/>
+      </div>
+    </div>
+    <!--表单组件-->
+    <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
     <tree-table v-loading="loading" :data="data" :expand-all="expand" :columns="columns" size="small">
       <el-table-column prop="icon" label="图标" align="center" width="80px">
@@ -28,7 +53,7 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT','MENU_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <edit v-permission="['ADMIN','MENU_ALL','MENU_EDIT']" :data="scope.row" :sup_this="sup_this"/>
+          <el-button v-permission="['ADMIN','MENU_ALL','MENU_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
             v-permission="['ADMIN','MENU_ALL','MENU_DELETE']"
             :ref="scope.row.id"
@@ -53,10 +78,9 @@ import treeTable from '@/components/TreeTable'
 import initData from '@/mixins/initData'
 import { del } from '@/api/menu'
 import { parseTime } from '@/utils/index'
-import eHeader from './module/header'
-import edit from './module/edit'
+import eForm from './form'
 export default {
-  components: { eHeader, edit, treeTable },
+  components: { treeTable, eForm },
   mixins: [initData],
   data() {
     return {
@@ -66,7 +90,7 @@ export default {
           value: 'name'
         }
       ],
-      delLoading: false, sup_this: this, expand: true
+      delLoading: false, expand: true
     }
   },
   created() {
@@ -102,6 +126,22 @@ export default {
         this.$refs[id].doClose()
         console.log(err.response.data.message)
       })
+    },
+    add() {
+      this.isAdd = true
+      this.$refs.form.getMenus()
+      this.$refs.form.dialog = true
+    },
+    edit(data) {
+      this.isAdd = false
+      const _this = this.$refs.form
+      _this.getMenus()
+      _this.form = { id: data.id, component: data.component, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon }
+      _this.dialog = true
+    },
+    changExpand() {
+      this.expand = !this.expand
+      this.init()
     }
   }
 }

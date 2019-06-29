@@ -1,14 +1,14 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增部门' : '编辑部门'" width="500px">
+  <el-dialog :visible.sync="dialog" :title="isAdd ? '新增权限' : '编辑权限'" append-to-body width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;"/>
+        <el-input v-model="form.name" style="width: 360px;"/>
       </el-form-item>
-      <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
-        <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
+      <el-form-item label="别名" prop="alias">
+        <el-input v-model="form.alias" style="width: 360px;"/>
       </el-form-item>
-      <el-form-item v-if="form.pid !== 0" style="margin-bottom: 0px;" label="上级部门">
-        <treeselect v-model="form.pid" :options="depts" style="width: 370px;" placeholder="选择上级类目" />
+      <el-form-item style="margin-bottom: 0px;" label="上级类目">
+        <treeselect v-model="form.pid" :options="permissions" style="width: 360px;" placeholder="选择上级类目" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { add, edit, getDepts } from '@/api/dept'
+import { add, edit, getPermissionTree } from '@/api/permission'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
@@ -28,28 +28,18 @@ export default {
     isAdd: {
       type: Boolean,
       required: true
-    },
-    sup_this: {
-      type: Object,
-      default: null
-    },
-    dicts: {
-      type: Array,
-      required: true
     }
   },
   data() {
     return {
-      loading: false, dialog: false, depts: [],
-      form: {
-        id: '',
-        name: '',
-        pid: 1,
-        enabled: 'true'
-      },
+      loading: false, dialog: false, permissions: [],
+      form: { name: '', alias: '', pid: 0 },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        alias: [
+          { required: true, message: '请输入别名', trigger: 'blur' }
         ]
       }
     }
@@ -61,17 +51,12 @@ export default {
     doSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.pid !== undefined) {
-            this.loading = true
-            if (this.isAdd) {
-              this.doAdd()
-            } else this.doEdit()
-          } else {
-            this.$message({
-              message: '上级部门不能为空',
-              type: 'warning'
-            })
-          }
+          this.loading = true
+          if (this.isAdd) {
+            this.doAdd()
+          } else this.doEdit()
+        } else {
+          return false
         }
       })
     },
@@ -84,7 +69,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.$parent.$parent.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -99,7 +84,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -108,16 +93,14 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = {
-        id: '',
-        name: '',
-        pid: 1,
-        enabled: 'true'
-      }
+      this.form = { name: '', alias: '', pid: 0 }
     },
-    getDepts() {
-      getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+    getPermissions() {
+      getPermissionTree().then(res => {
+        this.permissions = []
+        const permission = { id: 0, label: '顶级类目', children: [] }
+        permission.children = res
+        this.permissions.push(permission)
       })
     }
   }

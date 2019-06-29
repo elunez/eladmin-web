@@ -1,6 +1,22 @@
 <template>
   <div class="app-container">
-    <eHeader :query="query"/>
+    <!--表单组件-->
+    <eForm ref="form" :is-add="isAdd"/>
+    <!--工具栏-->
+    <div class="head-container">
+      <!-- 搜索 -->
+      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <!-- 新增 -->
+      <div v-permission="['ADMIN','ROLES_ALL','ROLES_CREATE']" style="display: inline-block;margin: 0px 2px;">
+        <el-button
+          class="filter-item"
+          size="mini"
+          type="primary"
+          icon="el-icon-plus"
+          @click="add">新增</el-button>
+      </div>
+    </div>
     <el-row :gutter="15">
       <!--角色管理-->
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17">
@@ -26,7 +42,7 @@
             </el-table-column>
             <el-table-column v-if="checkPermission(['ADMIN','ROLES_ALL','ROLES_EDIT','ROLES_DELETE'])" label="操作" width="130px" align="center">
               <template slot-scope="scope">
-                <edit v-permission="['ADMIN','ROLES_ALL','ROLES_EDIT']" :data="scope.row" :sup_this="sup_this"/>
+                <el-button v-permission="['ADMIN','ROLES_ALL','ROLES_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
                 <el-popover
                   v-permission="['ADMIN','ROLES_ALL','ROLES_DELETE']"
                   :ref="scope.row.id"
@@ -114,11 +130,10 @@ import { del } from '@/api/role'
 import { getPermissionTree } from '@/api/permission'
 import { getMenusTree } from '@/api/menu'
 import { parseTime } from '@/utils/index'
-import eHeader from './module/header'
-import edit from './module/edit'
+import eForm from './form'
 import { editPermission, editMenu, get } from '@/api/role'
 export default {
-  components: { eHeader, edit },
+  components: { eForm },
   mixins: [initData],
   data() {
     return {
@@ -127,7 +142,7 @@ export default {
         label: 'label'
       },
       currentId: 0, permissionLoading: false, menuLoading: false, showButton: false, opt: '菜单分配',
-      delLoading: false, sup_this: this, permissions: [], permissionIds: [], menus: [], menuIds: []
+      delLoading: false, permissions: [], permissionIds: [], menus: [], menuIds: []
     }
   },
   created() {
@@ -268,6 +283,23 @@ export default {
           }
         }
       })
+    },
+    add() {
+      this.isAdd = true
+      this.$refs.form.dialog = true
+    },
+    edit(data) {
+      this.isAdd = false
+      const _this = this.$refs.form
+      _this.deptIds = []
+      _this.form = { id: data.id, name: data.name, remark: data.remark, depts: data.depts, dataScope: data.dataScope, level: data.level }
+      if (_this.form.dataScope === '自定义') {
+        _this.getDepts()
+      }
+      for (let i = 0; i < _this.form.depts.length; i++) {
+        _this.deptIds[i] = _this.form.depts[i].id
+      }
+      _this.dialog = true
     }
   }
 }

@@ -138,10 +138,6 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    toQuery() {
-      this.page = 0
-      this.init()
-    },
     beforeInit() {
       this.url = 'api/qiNiuContent'
       const sort = 'id,desc'

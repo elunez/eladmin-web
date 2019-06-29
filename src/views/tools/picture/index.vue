@@ -154,10 +154,6 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    toQuery() {
-      this.page = 0
-      this.init()
-    },
     doDelete() {
       this.delAllLoading = true
       const data = this.$refs.table.selection

@@ -1,11 +1,14 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增字典' : '编辑字典'" width="500px">
+  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增字典详情' : '编辑字典详情'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="字典名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;"/>
+      <el-form-item label="字典标签" prop="label">
+        <el-input v-model="form.label" style="width: 370px;"/>
       </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="form.remark" style="width: 370px;"/>
+      <el-form-item label="字典值">
+        <el-input v-model="form.value" style="width: 370px;"/>
+      </el-form-item>
+      <el-form-item label="排序" prop="sort">
+        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -16,16 +19,16 @@
 </template>
 
 <script>
-import { add, edit } from '@/api/dict'
+import { add, edit } from '@/api/dictDetail'
 export default {
   props: {
     isAdd: {
       type: Boolean,
       required: true
     },
-    sup_this: {
-      type: Object,
-      default: null
+    dictId: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -33,12 +36,16 @@ export default {
       loading: false, dialog: false,
       form: {
         id: '',
-        name: '',
-        remark: ''
+        label: '',
+        value: '',
+        sort: 999
       },
       rules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+        label: [
+          { required: true, message: '请输入字典标签', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
         ]
       }
     }
@@ -48,6 +55,7 @@ export default {
       this.resetForm()
     },
     doSubmit() {
+      this.form['dict'] = { id: this.dictId }
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -66,7 +74,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -81,7 +89,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -92,14 +100,17 @@ export default {
       this.$refs['form'].resetFields()
       this.form = {
         id: '',
-        name: '',
-        remark: ''
+        label: '',
+        value: '',
+        sort: '999'
       }
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>

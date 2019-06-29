@@ -61,7 +61,7 @@ export default {
   mixins: [initData],
   data() {
     return {
-      delLoading: false, sup_this: this, permissions: [], deleteAllLoading: false
+      delLoading: false, permissions: [], deleteAllLoading: false
     }
   },
   created() {
@@ -100,10 +100,6 @@ export default {
         this.$refs[index].doClose()
         console.log(err.response.data.message)
       })
-    },
-    toQuery() {
-      this.page = 0
-      this.init()
     },
     deleteAll() {
       this.$confirm('你确定要清空缓存数据吗？', '提示', {

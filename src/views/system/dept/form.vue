@@ -1,14 +1,14 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增字典详情' : '编辑字典详情'" width="500px">
+  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增部门' : '编辑部门'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="字典标签" prop="label">
-        <el-input v-model="form.label" style="width: 370px;"/>
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="form.name" style="width: 370px;"/>
       </el-form-item>
-      <el-form-item label="字典值">
-        <el-input v-model="form.value" style="width: 370px;"/>
+      <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
+        <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;"/>
+      <el-form-item v-if="form.pid !== 0" style="margin-bottom: 0px;" label="上级部门">
+        <treeselect v-model="form.pid" :options="depts" style="width: 370px;" placeholder="选择上级类目" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -19,37 +19,33 @@
 </template>
 
 <script>
-import { add, edit } from '@/api/dictDetail'
+import { add, edit, getDepts } from '@/api/dept'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
+  components: { Treeselect },
   props: {
     isAdd: {
       type: Boolean,
       required: true
     },
-    sup_this: {
-      type: Object,
-      default: null
-    },
-    dictId: {
-      type: Number,
+    dicts: {
+      type: Array,
       required: true
     }
   },
   data() {
     return {
-      loading: false, dialog: false,
+      loading: false, dialog: false, depts: [],
       form: {
         id: '',
-        label: '',
-        value: '',
-        sort: 999
+        name: '',
+        pid: 1,
+        enabled: 'true'
       },
       rules: {
-        label: [
-          { required: true, message: '请输入字典标签', trigger: 'blur' }
-        ],
-        sort: [
-          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
         ]
       }
     }
@@ -59,13 +55,19 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.form['dict'] = { id: this.dictId }
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.loading = true
-          if (this.isAdd) {
-            this.doAdd()
-          } else this.doEdit()
+          if (this.form.pid !== undefined) {
+            this.loading = true
+            if (this.isAdd) {
+              this.doAdd()
+            } else this.doEdit()
+          } else {
+            this.$message({
+              message: '上级部门不能为空',
+              type: 'warning'
+            })
+          }
         }
       })
     },
@@ -78,7 +80,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.$parent.$parent.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -93,7 +95,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -104,17 +106,20 @@ export default {
       this.$refs['form'].resetFields()
       this.form = {
         id: '',
-        label: '',
-        value: '',
-        sort: '999'
+        name: '',
+        pid: 1,
+        enabled: 'true'
       }
+    },
+    getDepts() {
+      getDepts({ enabled: true }).then(res => {
+        this.depts = res.content
+      })
     }
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-  /deep/ .el-input-number .el-input__inner {
-    text-align: left;
-  }
+<style scoped>
+
 </style>

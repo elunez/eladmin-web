@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       errorInfo: '', errorDialog: false,
-      dialog: false, delLoading: false, sup_this: this,
+      dialog: false, delLoading: false,
       enabledTypeOptions: [
         { key: 'true', display_name: '成功' },
         { key: 'false', display_name: '失败' }

@@ -1,6 +1,30 @@
 <template>
   <div class="app-container">
-    <eHeader :query="query"/>
+    <!--工具栏-->
+    <div class="head-container">
+      <!-- 搜索 -->
+      <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <!-- 新增 -->
+      <div v-permission="['ADMIN','JOB_ALL','JOB_CREATE']" style="display: inline-block;margin: 0px 2px;">
+        <el-button
+          class="filter-item"
+          size="mini"
+          type="primary"
+          icon="el-icon-plus"
+          @click="dialog = true; isAdd = true">新增</el-button>
+      </div>
+      <!-- 任务日志 -->
+      <div v-permission="['ADMIN','JOB_ALL','JOB_SELECT']" style="display: inline-block;">
+        <el-button
+          class="filter-item"
+          size="mini"
+          type="warning"
+          icon="el-icon-tickets"
+          @click="doLog">执行日志</el-button>
+        <Log ref="log"/>
+      </div>
+    </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称"/>
@@ -21,7 +45,7 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT','JOB_DELETE'])" label="操作" width="180px" align="center">
         <template slot-scope="scope">
-          <edit v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" :data="scope.row" :sup_this="sup_this"/>
+          <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" size="mini" style="margin-right: 3px;" type="text" @click="edit(scope.row)">编辑</el-button>
           <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
           <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
             {{ scope.row.isPause ? '恢复' : '暂停' }}
@@ -55,16 +79,31 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, updateIsPause, execution } from '@/api/timing'
+import { del, updateIsPause, execution, add, edit } from '@/api/timing'
 import { parseTime } from '@/utils/index'
-import eHeader from './module/header'
-import edit from './module/edit'
+import Log from './log'
 export default {
-  components: { eHeader, edit },
+  components: { Log },
   mixins: [initData],
   data() {
     return {
-      delLoading: false, sup_this: this
+      delLoading: false, isAdd: false,
+      loading: false, dialog: false,
+      form: { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' }, permissionIds: [],
+      rules: {
+        jobName: [
+          { required: true, message: '请输入任务名称', trigger: 'blur' }
+        ],
+        beanName: [
+          { required: true, message: '请输入Bean名称', trigger: 'blur' }
+        ],
+        methodName: [
+          { required: true, message: '请输入方法名称', trigger: 'blur' }
+        ],
+        cronExpression: [
+          { required: true, message: '请输入Cron表达式', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -124,11 +163,70 @@ export default {
         this.$refs[id].doClose()
         console.log(err.response.data.message)
       })
+    },
+    toQuery() {
+      this.page = 0
+      this.init()
+    },
+    doLog() {
+      this.$refs.log.dialog = true
+      this.$refs.log.doInit()
+    },
+    cancel() {
+      this.resetForm()
+    },
+    doSubmit() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          if (this.isAdd) {
+            this.doAdd()
+          } else this.doEdit()
+        } else {
+          return false
+        }
+      })
+    },
+    doAdd() {
+      add(this.form).then(res => {
+        this.resetForm()
+        this.$notify({
+          title: '添加成功',
+          type: 'success',
+          duration: 2500
+        })
+        this.loading = false
+        this.init()
+      }).catch(err => {
+        this.loading = false
+        console.log(err.response.data.message)
+      })
+    },
+    doEdit() {
+      edit(this.form).then(res => {
+        this.resetForm()
+        this.$notify({
+          title: '修改成功',
+          type: 'success',
+          duration: 2500
+        })
+        this.loading = false
+        this.init()
+      }).catch(err => {
+        this.loading = false
+        console.log(err.response.data.message)
+      })
+    },
+    resetForm() {
+      this.dialog = false
+      this.$refs['form'].resetFields()
+      this.form = { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' }
+    },
+    edit(data) {
+      this.isAdd = false
+      this.form = { id: data.id, jobName: data.jobName, beanName: data.beanName, methodName: data.methodName, params: data.params, cronExpression: data.cronExpression, isPause: data.isPause.toString(), remark: data.remark }
+      this.dialog = true
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

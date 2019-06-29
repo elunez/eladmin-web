@@ -13,6 +13,19 @@ export function get(dictName) {
   })
 }
 
+export function getDictMap(dictName) {
+  const params = {
+    dictName,
+    page: 0,
+    size: 9999
+  }
+  return request({
+    url: 'api/dictDetail/map',
+    method: 'get',
+    params
+  })
+}
+
 export function add(data) {
   return request({
     url: 'api/dictDetail',
