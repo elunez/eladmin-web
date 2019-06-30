@@ -1,6 +1,7 @@
 <template>
   <div>
     <section class="app-main">
+      <!--<CodeFund />-->
       <transition name="fade-transform" mode="out-in">
         <keep-alive :include="cachedViews">
           <router-view :key="key"/>
@@ -16,8 +17,10 @@
 </template>
 
 <script>
+// import CodeFund from '@/components/CodeFund'
 export default {
   name: 'AppMain',
+  // components: { CodeFund },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews

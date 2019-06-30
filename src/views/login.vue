@@ -106,11 +106,9 @@ export default {
           code: this.loginForm.code,
           uuid: this.loginForm.uuid
         }
-        console.log(this.cookiePass)
         if (user.password !== this.cookiePass) {
           user.password = encrypt(user.password)
         }
-        console.log(user.password)
         if (valid) {
           this.loading = true
           if (user.rememberMe) {
