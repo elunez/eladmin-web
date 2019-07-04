@@ -12,7 +12,7 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
-          @click="dialog = true; isAdd = true">新增</el-button>
+          @click="dialog = true;isAdd = true">新增</el-button>
       </div>
       <!-- 任务日志 -->
       <div v-permission="['ADMIN','JOB_ALL','JOB_SELECT']" style="display: inline-block;">
@@ -25,6 +25,37 @@
         <Log ref="log"/>
       </div>
     </div>
+    <!--Form表单-->
+    <el-dialog :visible.sync="dialog" :title="isAdd ? '新增任务' : '编辑任务'" append-to-body width="600px">
+      <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
+        <el-form-item label="任务名称" prop="jobName">
+          <el-input v-model="form.jobName" style="width: 460px;"/>
+        </el-form-item>
+        <el-form-item label="Bean名称" prop="beanName">
+          <el-input v-model="form.beanName" style="width: 460px;"/>
+        </el-form-item>
+        <el-form-item label="执行方法" prop="methodName">
+          <el-input v-model="form.methodName" style="width: 460px;"/>
+        </el-form-item>
+        <el-form-item label="参数内容">
+          <el-input v-model="form.params" style="width: 460px;"/>
+        </el-form-item>
+        <el-form-item label="Cron表达式" prop="cronExpression">
+          <el-input v-model="form.cronExpression" style="width: 460px;"/>
+        </el-form-item>
+        <el-form-item label="任务状态">
+          <el-radio v-model="form.isPause" label="false">启用</el-radio>
+          <el-radio v-model="form.isPause" label="true" >暂停</el-radio>
+        </el-form-item>
+        <el-form-item label="任务描述">
+          <el-input v-model="form.remark" style="width: 460px;" rows="2" type="textarea"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="cancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
+      </div>
+    </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称"/>
