@@ -60,7 +60,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          updatePass(this.form.confirmPass).then(res => {
+          updatePass(this.form).then(res => {
             this.resetForm()
             this.$notify({
               title: '密码修改成功，请重新登录',
