@@ -5,6 +5,13 @@
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
+        <div class="feedback">
+            <el-tooltip class="item" effect="dark" content="建议反馈" placement="left">
+              <el-button type="text" @click="doFeedback">
+                <svg-icon  style="font-size: 28px;color: #606266;" icon-class="codeConsole" />
+              </el-button>
+            </el-tooltip>
+          </div>
         <tags-view v-if="needTagsView" />
       </div>
       <app-main />
@@ -12,6 +19,7 @@
         <settings />
       </right-panel>
     </div>
+    <feedback :showDialog.sync="feedbackShow"></feedback>
   </div>
 </template>
 
@@ -20,6 +28,7 @@ import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
+import feedback from './feedback.vue'
 
 export default {
   name: 'Layout',
@@ -29,7 +38,13 @@ export default {
     Settings,
     Sidebar,
     TagsView,
-    RightPanel
+    RightPanel,
+    feedback
+  },
+  data() {
+    return {
+      feedbackShow: false
+    }
   },
   mixins: [ResizeMixin],
   computed: {
@@ -51,6 +66,10 @@ export default {
   methods: {
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
+    },
+    doFeedback() {
+      console.log(111)
+      this.feedbackShow = true
     }
   }
 }
@@ -99,4 +118,12 @@ export default {
   .mobile .fixed-header {
     width: 100%;
   }
+
+  .feedback {
+    position: fixed;
+    z-index: 999999;
+    right: 10px;
+    bottom: 60px;
+  }
 </style>
+
