@@ -61,5 +61,5 @@ export default {
   /**
    * 备案号
    */
-  caseNumber: '浙ICP备18005431号-3'
+  caseNumber: '浙ICP备18005431号'
 }
