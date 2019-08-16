@@ -40,7 +40,6 @@ import SimpleDrawingBoard from 'simple-drawing-board'
 import html2canvas from 'html2canvas'
 export default {
   props: ['showDialog'],
-
   data() {
     return {
       feedback: {
@@ -101,7 +100,7 @@ export default {
           })
           .catch(e => {
             this.dataLoading = false
-            util.showErrorMessageBox(e)
+            console.log(e)
           })
       })
     },
@@ -137,9 +136,7 @@ export default {
           type: 'success',
           duration: 2500
         })
-        if (res.data.data.status === 1) {
-          this.show = false
-        }
+        this.show = false
       } catch (e) {
         this.$notify({
           title: '提交失败',
