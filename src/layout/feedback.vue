@@ -39,7 +39,12 @@
 import SimpleDrawingBoard from 'simple-drawing-board'
 import html2canvas from 'html2canvas'
 export default {
-  props: ['showDialog'],
+  props: {
+    showDialog: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
       feedback: {
@@ -66,7 +71,7 @@ export default {
     async loadLibrary() {
       if (typeof html2canvas === 'undefined') {
         try {
-          console.error('html2canvas not import', e.toString())
+          console.error('html2canvas not import')
         } catch (e) {
           console.error('html2canvas.min.js is missing', e.toString())
           return null
@@ -100,7 +105,7 @@ export default {
           })
           .catch(e => {
             this.dataLoading = false
-            console.log(e)
+            console.log(e.toString())
           })
       })
     },
