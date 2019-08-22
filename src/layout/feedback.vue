@@ -1,24 +1,24 @@
 <template>
   <div>
     <el-dialog
+      :visible.sync="show"
       data-html2canvas-ignore="true"
       title="意见反馈"
-      :visible.sync="show"
       class
-      @open="init"
       width="60%"
-      @close="close"
       center
+      @open="init"
+      @close="close"
     >
-      <el-form :model="feedback" ref="form" label-width="0px" class="feedback-add-form">
+      <el-form ref="form" :model="feedback" label-width="0px" class="feedback-add-form">
         <el-form-item label prop="info">
-          <el-input v-model="feedback.info" :rows="2" type="textarea" placeholder="告诉我们你的建议或遇到的问题。"></el-input>
+          <el-input v-model="feedback.info" :rows="2" type="textarea" placeholder="告诉我们你的建议或遇到的问题。"/>
         </el-form-item>
         <el-form-item label>
           <span>屏幕截图 (可选)：</span>
         </el-form-item>
-        <el-form-item label v-show="submitScreenshot" v-loading="dataLoading">
-          <div id="screenshot"></div>
+        <el-form-item v-loading="dataLoading" v-show="submitScreenshot" label>
+          <div id="screenshot"/>
         </el-form-item>
         <el-form-item label>
           <el-checkbox v-model="submitScreenshot">提交屏幕截图</el-checkbox>
@@ -26,10 +26,10 @@
       </el-form>
       <el-button
         slot="footer"
+        :loading="confirmLoading"
         class="confirm-btn"
         type="primary"
         @click="submit"
-        :loading="confirmLoading"
       >提交</el-button>
     </el-dialog>
   </div>
@@ -84,14 +84,14 @@ export default {
       this.dataLoading = true
       this.$nextTick(() => {
         // modal层处理，截屏时忽略遮罩层
-        let modals = document.getElementsByClassName('v-modal')
+        const modals = document.getElementsByClassName('v-modal')
         for (let i = 0; i < modals.length; i++) {
           modals[i].setAttribute('data-html2canvas-ignore', 'true')
         }
 
         html2canvas(document.body, { logging: false })
           .then(canvas => {
-            let screenshot = document.getElementById('screenshot')
+            const screenshot = document.getElementById('screenshot')
             canvas.setAttribute('style', 'width:100%')
             screenshot.appendChild(canvas)
             this.dataLoading = false
@@ -111,18 +111,18 @@ export default {
     },
 
     close() {
-      let screenshot = document.getElementById('screenshot')
-      let canvas = screenshot.getElementsByTagName('canvas')[0]
+      const screenshot = document.getElementById('screenshot')
+      const canvas = screenshot.getElementsByTagName('canvas')[0]
       screenshot.removeChild(canvas)
     },
 
     async submit() {
       try {
         this.confirmLoading = true
-        let formData = new FormData()
+        const formData = new FormData()
         if (window.sdb) {
           if (this.submitScreenshot) {
-            let screenshot = window.sdb.getImg()
+            const screenshot = window.sdb.getImg()
             formData.append('file', screenshot)
           }
           formData.append('feedback', this.feedback.info)

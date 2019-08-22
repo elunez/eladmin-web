@@ -6,12 +6,12 @@
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
         <div class="feedback">
-            <el-tooltip class="item" effect="dark" content="建议反馈" placement="left">
-              <el-button type="text" @click="doFeedback">
-                <svg-icon  style="font-size: 28px;color: #606266;" icon-class="codeConsole" />
-              </el-button>
-            </el-tooltip>
-          </div>
+          <el-tooltip class="item" effect="dark" content="建议反馈" placement="left">
+            <el-button type="text" @click="doFeedback">
+              <svg-icon style="font-size: 28px;color: #606266;" icon-class="codeConsole" />
+            </el-button>
+          </el-tooltip>
+        </div>
         <tags-view v-if="needTagsView" />
       </div>
       <app-main />
@@ -19,7 +19,7 @@
         <settings />
       </right-panel>
     </div>
-    <feedback :showDialog.sync="feedbackShow"></feedback>
+    <feedback :show-dialog.sync="feedbackShow"/>
   </div>
 </template>
 
@@ -41,12 +41,12 @@ export default {
     RightPanel,
     feedback
   },
+  mixins: [ResizeMixin],
   data() {
     return {
       feedbackShow: false
     }
   },
-  mixins: [ResizeMixin],
   computed: {
     ...mapState({
       sidebar: state => state.app.sidebar,
