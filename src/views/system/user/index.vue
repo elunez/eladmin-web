@@ -15,10 +15,7 @@
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.value" clearable placeholder="输入关键字搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-          <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
-            <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-          </el-select>
+          <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
           <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
             <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
@@ -117,10 +114,6 @@ export default {
         label: 'name'
       },
       downloadLoading: false,
-      queryTypeOptions: [
-        { key: 'username', display_name: '用户名' },
-        { key: 'email', display_name: '邮箱' }
-      ],
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
@@ -148,11 +141,10 @@ export default {
       this.url = 'api/users'
       const sort = 'id,desc'
       const query = this.query
-      const type = query.type
-      const value = query.value
+      const blurry = query.blurry
       const enabled = query.enabled
       this.params = { page: this.page, size: this.size, sort: sort, deptId: this.deptId }
-      if (type && value) { this.params[type] = value }
+      if (blurry) { this.params['blurry'] = blurry }
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },

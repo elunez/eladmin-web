@@ -5,7 +5,7 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable placeholder="输入名称或者描述搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['ADMIN','ROLES_ALL','ROLES_CREATE']" style="display: inline-block;margin: 0px 2px;">
@@ -164,7 +164,7 @@ export default {
       const query = this.query
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['name'] = value }
+      if (value) { this.params['blurry'] = value }
       return true
     },
     subDelete(id) {

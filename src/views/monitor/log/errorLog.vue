@@ -5,6 +5,7 @@
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column prop="username" label="用户名"/>
       <el-table-column prop="requestIp" label="IP"/>
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源"/>
       <el-table-column prop="description" label="描述"/>
       <el-table-column :show-overflow-tooltip="true" prop="method" label="方法名称"/>
       <el-table-column :show-overflow-tooltip="true" prop="params" label="参数"/>
@@ -59,10 +60,9 @@ export default {
       this.url = 'api/logs/error'
       const sort = 'id,desc'
       const query = this.query
-      const type = query.type
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (type && value) { this.params[type] = value }
+      if (value) { this.params['blurry'] = value }
       return true
     },
     info(id) {
