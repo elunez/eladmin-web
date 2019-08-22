@@ -25,7 +25,7 @@
       </div>
     </div>
     <!-- 文件上传 -->
-    <el-dialog :visible.sync="dialog" append-to-body width="500px" @close="doSubmit">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" append-to-body width="500px" @close="doSubmit">
       <el-upload
         :before-remove="handleBeforeRemove"
         :on-success="handleSuccess"

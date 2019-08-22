@@ -311,3 +311,9 @@ export default {
     font-size: 15px;
   }
 </style>
+
+<style scoped>
+  /deep/ .el-tree-node__label{
+    margin-left: 5px;
+  }
+</style>

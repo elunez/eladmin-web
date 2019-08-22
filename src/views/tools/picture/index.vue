@@ -27,7 +27,7 @@
       </div>
     </div>
     <!--上传图片-->
-    <el-dialog :visible.sync="dialog" append-to-body width="600px" @close="doSubmit">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" append-to-body width="600px" @close="doSubmit">
       <el-upload
         :on-preview="handlePictureCardPreview"
         :before-remove="handleBeforeRemove"

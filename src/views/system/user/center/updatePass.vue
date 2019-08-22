@@ -1,6 +1,6 @@
 <template>
   <div style="display: inline-block">
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :title="title" append-to-body width="500px" @close="cancel">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="title" append-to-body width="500px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
         <el-form-item label="旧密码" prop="oldPass">
           <el-input v-model="form.oldPass" type="password" auto-complete="on" style="width: 370px;"/>
