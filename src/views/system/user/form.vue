@@ -14,10 +14,10 @@
         <el-input v-model="form.email" />
       </el-form-item>
       <el-form-item label="部门">
-        <treeselect v-model="deptId" :options="depts" :style="style" placeholder="选择部门" @select="selectFun" />
+        <treeselect v-model="deptId" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
       </el-form-item>
       <el-form-item label="岗位">
-        <el-select v-model="jobId" :style="style" placeholder="请先选择部门">
+        <el-select v-model="jobId" style="width: 178px" placeholder="请先选择部门">
           <el-option
             v-for="(item, index) in jobs"
             :key="item.name + index"
@@ -75,7 +75,7 @@ export default {
     }
     return {
       dialog: false, loading: false, form: { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null },
-      roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], style: 'width: 184px', level: 3,
+      roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], level: 3,
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -92,14 +92,6 @@ export default {
           { required: true, message: '状态不能为空', trigger: 'blur' }
         ]
       }
-    }
-  },
-  created() {
-    const explorer = navigator.userAgent
-    if (explorer.indexOf('Chrome') >= 0) {
-      this.style = 'width: 184px'
-    } else {
-      this.style = 'width: 172px'
     }
   },
   methods: {

@@ -64,7 +64,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="100px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"

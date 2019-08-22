@@ -25,7 +25,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT','REDIS_DELETE'])" label="操作" width="130px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT','REDIS_DELETE'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-popover
             v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']"

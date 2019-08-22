@@ -74,7 +74,7 @@
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT','JOB_DELETE'])" label="操作" width="180px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT','JOB_DELETE'])" label="操作" width="180px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" size="mini" style="margin-right: 3px;" type="text" @click="edit(scope.row)">编辑</el-button>
           <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>

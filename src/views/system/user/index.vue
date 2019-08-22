@@ -4,14 +4,14 @@
     <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
     <el-row :gutter="20">
       <!--部门数据-->
-      <el-col :xs="7" :sm="6" :md="4" :lg="4" :xl="4">
+      <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
         <div class="head-container">
           <el-input v-model="deptName" clearable placeholder="输入部门名称搜索" prefix-icon="el-icon-search" style="width: 100%;" class="filter-item" @input="getDeptDatas"/>
         </div>
         <el-tree :data="depts" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick"/>
       </el-col>
       <!--用户数据-->
-      <el-col :xs="17" :sm="18" :md="20" :lg="20" :xl="20">
+      <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
@@ -63,7 +63,7 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center">
+          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center" fixed="right">
             <template slot-scope="scope">
               <el-button v-permission="['ADMIN','USER_ALL','USER_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
               <el-popover

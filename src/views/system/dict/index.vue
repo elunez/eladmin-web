@@ -26,7 +26,7 @@
           <el-table v-loading="loading" :data="data" size="small" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
             <el-table-column :show-overflow-tooltip="true" prop="name" label="名称"/>
             <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
-            <el-table-column v-if="checkPermission(['ADMIN','DICT_ALL','DICT_EDIT','DICT_DELETE'])" label="操作" width="130px" align="center">
+            <el-table-column v-if="checkPermission(['ADMIN','DICT_ALL','DICT_EDIT','DICT_DELETE'])" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <el-button v-permission="['ADMIN','DICT_ALL','DICT_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
                 <el-popover

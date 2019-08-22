@@ -61,7 +61,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="140px" align="center">
+      <el-table-column label="操作" width="140px" align="center" fixed="right">
         <template slot-scope="scope">
           <Generator :name="scope.row.tableName"/>
         </template>
