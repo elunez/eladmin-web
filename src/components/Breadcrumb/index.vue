@@ -37,6 +37,9 @@ export default {
       if (first && first.name !== '首页') {
         matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)
       }
+      if (matched.length >= 4) {
+        matched.splice(1, 1)
+      }
       this.levelList = matched
     },
     pathCompile(path) {

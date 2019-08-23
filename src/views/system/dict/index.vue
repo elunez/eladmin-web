@@ -3,7 +3,7 @@
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
+      <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10" style="margin-bottom: 10px">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>字典列表</span>

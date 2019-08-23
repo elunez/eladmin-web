@@ -19,7 +19,7 @@
     </div>
     <el-row :gutter="15">
       <!--角色管理-->
-      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17">
+      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17" style="margin-bottom: 10px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <span class="role-span">角色列表</span>
