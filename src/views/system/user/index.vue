@@ -32,7 +32,7 @@
           <!-- 导出 -->
           <div style="display: inline-block;">
             <el-button
-              v-permission="['ADMIN']"
+              v-permission="['ADMIN','USER_ALL','USER_SELECT']"
               :loading="downloadLoading"
               size="mini"
               class="filter-item"
@@ -98,9 +98,9 @@
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import initDict from '@/mixins/initDict'
-import { del } from '@/api/user'
+import { del, downloadUser } from '@/api/user'
 import { getDepts } from '@/api/dept'
-import { parseTime } from '@/utils/index'
+import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {
   components: { eForm },
@@ -192,15 +192,10 @@ export default {
     // 导出
     download() {
       this.downloadLoading = true
-      import('@/utils/export2Excel').then(excel => {
-        const tHeader = ['ID', '用户名', '邮箱', '头像地址', '状态', '注册日期', '最后修改密码日期']
-        const filterVal = ['id', 'username', 'email', 'avatar', 'enabled', 'createTime', 'lastPasswordResetTime']
-        const data = this.formatJson(filterVal, this.data)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
+      downloadUser().then(result => {
+        downloadFile(result, '用户列表', 'xls')
+        this.downloadLoading = false
+      }).catch(() => {
         this.downloadLoading = false
       })
     },
