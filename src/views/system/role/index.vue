@@ -156,8 +156,6 @@ export default {
     parseTime,
     checkPermission,
     beforeInit() {
-      this.$refs.permission.setCheckedKeys([])
-      this.$refs.menu.setCheckedKeys([])
       this.showButton = false
       this.url = 'api/roles'
       const sort = 'level,asc'
@@ -165,6 +163,9 @@ export default {
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
       if (value) { this.params['blurry'] = value }
+      // 清空权限与菜单的选中
+      this.$refs.permission.setCheckedKeys([])
+      this.$refs.menu.setCheckedKeys([])
       return true
     },
     subDelete(id) {

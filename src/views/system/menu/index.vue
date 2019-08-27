@@ -46,6 +46,18 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
+      <el-table-column prop="iframe" width="100px" label="是否缓存">
+        <template slot-scope="scope">
+          <span v-if="scope.row.cache">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="iframe" width="100px" label="是否隐藏">
+        <template slot-scope="scope">
+          <span v-if="scope.row.hidden">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -136,7 +148,7 @@ export default {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getMenus()
-      _this.form = { id: data.id, component: data.component, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon }
+      _this.form = { id: data.id, component: data.component, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon, cache: data.cache, hidden: data.hidden }
       _this.dialog = true
     },
     changExpand() {

@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增菜单' : '编辑菜单'" append-to-body width="600px">
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
+    <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="菜单图标">
         <el-popover
           placement="bottom-start"
@@ -20,11 +20,25 @@
       <el-form-item label="菜单排序" prop="sort">
         <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 460px;"/>
       </el-form-item>
-      <el-form-item label="内部菜单" prop="iframe">
-        <el-radio v-model="form.iframe" label="false">是</el-radio>
-        <el-radio v-model="form.iframe" label="true" >否</el-radio>
+      <el-form-item label="内部菜单">
+        <el-radio-group v-model="form.iframe" size="mini">
+          <el-radio-button label="false">是</el-radio-button>
+          <el-radio-button label="true">否</el-radio-button>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="链接地址">
+      <el-form-item label="是否缓存">
+        <el-radio-group v-model="form.cache" size="mini">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否隐藏">
+        <el-radio-group v-model="form.hidden" size="mini">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="链接地址" prop="path">
         <el-input v-model="form.path" placeholder="菜单路径" style="width: 460px;"/>
       </el-form-item>
       <el-form-item v-if="form.iframe === 'false'" label="组件路径">
@@ -57,7 +71,7 @@ export default {
   data() {
     return {
       loading: false, dialog: false, menus: [],
-      form: { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' },
+      form: { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '', cache: false, hidden: false },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -65,8 +79,8 @@ export default {
         sort: [
           { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
         ],
-        iframe: [
-          { required: true, message: '请选择菜单类型', trigger: 'blur' }
+        path: [
+          { required: true, message: '请输入地址', trigger: 'blur' }
         ]
       }
     }
@@ -120,7 +134,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }
+      this.form = { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '', cache: false, hidden: false }
     },
     selected(name) {
       this.form.icon = name
