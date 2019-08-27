@@ -80,6 +80,7 @@ import initData from '@/mixins/initData'
 import { update, get } from '@/api/genConfig'
 import { generator } from '@/api/generator'
 export default {
+  name: 'Generator',
   mixins: [initData],
   props: {
     name: {

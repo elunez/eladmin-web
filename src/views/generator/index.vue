@@ -43,7 +43,7 @@ import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
 import Generator from './generator'
 export default {
-  name: 'Generator',
+  name: 'GeneratorIndex',
   components: { Generator },
   mixins: [initData],
   data() {
