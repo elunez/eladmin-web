@@ -42,6 +42,7 @@ import { parseTime } from '@/utils/index'
 import { getErrDetail } from '@/api/log'
 import Search from './search'
 export default {
+  name: 'ErrorLog',
   components: { Search },
   mixins: [initData],
   data() {

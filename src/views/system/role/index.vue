@@ -133,6 +133,7 @@ import { parseTime } from '@/utils/index'
 import eForm from './form'
 import { editPermission, editMenu, get } from '@/api/role'
 export default {
+  name: 'Role',
   components: { eForm },
   mixins: [initData],
   data() {

@@ -81,6 +81,7 @@ import { del } from '@/api/dict'
 import dictDetail from '../dictDetail/index'
 import eForm from './form'
 export default {
+  name: 'Dict',
   components: { dictDetail, eForm },
   mixins: [initData],
   data() {

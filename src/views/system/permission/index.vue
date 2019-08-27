@@ -27,7 +27,7 @@
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="expand" :columns="columns" size="small">
+    <tree-table v-loading="loading" :data="data" :expand-all="expand" :height="height" :columns="columns" size="small">
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -62,6 +62,7 @@ import { del } from '@/api/permission'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
+  name: 'Permission',
   components: { treeTable, eForm },
   mixins: [initData],
   data() {
@@ -76,11 +77,12 @@ export default {
           value: 'alias'
         }
       ],
-      delLoading: false, expand: true
+      delLoading: false, expand: true, height: 625
     }
   },
   created() {
     this.$nextTick(() => {
+      this.height = document.documentElement.clientHeight - 200
       this.init()
     })
   },

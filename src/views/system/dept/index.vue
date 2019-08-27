@@ -73,6 +73,7 @@ import { del } from '@/api/dept'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
+  name: 'Dept',
   components: { eForm, treeTable },
   mixins: [initData, initDict],
   data() {

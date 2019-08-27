@@ -28,6 +28,7 @@ import Config from './config'
 import Send from './send'
 import '@/styles/description.scss'
 export default {
+  name: 'Email',
   components: { Config, Send },
   data() {
     return {

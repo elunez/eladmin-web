@@ -38,6 +38,7 @@ import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
 import Search from './search'
 export default {
+  name: 'Log',
   components: { Search },
   mixins: [initData],
   created() {

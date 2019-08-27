@@ -27,6 +27,7 @@ import Config from './config'
 import List from './list'
 import '@/styles/description.scss'
 export default {
+  name: 'Qiniu',
   components: { Config, List },
   data() {
     return {

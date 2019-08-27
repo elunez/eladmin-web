@@ -114,6 +114,7 @@ import { del, updateIsPause, execution, add, edit } from '@/api/timing'
 import { parseTime } from '@/utils/index'
 import Log from './log'
 export default {
+  name: 'Timing',
   components: { Log },
   mixins: [initData],
   data() {

@@ -17,6 +17,7 @@ import { mapGetters } from 'vuex'
 import E from 'wangeditor'
 import { getToken } from '@/utils/auth'
 export default {
+  name: 'Editor',
   data() {
     return {
       headers: {

@@ -58,6 +58,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
 import { del, delAll } from '@/api/redis'
 export default {
+  name: 'Redis',
   mixins: [initData],
   data() {
     return {

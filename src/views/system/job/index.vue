@@ -82,6 +82,7 @@ import { del } from '@/api/job'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
+  name: 'Job',
   components: { eForm },
   mixins: [initData, initDict],
   data() {

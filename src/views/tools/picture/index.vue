@@ -99,6 +99,7 @@ import { mapGetters } from 'vuex'
 import { del, delAll } from '@/api/picture'
 import { getToken } from '@/utils/auth'
 export default {
+  name: 'Pictures',
   mixins: [initData],
   data() {
     return {
