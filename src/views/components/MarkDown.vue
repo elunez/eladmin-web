@@ -15,7 +15,7 @@ import { getToken } from '@/utils/auth'
 import { del } from '@/api/picture'
 export default {
   name: 'Markdown',
-  data() {
+  data () {
     return {
       height: document.documentElement.clientHeight - 200 + 'px',
       data: null,
@@ -27,15 +27,15 @@ export default {
       'imagesUploadApi'
     ])
   },
-  mounted() {
+  mounted () {
     this.$refs.md.$refs.toolbar_left.img_file = []
     const that = this
-    window.onresize = function temp() {
+    window.onresize = function temp () {
       that.height = document.documentElement.clientHeight - 200 + 'px'
     }
   },
   methods: {
-    imgAdd(pos, $file) {
+    imgAdd (pos, $file) {
       var formdata = new FormData()
       formdata.append('file', $file)
       axios({
@@ -53,7 +53,7 @@ export default {
         this.$refs.md.$refs.toolbar_left.$imgDel(pos)
       })
     },
-    imgDel(file, pos) {
+    imgDel (file, pos) {
       const image = this.images[file[1]]
       if (image) {
         del(image.id).then(res => {

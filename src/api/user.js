@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function add(data) {
+export function add (data) {
   return request({
     url: 'api/users',
     method: 'post',
     data
   })
 }
-export function downloadUser() {
+export function downloadUser () {
   return request({
     url: 'api/users/download',
     method: 'get',
@@ -15,14 +15,14 @@ export function downloadUser() {
   })
 }
 
-export function del(id) {
+export function del (id) {
   return request({
     url: 'api/users/' + id,
     method: 'delete'
   })
 }
 
-export function edit(data) {
+export function edit (data) {
   return request({
     url: 'api/users',
     method: 'put',
@@ -30,7 +30,7 @@ export function edit(data) {
   })
 }
 
-export function updatePass(user) {
+export function updatePass (user) {
   const data = {
     oldPass: user.oldPass,
     newPass: user.newPass
@@ -42,11 +42,10 @@ export function updatePass(user) {
   })
 }
 
-export function updateEmail(code, data) {
+export function updateEmail (code, data) {
   return request({
     url: 'api/users/updateEmail/' + code,
     method: 'post',
     data
   })
 }
-

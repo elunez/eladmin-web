@@ -63,7 +63,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     const validPhone = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入电话号码'))
@@ -74,8 +74,16 @@ export default {
       }
     }
     return {
-      dialog: false, loading: false, form: { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null },
-      roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], level: 3,
+      dialog: false,
+      loading: false,
+      form: { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null },
+      roleIds: [],
+      roles: [],
+      depts: [],
+      deptId: null,
+      jobId: null,
+      jobs: [],
+      level: 3,
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -95,10 +103,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.form.dept.id = this.deptId
       this.form.job.id = this.jobId
       this.$refs['form'].validate((valid) => {
@@ -122,7 +130,7 @@ export default {
             this.loading = true
             this.form.roles = []
             const _this = this
-            this.roleIds.forEach(function(data, index) {
+            this.roleIds.forEach(function (data, index) {
               const role = { id: data }
               _this.form.roles.push(role)
             })
@@ -135,7 +143,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -151,7 +159,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -166,7 +174,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.deptId = null
@@ -174,33 +182,33 @@ export default {
       this.roleIds = []
       this.form = { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null }
     },
-    getRoles() {
+    getRoles () {
       getAll().then(res => {
         this.roles = res
       }).catch(err => {
         console.log(err.response.data.message)
       })
     },
-    getJobs(id) {
+    getJobs (id) {
       getAllJob(id).then(res => {
         this.jobs = res.content
       }).catch(err => {
         console.log(err.response.data.message)
       })
     },
-    getDepts() {
+    getDepts () {
       getDepts({ enabled: true }).then(res => {
         this.depts = res.content
       })
     },
-    isvalidPhone(str) {
+    isvalidPhone (str) {
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
       return reg.test(str)
     },
-    selectFun(node, instanceId) {
+    selectFun (node, instanceId) {
       this.getJobs(node.id)
     },
-    getRoleLevel() {
+    getRoleLevel () {
       getLevel().then(res => {
         this.level = res.level
       }).catch(err => {

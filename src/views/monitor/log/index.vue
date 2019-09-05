@@ -41,14 +41,14 @@ export default {
   name: 'Log',
   components: { Search },
   mixins: [initData],
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
     parseTime,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/logs'
       const sort = 'id,desc'
       const query = this.query

@@ -59,13 +59,13 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     return {
       onlyOneChild: null
     }
   },
   methods: {
-    hasOneShowingChild(children, parent) {
+    hasOneShowingChild (children, parent) {
       const showingChildren = children.filter(item => {
         if (item.hidden) {
           return false
@@ -83,19 +83,19 @@ export default {
 
       // Show parent if there are no child router to display
       if (showingChildren.length === 0) {
-        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
+        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
         return true
       }
 
       return false
     },
-    resolvePath(routePath) {
+    resolvePath (routePath) {
       if (this.isExternalLink(routePath)) {
         return routePath
       }
       return path.resolve(this.basePath, routePath)
     },
-    isExternalLink(routePath) {
+    isExternalLink (routePath) {
       return isExternal(routePath)
     }
   }

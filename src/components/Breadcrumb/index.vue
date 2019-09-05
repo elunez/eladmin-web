@@ -13,21 +13,21 @@
 import pathToRegexp from 'path-to-regexp'
 
 export default {
-  data() {
+  data () {
     return {
       levelList: null
     }
   },
   watch: {
-    $route() {
+    $route () {
       this.getBreadcrumb()
     }
   },
-  created() {
+  created () {
     this.getBreadcrumb()
   },
   methods: {
-    getBreadcrumb() {
+    getBreadcrumb () {
       let matched = this.$route.matched.filter(item => {
         if (item.name) {
           return true
@@ -35,20 +35,20 @@ export default {
       })
       const first = matched[0]
       if (first && first.name !== '首页') {
-        matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)
+        matched = [{ path: '/dashboard', meta: { title: '首页' } }].concat(matched)
       }
       if (matched.length >= 4) {
         matched.splice(1, 1)
       }
       this.levelList = matched
     },
-    pathCompile(path) {
+    pathCompile (path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route
       var toPath = pathToRegexp.compile(path)
       return toPath(params)
     },
-    handleLink(item) {
+    handleLink (item) {
       const { redirect, path } = item
       if (redirect) {
         this.$router.push(redirect)

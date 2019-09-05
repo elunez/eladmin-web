@@ -35,7 +35,7 @@ service.interceptors.response.use(
       Notification.error({
         title: response.message
       })
-      return Promise.reject('error')
+      return Promise.reject(new Error('error'))
     } else {
       return response.data
     }
@@ -50,14 +50,14 @@ service.interceptors.response.use(
           title: '网络请求超时',
           duration: 2500
         })
-        return Promise.reject(error)
+        return Promise.reject(new Error(error))
       }
       if (error.toString().indexOf('Error: Network Error') !== -1) {
         Notification.error({
           title: '网络请求错误',
           duration: 2500
         })
-        return Promise.reject(error)
+        return Promise.reject(new Error(error))
       }
     }
     if (code === 401) {
@@ -85,7 +85,7 @@ service.interceptors.response.use(
         })
       }
     }
-    return Promise.reject(error)
+    return Promise.reject(new Error(error))
   }
 )
 export default service

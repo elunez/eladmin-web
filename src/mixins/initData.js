@@ -1,13 +1,13 @@
 import { initData } from '@/api/data'
 
 export default {
-  data() {
+  data () {
     return {
       loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 170, isAdd: false
     }
   },
   methods: {
-    async init() {
+    async init () {
       if (!await this.beforeInit()) {
         return
       }
@@ -26,20 +26,20 @@ export default {
         })
       })
     },
-    beforeInit() {
+    beforeInit () {
       return true
     },
-    pageChange(e) {
+    pageChange (e) {
       this.page = e - 1
       this.init()
     },
-    sizeChange(e) {
+    sizeChange (e) {
       this.page = 0
       this.size = e
       this.init()
     },
     // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
-    dleChangePage(size) {
+    dleChangePage (size) {
       if (size === undefined) {
         size = 1
       }
@@ -47,7 +47,7 @@ export default {
         this.page = this.page - 1
       }
     },
-    toQuery() {
+    toQuery () {
       this.page = 0
       this.init()
     }

@@ -30,7 +30,7 @@ import '@/styles/description.scss'
 export default {
   name: 'Email',
   components: { Config, Send },
-  data() {
+  data () {
     return {
       activeName: 'second'
     }

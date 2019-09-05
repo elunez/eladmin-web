@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+import echarts from 'echarts' // echarts theme
 import { debounce } from '@/utils'
 import { getChartData } from '@/api/visits'
+require('echarts/theme/macarons')
 
 export default {
   props: {
@@ -27,7 +27,7 @@ export default {
       default: true
     }
   },
-  data() {
+  data () {
     return {
       chart: null,
       sidebarElm: null,
@@ -38,7 +38,7 @@ export default {
       weekDays: []
     }
   },
-  mounted() {
+  mounted () {
     getChartData().then(res => {
       this.chartData.visitsData = res.visitsData
       this.chartData.ipData = res.ipData
@@ -58,7 +58,7 @@ export default {
     this.sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     this.sidebarElm && this.sidebarElm.addEventListener('transitionend', this.sidebarResizeHandler)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     if (!this.chart) {
       return
     }
@@ -72,12 +72,12 @@ export default {
     this.chart = null
   },
   methods: {
-    sidebarResizeHandler(e) {
+    sidebarResizeHandler (e) {
       if (e.propertyName === 'width') {
         this.__resizeHandler()
       }
     },
-    setOptions({ visitsData, ipData } = {}) {
+    setOptions ({ visitsData, ipData } = {}) {
       this.chart.setOption({
         xAxis: {
           data: this.weekDays,
@@ -109,7 +109,8 @@ export default {
           data: ['pv', 'ip']
         },
         series: [{
-          name: 'pv', itemStyle: {
+          name: 'pv',
+          itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -146,7 +147,7 @@ export default {
         }]
       })
     },
-    initChart() {
+    initChart () {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     }

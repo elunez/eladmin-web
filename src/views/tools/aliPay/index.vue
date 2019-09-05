@@ -37,7 +37,7 @@ import '@/styles/description.scss'
 export default {
   name: 'AliPay',
   components: { Config, ToPay },
-  data() {
+  data () {
     return {
       activeName: 'second'
     }

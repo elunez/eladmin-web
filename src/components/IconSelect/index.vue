@@ -17,25 +17,25 @@
 import icons from './requireIcons'
 export default {
   name: 'IconSelect',
-  data() {
+  data () {
     return {
       name: '',
       iconList: icons
     }
   },
   methods: {
-    filterIcons() {
+    filterIcons () {
       if (this.name) {
         this.iconList = this.iconList.filter(item => item.includes(this.name))
       } else {
         this.iconList = icons
       }
     },
-    selectedIcon(name) {
+    selectedIcon (name) {
       this.$emit('selected', name)
       document.body.click()
     },
-    reset() {
+    reset () {
       this.name = ''
       this.iconList = icons
     }

@@ -45,7 +45,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       feedback: {
         info: ''
@@ -58,17 +58,17 @@ export default {
 
   computed: {
     show: {
-      get() {
+      get () {
         return this.showDialog
       },
-      set(val) {
+      set (val) {
         this.$emit('update:showDialog', val)
       }
     }
   },
 
   methods: {
-    async loadLibrary() {
+    async loadLibrary () {
       if (typeof html2canvas === 'undefined') {
         try {
           console.error('html2canvas not import')
@@ -79,7 +79,7 @@ export default {
       }
       return html2canvas
     },
-    async init() {
+    async init () {
       await this.loadLibrary()
       this.dataLoading = true
       this.$nextTick(() => {
@@ -110,13 +110,13 @@ export default {
       })
     },
 
-    close() {
+    close () {
       const screenshot = document.getElementById('screenshot')
       const canvas = screenshot.getElementsByTagName('canvas')[0]
       screenshot.removeChild(canvas)
     },
 
-    async submit() {
+    async submit () {
       try {
         this.confirmLoading = true
         const formData = new FormData()

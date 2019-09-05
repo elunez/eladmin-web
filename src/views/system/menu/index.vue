@@ -96,7 +96,7 @@ export default {
   name: 'Menu',
   components: { treeTable, eForm },
   mixins: [initData],
-  data() {
+  data () {
     return {
       columns: [
         {
@@ -105,10 +105,12 @@ export default {
           width: 140
         }
       ],
-      delLoading: false, expand: true, height: 625
+      delLoading: false,
+      expand: true,
+      height: 625
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.height = document.documentElement.clientHeight - 200
       this.init()
@@ -117,7 +119,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/menus'
       const sort = 'id,desc'
       const query = this.query
@@ -126,7 +128,7 @@ export default {
       if (value) { this.params['blurry'] = value }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -143,19 +145,19 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    add() {
+    add () {
       this.isAdd = true
       this.$refs.form.getMenus()
       this.$refs.form.dialog = true
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getMenus()
       _this.form = { id: data.id, component: data.component, componentName: data.componentName, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon, cache: data.cache, hidden: data.hidden }
       _this.dialog = true
     },
-    changExpand() {
+    changExpand () {
       this.expand = !this.expand
       this.init()
     }

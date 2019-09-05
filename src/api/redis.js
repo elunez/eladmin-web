@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function add(data) {
+export function add (data) {
   return request({
     url: 'api/redis',
     method: 'post',
@@ -8,7 +8,7 @@ export function add(data) {
   })
 }
 
-export function del(key) {
+export function del (key) {
   const data = {
     key
   }
@@ -19,14 +19,14 @@ export function del(key) {
   })
 }
 
-export function delAll() {
+export function delAll () {
   return request({
     url: 'api/redis/all',
     method: 'delete'
   })
 }
 
-export function edit(data) {
+export function edit (data) {
   return request({
     url: 'api/redis',
     method: 'put',

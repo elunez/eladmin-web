@@ -11,18 +11,18 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       height: document.documentElement.clientHeight - 94.5 + 'px;',
       loading: true
     }
   },
-  mounted: function() {
+  mounted: function () {
     setTimeout(() => {
       this.loading = false
     }, 230)
     const that = this
-    window.onresize = function temp() {
+    window.onresize = function temp () {
       that.height = document.documentElement.clientHeight - 94.5 + 'px;'
     }
   }

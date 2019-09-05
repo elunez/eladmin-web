@@ -21,8 +21,8 @@ Vue.use(mavonEditor)
 Vue.use(permission)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
-require('babel-polyfill')
 
+/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,

@@ -126,27 +126,35 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/role'
+import { del, editPermission, editMenu, get } from '@/api/role'
 import { getPermissionTree } from '@/api/permission'
 import { getMenusTree } from '@/api/menu'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
-import { editPermission, editMenu, get } from '@/api/role'
+
 export default {
   name: 'Role',
   components: { eForm },
   mixins: [initData],
-  data() {
+  data () {
     return {
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      currentId: 0, permissionLoading: false, menuLoading: false, showButton: false, opt: '菜单分配',
-      delLoading: false, permissions: [], permissionIds: [], menus: [], menuIds: []
+      currentId: 0,
+      permissionLoading: false,
+      menuLoading: false,
+      showButton: false,
+      opt: '菜单分配',
+      delLoading: false,
+      permissions: [],
+      permissionIds: [],
+      menus: [],
+      menuIds: []
     }
   },
-  created() {
+  created () {
     this.getPermissions()
     this.getMenus()
     this.$nextTick(() => {
@@ -156,7 +164,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.showButton = false
       this.url = 'api/roles'
       const sort = 'level,asc'
@@ -169,7 +177,7 @@ export default {
       this.$refs.menu.setCheckedKeys([])
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -187,17 +195,17 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    getPermissions() {
+    getPermissions () {
       getPermissionTree().then(res => {
         this.permissions = res
       })
     },
-    getMenus() {
+    getMenus () {
       getMenusTree().then(res => {
         this.menus = res
       })
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       if (val) {
         const _this = this
         // 清空权限与菜单的选中
@@ -211,7 +219,7 @@ export default {
         this.menuIds = []
         this.permissionIds = []
         // 菜单数据需要特殊处理
-        val.menus.forEach(function(data, index) {
+        val.menus.forEach(function (data, index) {
           let add = true
           for (let i = 0; i < val.menus.length; i++) {
             if (data.id === val.menus[i].pid) {
@@ -224,15 +232,15 @@ export default {
           }
         })
         // 处理权限数据
-        val.permissions.forEach(function(data, index) {
+        val.permissions.forEach(function (data, index) {
           _this.permissionIds.push(data.id)
         })
       }
     },
-    savePermission() {
+    savePermission () {
       this.permissionLoading = true
       const role = { id: this.currentId, permissions: [] }
-      this.$refs.permission.getCheckedKeys().forEach(function(data, index) {
+      this.$refs.permission.getCheckedKeys().forEach(function (data, index) {
         const permission = { id: data }
         role.permissions.push(permission)
       })
@@ -249,16 +257,16 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    saveMenu() {
+    saveMenu () {
       this.menuLoading = true
       const role = { id: this.currentId, menus: [] }
       // 得到半选的父节点数据，保存起来
-      this.$refs.menu.getHalfCheckedNodes().forEach(function(data, index) {
+      this.$refs.menu.getHalfCheckedNodes().forEach(function (data, index) {
         const permission = { id: data.id }
         role.menus.push(permission)
       })
       // 得到已选中的 key 值
-      this.$refs.menu.getCheckedKeys().forEach(function(data, index) {
+      this.$refs.menu.getCheckedKeys().forEach(function (data, index) {
         const permission = { id: data }
         role.menus.push(permission)
       })
@@ -275,7 +283,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    update() {
+    update () {
       // 无刷新更新 表格数据
       get(this.currentId).then(res => {
         for (let i = 0; i < this.data.length; i++) {
@@ -286,11 +294,11 @@ export default {
         }
       })
     },
-    add() {
+    add () {
       this.isAdd = true
       this.$refs.form.dialog = true
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.deptIds = []

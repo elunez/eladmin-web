@@ -25,16 +25,16 @@ import clipboard from '@/utils/clipboard'
 
 export default {
   name: 'Icons',
-  data() {
+  data () {
     return {
       iconsMap: icons
     }
   },
   methods: {
-    generateIconCode(symbol) {
+    generateIconCode (symbol) {
       return `<svg-icon icon-class="${symbol}" />`
     },
-    handleClipboard(text, event) {
+    handleClipboard (text, event) {
       clipboard(text, event)
     }
   }

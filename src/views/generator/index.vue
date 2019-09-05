@@ -46,9 +46,10 @@ export default {
   name: 'GeneratorIndex',
   components: { Generator },
   mixins: [initData],
-  data() {
+  data () {
     return {
-      loading: false, dialog: false,
+      loading: false,
+      dialog: false,
       form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
@@ -72,14 +73,14 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
     parseTime,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/generator/tables'
       const query = this.query
       const name = query.name
@@ -87,10 +88,10 @@ export default {
       if (name) { this.params['name'] = name }
       return true
     },
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true

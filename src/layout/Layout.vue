@@ -42,7 +42,7 @@ export default {
     feedback
   },
   mixins: [ResizeMixin],
-  data() {
+  data () {
     return {
       feedbackShow: false
     }
@@ -54,7 +54,7 @@ export default {
       needTagsView: state => state.settings.tagsView,
       fixedHeader: state => state.settings.fixedHeader
     }),
-    classObj() {
+    classObj () {
       return {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
@@ -64,10 +64,10 @@ export default {
     }
   },
   methods: {
-    handleClickOutside() {
+    handleClickOutside () {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
     },
-    doFeedback() {
+    doFeedback () {
       console.log(111)
       this.feedbackShow = true
     }
@@ -126,4 +126,3 @@ export default {
     bottom: 60px;
   }
 </style>
-

@@ -71,9 +71,11 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      loading: false, dialog: false, menus: [],
+      loading: false,
+      dialog: false,
+      menus: [],
       form: { name: '', sort: 999, path: '', component: '', componentName: '', iframe: 'false', roles: [], pid: 0, icon: '', cache: false, hidden: false },
       rules: {
         name: [
@@ -89,10 +91,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -104,7 +106,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -119,7 +121,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -134,15 +136,15 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { name: '', sort: 999, path: '', component: '', componentName: '', iframe: 'false', roles: [], pid: 0, icon: '', cache: false, hidden: false }
     },
-    selected(name) {
+    selected (name) {
       this.form.icon = name
     },
-    getMenus() {
+    getMenus () {
       getMenusTree().then(res => {
         this.menus = []
         const menu = { id: 0, label: '顶级类目', children: [] }

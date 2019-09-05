@@ -106,10 +106,14 @@ export default {
   name: 'User',
   components: { eForm },
   mixins: [initData, initDict],
-  data() {
+  data () {
     return {
-      height: document.documentElement.clientHeight - 180 + 'px;', isAdd: false,
-      delLoading: false, deptName: '', depts: [], deptId: null,
+      height: document.documentElement.clientHeight - 180 + 'px;',
+      isAdd: false,
+      delLoading: false,
+      deptName: '',
+      depts: [],
+      deptId: null,
       defaultProps: {
         children: 'children',
         label: 'name'
@@ -121,7 +125,7 @@ export default {
       ]
     }
   },
-  created() {
+  created () {
     this.getDeptDatas()
     this.$nextTick(() => {
       this.init()
@@ -129,16 +133,16 @@ export default {
       this.getDict('user_status')
     })
   },
-  mounted: function() {
+  mounted: function () {
     const that = this
-    window.onresize = function temp() {
+    window.onresize = function temp () {
       that.height = document.documentElement.clientHeight - 180 + 'px;'
     }
   },
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/users'
       const sort = 'id,desc'
       const query = this.query
@@ -149,7 +153,7 @@ export default {
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -167,7 +171,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    getDeptDatas() {
+    getDeptDatas () {
       const sort = 'id,desc'
       const params = { sort: sort }
       if (this.deptName) { params['name'] = this.deptName }
@@ -175,7 +179,7 @@ export default {
         this.depts = res.content
       })
     },
-    handleNodeClick(data) {
+    handleNodeClick (data) {
       if (data.pid === 0) {
         this.deptId = null
       } else {
@@ -183,7 +187,7 @@ export default {
       }
       this.init()
     },
-    add() {
+    add () {
       this.isAdd = true
       this.$refs.form.getDepts()
       this.$refs.form.getRoles()
@@ -191,7 +195,7 @@ export default {
       this.$refs.form.dialog = true
     },
     // 导出
-    download() {
+    download () {
       this.downloadLoading = true
       downloadUser().then(result => {
         downloadFile(result, '用户列表', 'xls')
@@ -201,7 +205,7 @@ export default {
       })
     },
     // 数据转换
-    formatJson(filterVal, jsonData) {
+    formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
         if (j === 'createTime' || j === 'lastPasswordResetTime') {
           return parseTime(v[j])
@@ -212,15 +216,15 @@ export default {
         }
       }))
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getRoles()
       _this.getDepts()
       _this.getRoleLevel()
       _this.roleIds = []
-      _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roles: [], dept: { id: data.dept.id }, job: { id: data.job.id }}
-      data.roles.forEach(function(data, index) {
+      _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roles: [], dept: { id: data.dept.id }, job: { id: data.job.id } }
+      data.roles.forEach(function (data, index) {
         _this.roleIds.push(data.id)
       })
       _this.deptId = data.dept.id

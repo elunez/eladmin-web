@@ -24,7 +24,7 @@
 import store from '@/store'
 import { updatePass } from '@/api/user'
 export default {
-  data() {
+  data () {
     const confirmPass = (rule, value, callback) => {
       if (value) {
         if (this.form.newPass !== value) {
@@ -37,7 +37,10 @@ export default {
       }
     }
     return {
-      loading: false, dialog: false, title: '修改密码', form: { oldPass: '', newPass: '', confirmPass: '' },
+      loading: false,
+      dialog: false,
+      title: '修改密码',
+      form: { oldPass: '', newPass: '', confirmPass: '' },
       rules: {
         oldPass: [
           { required: true, message: '请输入旧密码', trigger: 'blur' }
@@ -53,10 +56,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -81,7 +84,7 @@ export default {
         }
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { oldPass: '', newPass: '', confirmPass: '' }

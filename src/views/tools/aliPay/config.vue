@@ -34,7 +34,7 @@
 import { get, update } from '@/api/alipay'
 export default {
   name: 'Config',
-  data() {
+  data () {
     return {
       loading: false,
       form: { appID: '', sysServiceProviderId: '', privateKey: '', publicKey: '', returnUrl: '', notifyUrl: '' },
@@ -60,16 +60,16 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       get().then(res => {
         this.form = res
       })
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true

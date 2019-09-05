@@ -26,12 +26,13 @@ import { validatEmail } from '@/utils/validate'
 import E from 'wangeditor'
 export default {
   name: 'Index',
-  data() {
+  data () {
     return {
       headers: {
         'Authorization': 'Bearer ' + getToken()
       },
-      loading: false, form: { subject: '', tos: [], content: '' },
+      loading: false,
+      form: { subject: '', tos: [], content: '' },
       tos: [{
         value: ''
       }],
@@ -50,7 +51,7 @@ export default {
       'qiNiuUploadApi'
     ])
   },
-  mounted() {
+  mounted () {
     var editor = new E(this.$refs.editor)
     editor.customConfig.uploadImgShowBase64 = true // 使用 base64 保存图片
     // 不可修改
@@ -65,7 +66,7 @@ export default {
     editor.create()
   },
   methods: {
-    removeDomain(item) {
+    removeDomain (item) {
       var index = this.tos.indexOf(item)
       if (index !== -1 && this.tos.length !== 1) {
         this.tos.splice(index, 1)
@@ -76,19 +77,19 @@ export default {
         })
       }
     },
-    addDomain() {
+    addDomain () {
       this.tos.push({
         value: '',
         key: Date.now()
       })
     },
-    doSubmit() {
+    doSubmit () {
       const _this = this
       this.$refs['form'].validate((valid) => {
         this.form.tos = []
         if (valid) {
           let sub = false
-          this.tos.forEach(function(data, index) {
+          this.tos.forEach(function (data, index) {
             if (data.value === '') {
               _this.$message({
                 message: '收件邮箱不能为空',

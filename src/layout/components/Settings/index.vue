@@ -28,15 +28,15 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {}
   },
   computed: {
     fixedHeader: {
-      get() {
+      get () {
         return this.$store.state.settings.fixedHeader
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'fixedHeader',
           value: val
@@ -44,10 +44,10 @@ export default {
       }
     },
     tagsView: {
-      get() {
+      get () {
         return this.$store.state.settings.tagsView
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'tagsView',
           value: val
@@ -55,10 +55,10 @@ export default {
       }
     },
     sidebarLogo: {
-      get() {
+      get () {
         return this.$store.state.settings.sidebarLogo
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'sidebarLogo',
           value: val
@@ -66,10 +66,10 @@ export default {
       }
     },
     settingBtn: {
-      get() {
+      get () {
         return this.$store.state.settings.settingBtn
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'settingBtn',
           value: val
@@ -77,10 +77,10 @@ export default {
       }
     },
     uniqueOpened: {
-      get() {
+      get () {
         return this.$store.state.settings.uniqueOpened
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'uniqueOpened',
           value: val

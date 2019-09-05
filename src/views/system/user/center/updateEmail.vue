@@ -33,7 +33,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     const validMail = (rule, value, callback) => {
       if (value === '' || value === null) {
         callback(new Error('新邮箱不能为空'))
@@ -46,10 +46,16 @@ export default {
       }
     }
     return {
-      loading: false, dialog: false, title: '修改邮箱', form: { pass: '', email: '', code: '' },
-      user: { email: '', password: '' }, codeLoading: false,
+      loading: false,
+      dialog: false,
+      title: '修改邮箱',
+      form: { pass: '', email: '', code: '' },
+      user: { email: '', password: '' },
+      codeLoading: false,
       codeData: { type: 'email', value: '' },
-      buttonName: '获取验证码', isDisabled: false, time: 60,
+      buttonName: '获取验证码',
+      isDisabled: false,
+      time: 60,
       rules: {
         pass: [
           { required: true, message: '当前密码不能为空', trigger: 'blur' }
@@ -64,10 +70,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    sendCode() {
+    sendCode () {
       if (this.form.email && this.form.email !== this.email) {
         this.codeLoading = true
         this.buttonName = '验证码发送中'
@@ -82,7 +88,7 @@ export default {
           this.codeLoading = false
           this.isDisabled = true
           this.buttonName = this.time-- + '秒后重新发送'
-          this.timer = window.setInterval(function() {
+          this.timer = window.setInterval(function () {
             _this.buttonName = _this.time + '秒后重新发送'
             --_this.time
             if (_this.time < 0) {
@@ -99,7 +105,7 @@ export default {
         })
       }
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -122,7 +128,7 @@ export default {
         }
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       window.clearInterval(this.timer)

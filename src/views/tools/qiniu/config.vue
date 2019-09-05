@@ -39,10 +39,11 @@
 import { get, update } from '@/api/qiniu'
 export default {
   name: 'Config',
-  data() {
+  data () {
     return {
       zones: ['华东', '华北', '华南', '北美', '东南亚'],
-      loading: false, form: { accessKey: '', secretKey: '', bucket: '', host: '', zone: '', type: '' },
+      loading: false,
+      form: { accessKey: '', secretKey: '', bucket: '', host: '', zone: '', type: '' },
       rules: {
         accessKey: [
           { required: true, message: '请输入accessKey', trigger: 'blur' }
@@ -62,16 +63,16 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       get().then(res => {
         this.form = res
       })
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true

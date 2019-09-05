@@ -29,7 +29,7 @@ import '@/styles/description.scss'
 export default {
   name: 'Qiniu',
   components: { Config, List },
-  data() {
+  data () {
     return {
       activeName: 'second'
     }

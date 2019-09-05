@@ -34,9 +34,11 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      loading: false, dialog: false, depts: [],
+      loading: false,
+      dialog: false,
+      depts: [],
       form: {
         id: '',
         name: '',
@@ -51,10 +53,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.pid !== undefined) {
@@ -71,7 +73,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -86,7 +88,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -101,7 +103,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = {
@@ -111,7 +113,7 @@ export default {
         enabled: 'true'
       }
     },
-    getDepts() {
+    getDepts () {
       getDepts({ enabled: true }).then(res => {
         this.depts = res.content
       })

@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function get() {
+export function get () {
   return request({
     url: 'api/email',
     method: 'get'
   })
 }
 
-export function update(data) {
+export function update (data) {
   return request({
     url: 'api/email',
     data,
@@ -15,7 +15,7 @@ export function update(data) {
   })
 }
 
-export function send(data) {
+export function send (data) {
   return request({
     url: 'api/email',
     data,

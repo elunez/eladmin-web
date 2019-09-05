@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function get() {
+export function get () {
   return request({
     url: 'api/aliPay',
     method: 'get'
   })
 }
 
-export function update(data) {
+export function update (data) {
   return request({
     url: 'api/aliPay',
     data,
@@ -16,7 +16,7 @@ export function update(data) {
 }
 
 // 支付
-export function toAliPay(url, data) {
+export function toAliPay (url, data) {
   return request({
     url: 'api/' + url,
     data,

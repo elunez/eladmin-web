@@ -55,10 +55,12 @@ import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
 export default {
   mixins: [initData],
-  data() {
+  data () {
     return {
-      errorInfo: '', errorDialog: false,
-      dialog: false, delLoading: false,
+      errorInfo: '',
+      errorDialog: false,
+      dialog: false,
+      delLoading: false,
       enabledTypeOptions: [
         { key: 'true', display_name: '成功' },
         { key: 'false', display_name: '失败' }
@@ -68,16 +70,16 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    doInit() {
+    doInit () {
       this.$nextTick(() => {
         this.init()
       })
     },
-    toQuery() {
+    toQuery () {
       this.page = 0
       this.doInit()
     },
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/jobLogs'
       const sort = 'id,desc'
       const query = this.query
@@ -89,7 +91,7 @@ export default {
       if (isSuccess !== '' && isSuccess !== null) { this.params['isSuccess'] = isSuccess }
       return true
     },
-    info(errorInfo) {
+    info (errorInfo) {
       this.errorInfo = errorInfo
       this.errorDialog = true
     }

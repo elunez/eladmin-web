@@ -76,7 +76,7 @@ export default {
   name: 'Dept',
   components: { eForm, treeTable },
   mixins: [initData, initDict],
-  data() {
+  data () {
     return {
       columns: [
         {
@@ -88,10 +88,11 @@ export default {
         { key: 'true', display_name: '正常' },
         { key: 'false', display_name: '禁用' }
       ],
-      delLoading: false, expand: true
+      delLoading: false,
+      expand: true
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
       // 加载数据字典
@@ -101,7 +102,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/dept'
       const sort = 'id,desc'
       this.params = { page: this.page, size: this.size, sort: sort }
@@ -112,7 +113,7 @@ export default {
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -129,17 +130,17 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    add() {
+    add () {
       this.isAdd = true
       const _this = this.$refs.form
       _this.getDepts()
       _this.dialog = true
     },
-    changeExpand() {
+    changeExpand () {
       this.expand = !this.expand
       this.init()
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getDepts()

@@ -60,19 +60,19 @@ import { del, delAll } from '@/api/redis'
 export default {
   name: 'Redis',
   mixins: [initData],
-  data() {
+  data () {
     return {
       delLoading: false, permissions: [], deleteAllLoading: false
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/redis'
       const query = this.query
       const value = query.value
@@ -84,7 +84,7 @@ export default {
       }
       return true
     },
-    subDelete(index, row) {
+    subDelete (index, row) {
       this.delLoading = true
       del(row.key).then(res => {
         this.delLoading = false
@@ -102,7 +102,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    deleteAll() {
+    deleteAll () {
       this.$confirm('你确定要清空缓存数据吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

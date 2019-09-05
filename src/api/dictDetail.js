@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function get(dictName) {
+export function get (dictName) {
   const params = {
     dictName,
     page: 0,
@@ -13,7 +13,7 @@ export function get(dictName) {
   })
 }
 
-export function getDictMap(dictName) {
+export function getDictMap (dictName) {
   const params = {
     dictName,
     page: 0,
@@ -26,7 +26,7 @@ export function getDictMap(dictName) {
   })
 }
 
-export function add(data) {
+export function add (data) {
   return request({
     url: 'api/dictDetail',
     method: 'post',
@@ -34,14 +34,14 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del (id) {
   return request({
     url: 'api/dictDetail/' + id,
     method: 'delete'
   })
 }
 
-export function edit(data) {
+export function edit (data) {
   return request({
     url: 'api/dictDetail',
     method: 'put',

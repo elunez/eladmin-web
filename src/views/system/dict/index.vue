@@ -84,7 +84,7 @@ export default {
   name: 'Dict',
   components: { dictDetail, eForm },
   mixins: [initData],
-  data() {
+  data () {
     return {
       delLoading: false,
       queryTypeOptions: [
@@ -93,14 +93,14 @@ export default {
       ]
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/dict'
       const sort = 'id,desc'
       this.params = { page: this.page, size: this.size, sort: sort }
@@ -113,7 +113,7 @@ export default {
       }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -131,14 +131,14 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       if (val) {
         this.$refs.dictDetail.dictName = val.name
         this.$refs.dictDetail.dictId = val.id
         this.$refs.dictDetail.init()
       }
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.form = {

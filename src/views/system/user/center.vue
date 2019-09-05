@@ -79,18 +79,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { regEmail } from '@/utils/index'
+import { regEmail, parseTime } from '@/utils/index'
 import updatePass from './center/updatePass'
 import updateEmail from './center/updateEmail'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
-import { parseTime } from '@/utils/index'
+
 import initData from '@/mixins/initData'
 export default {
   name: 'Center',
   components: { updatePass, updateEmail },
   mixins: [initData],
-  data() {
+  data () {
     return {
       ico: 'el-icon-refresh',
       headers: {
@@ -104,7 +104,7 @@ export default {
       'updateAvatarApi'
     ])
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
@@ -112,16 +112,16 @@ export default {
   },
   methods: {
     parseTime,
-    formatEmail(mail) {
+    formatEmail (mail) {
       return regEmail(mail)
     },
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/logs/user'
       const sort = 'id,desc'
       this.params = { page: this.page, size: this.size, sort: sort }
       return true
     },
-    handleSuccess(response, file, fileList) {
+    handleSuccess (response, file, fileList) {
       this.$notify({
         title: '头像修改成功',
         type: 'success',
@@ -130,7 +130,7 @@ export default {
       store.dispatch('GetInfo').then(() => {})
     },
     // 监听上传失败
-    handleError(e, file, fileList) {
+    handleError (e, file, fileList) {
       const msg = JSON.parse(e.message)
       this.$notify({
         title: msg.message,
@@ -138,7 +138,7 @@ export default {
         duration: 2500
       })
     },
-    refresh() {
+    refresh () {
       this.ico = 'el-icon-loading'
       this.$refs.log.init()
       setTimeout(() => {

@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function get() {
+export function get () {
   return request({
     url: 'api/genConfig',
     method: 'get'
   })
 }
 
-export function update(data) {
+export function update (data) {
   return request({
     url: 'api/genConfig',
     data,

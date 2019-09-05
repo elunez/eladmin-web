@@ -30,10 +30,10 @@ export default {
   },
   computed: {
     show: {
-      get() {
+      get () {
         return this.$store.state.settings.showRightPanel
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'showRightPanel',
           value: val
@@ -41,18 +41,18 @@ export default {
       }
     },
     theme: {
-      get() {
+      get () {
         return this.$store.state.settings.theme
       }
     },
     settingBtn: {
-      get() {
+      get () {
         return this.$store.state.settings.settingBtn
       }
     }
   },
   watch: {
-    show(value) {
+    show (value) {
       if (value && !this.clickNotClose) {
         this.addEventClick()
       }
@@ -63,25 +63,25 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.insertToBody()
   },
-  beforeDestroy() {
+  beforeDestroy () {
     const elx = this.$refs.rightPanel
     elx.remove()
   },
   methods: {
-    addEventClick() {
+    addEventClick () {
       window.addEventListener('click', this.closeSidebar)
     },
-    closeSidebar(evt) {
+    closeSidebar (evt) {
       const parent = evt.target.closest('.rightPanel')
       if (!parent) {
         this.show = false
         window.removeEventListener('click', this.closeSidebar)
       }
     },
-    insertToBody() {
+    insertToBody () {
       const elx = this.$refs.rightPanel
       const body = document.querySelector('body')
       body.insertBefore(elx, body.firstChild)

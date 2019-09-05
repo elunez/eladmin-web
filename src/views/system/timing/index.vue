@@ -117,11 +117,14 @@ export default {
   name: 'Timing',
   components: { Log },
   mixins: [initData],
-  data() {
+  data () {
     return {
-      delLoading: false, isAdd: false,
-      loading: false, dialog: false,
-      form: { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' }, permissionIds: [],
+      delLoading: false,
+      isAdd: false,
+      loading: false,
+      dialog: false,
+      form: { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' },
+      permissionIds: [],
       rules: {
         jobName: [
           { required: true, message: '请输入任务名称', trigger: 'blur' }
@@ -138,7 +141,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
@@ -146,7 +149,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/jobs'
       const sort = 'id,desc'
       const query = this.query
@@ -155,7 +158,7 @@ export default {
       if (value) { this.params['jobName'] = value }
       return true
     },
-    execute(id) {
+    execute (id) {
       execution(id).then(res => {
         this.$notify({
           title: '执行成功',
@@ -166,7 +169,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    updateStatus(id, status) {
+    updateStatus (id, status) {
       updateIsPause(id).then(res => {
         this.init()
         this.$notify({
@@ -178,7 +181,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -196,18 +199,18 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    toQuery() {
+    toQuery () {
       this.page = 0
       this.init()
     },
-    doLog() {
+    doLog () {
       this.$refs.log.dialog = true
       this.$refs.log.doInit()
     },
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -219,7 +222,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -234,7 +237,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -249,12 +252,12 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' }
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       this.form = { id: data.id, jobName: data.jobName, beanName: data.beanName, methodName: data.methodName, params: data.params, cronExpression: data.cronExpression, isPause: data.isPause.toString(), remark: data.remark }
       this.dialog = true

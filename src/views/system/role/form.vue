@@ -43,10 +43,13 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       dateScopes: ['全部', '本级', '自定义'],
-      loading: false, dialog: false, depts: [], deptIds: [],
+      loading: false,
+      dialog: false,
+      depts: [],
+      deptIds: [],
       form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3 },
       rules: {
         name: [
@@ -56,10 +59,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       if (this.form.dataScope === '自定义' && this.deptIds.length === 0) {
         this.$message({
           message: '自定义数据权限不能为空',
@@ -86,7 +89,7 @@ export default {
         })
       }
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -101,7 +104,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -116,17 +119,17 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3 }
     },
-    getDepts() {
+    getDepts () {
       getDepts({ enabled: true }).then(res => {
         this.depts = res.content
       })
     },
-    changeScope() {
+    changeScope () {
       if (this.form.dataScope === '自定义') {
         this.getDepts()
       }

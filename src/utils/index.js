@@ -2,7 +2,7 @@
  * Created by jiachenpan on 16/11/18.
  */
 
-export function parseTime(time) {
+export function parseTime (time) {
   if (time) {
     var date = new Date(time)
     var year = date.getFullYear()
@@ -21,7 +21,7 @@ export function parseTime(time) {
   }
 }
 
-export function formatTime(time, option) {
+export function formatTime (time, option) {
   time = +time * 1000
   const d = new Date(time)
   const now = Date.now()
@@ -55,10 +55,10 @@ export function formatTime(time, option) {
   }
 }
 
-export function debounce(func, wait, immediate) {
+export function debounce (func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -75,7 +75,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -90,12 +90,12 @@ export function debounce(func, wait, immediate) {
   }
 }
 
-export function isExternal(path) {
+export function isExternal (path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
 
 // 替换邮箱字符
-export function regEmail(email) {
+export function regEmail (email) {
   if (String(email).indexOf('@') > 0) {
     const str = email.split('@')
     let _s = ''
@@ -110,7 +110,7 @@ export function regEmail(email) {
 }
 
 // 替换手机字符
-export function regMobile(mobile) {
+export function regMobile (mobile) {
   if (mobile.length > 7) {
     var new_mobile = mobile.substr(0, 3) + '****' + mobile.substr(7)
   }
@@ -123,7 +123,7 @@ export function regMobile(mobile) {
  * @param {string} cls
  * @returns {boolean}
  */
-export function hasClass(ele, cls) {
+export function hasClass (ele, cls) {
   return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
 }
 
@@ -132,7 +132,7 @@ export function hasClass(ele, cls) {
  * @param {HTMLElement} elm
  * @param {string} cls
  */
-export function addClass(ele, cls) {
+export function addClass (ele, cls) {
   if (!hasClass(ele, cls)) ele.className += ' ' + cls
 }
 
@@ -141,14 +141,14 @@ export function addClass(ele, cls) {
  * @param {HTMLElement} elm
  * @param {string} cls
  */
-export function removeClass(ele, cls) {
+export function removeClass (ele, cls) {
   if (hasClass(ele, cls)) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
   }
 }
 
-export function downloadFile(obj, name, suffix) {
+export function downloadFile (obj, name, suffix) {
   const url = window.URL.createObjectURL(new Blob([obj]))
   const link = document.createElement('a')
   link.style.display = 'none'

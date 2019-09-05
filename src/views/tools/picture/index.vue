@@ -101,9 +101,10 @@ import { getToken } from '@/utils/auth'
 export default {
   name: 'Pictures',
   mixins: [initData],
-  data() {
+  data () {
     return {
-      delLoading: false, downloadLoading: false,
+      delLoading: false,
+      downloadLoading: false,
       delAllLoading: false,
       headers: {
         'Authorization': 'Bearer ' + getToken()
@@ -120,7 +121,7 @@ export default {
       'imagesUploadApi'
     ])
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
@@ -128,7 +129,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/pictures'
       const sort = 'id,desc'
       const query = this.query
@@ -137,7 +138,7 @@ export default {
       if (filename) { this.params[filename] = filename }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -155,7 +156,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doDelete() {
+    doDelete () {
       this.delAllLoading = true
       const data = this.$refs.table.selection
       const ids = []
@@ -176,7 +177,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    open() {
+    open () {
       this.$confirm('你确定删除选中的数据吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -185,12 +186,12 @@ export default {
         this.doDelete()
       })
     },
-    handleSuccess(response, file, fileList) {
+    handleSuccess (response, file, fileList) {
       const uid = file.uid
       const id = response.id
       this.pictures.push({ uid, id })
     },
-    handleBeforeRemove(file, fileList) {
+    handleBeforeRemove (file, fileList) {
       for (let i = 0; i < this.pictures.length; i++) {
         if (this.pictures[i].uid === file.uid) {
           del(this.pictures[i].id).then(res => {})
@@ -198,12 +199,12 @@ export default {
         }
       }
     },
-    handlePictureCardPreview(file) {
+    handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
     // 刷新列表数据
-    doSubmit() {
+    doSubmit () {
       this.fileList = []
       this.dialogVisible = false
       this.dialogImageUrl = ''
@@ -211,7 +212,7 @@ export default {
       this.init()
     },
     // 监听上传失败
-    handleError(e, file, fileList) {
+    handleError (e, file, fileList) {
       const msg = JSON.parse(e.message)
       this.$notify({
         title: msg.message,

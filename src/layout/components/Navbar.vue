@@ -53,7 +53,7 @@ export default {
     Hamburger,
     Screenfull
   },
-  data() {
+  data () {
     return {
       dialogVisible: false
     }
@@ -65,10 +65,10 @@ export default {
       'device'
     ]),
     show: {
-      get() {
+      get () {
         return this.$store.state.settings.showRightPanel
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('changeSetting', {
           key: 'showRightPanel',
           value: val
@@ -77,7 +77,7 @@ export default {
     }
   },
   methods: {
-    open() {
+    open () {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -86,10 +86,10 @@ export default {
         this.logout()
       })
     },
-    toggleSideBar() {
+    toggleSideBar () {
       this.$store.dispatch('ToggleSideBar')
     },
-    logout() {
+    logout () {
       this.dialogVisible = false
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug

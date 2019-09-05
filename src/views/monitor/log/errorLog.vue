@@ -45,19 +45,19 @@ export default {
   name: 'ErrorLog',
   components: { Search },
   mixins: [initData],
-  data() {
+  data () {
     return {
       errorInfo: '', dialog: false
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
   },
   methods: {
     parseTime,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/logs/error'
       const sort = 'id,desc'
       const query = this.query
@@ -66,7 +66,7 @@ export default {
       if (value) { this.params['blurry'] = value }
       return true
     },
-    info(id) {
+    info (id) {
       this.dialog = true
       getErrDetail(id).then(res => {
         this.errorInfo = res.exception

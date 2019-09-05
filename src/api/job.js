@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getAllJob(deptId) {
+export function getAllJob (deptId) {
   const params = {
     deptId,
     page: 0,
@@ -13,7 +13,7 @@ export function getAllJob(deptId) {
   })
 }
 
-export function add(data) {
+export function add (data) {
   return request({
     url: 'api/job',
     method: 'post',
@@ -21,14 +21,14 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del (id) {
   return request({
     url: 'api/job/' + id,
     method: 'delete'
   })
 }
 
-export function edit(data) {
+export function edit (data) {
   return request({
     url: 'api/job',
     method: 'put',

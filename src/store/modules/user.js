@@ -28,7 +28,7 @@ const user = {
 
   actions: {
     // 登录
-    Login({ commit }, userInfo) {
+    Login ({ commit }, userInfo) {
       const username = userInfo.username
       const password = decrypt(userInfo.password)
       const code = userInfo.code
@@ -49,7 +49,7 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit }) {
+    GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           setUserInfo(res, commit)
@@ -61,7 +61,7 @@ const user = {
     },
 
     // 登出
-    LogOut({ commit }) {
+    LogOut ({ commit }) {
       return new Promise((resolve, reject) => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
@@ -70,7 +70,7 @@ const user = {
       })
     },
 
-    updateLoadMenus({ commit }) {
+    updateLoadMenus ({ commit }) {
       return new Promise((resolve, reject) => {
         commit('SET_LOAD_MENUS', false)
       })

@@ -38,9 +38,12 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      loading: false, dialog: false, depts: [], deptId: null,
+      loading: false,
+      dialog: false,
+      depts: [],
+      deptId: null,
       form: {
         id: '',
         name: '',
@@ -60,10 +63,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.form.dept.id = this.deptId
       this.$refs['form'].validate((valid) => {
         if (valid) {
@@ -81,7 +84,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -96,7 +99,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -111,7 +114,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.deptId = null
@@ -124,7 +127,7 @@ export default {
         dept: { id: '' }
       }
     },
-    getDepts() {
+    getDepts () {
       getDepts({ enabled: true }).then(res => {
         this.depts = res.content
       })

@@ -30,9 +30,11 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      loading: false, dialog: false, permissions: [],
+      loading: false,
+      dialog: false,
+      permissions: [],
       form: { name: '', alias: '', pid: 0 },
       rules: {
         name: [
@@ -45,10 +47,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -60,7 +62,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -75,7 +77,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -90,12 +92,12 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = { name: '', alias: '', pid: 0 }
     },
-    getPermissions() {
+    getPermissions () {
       getPermissionTree().then(res => {
         this.permissions = []
         const permission = { id: 0, label: '顶级类目', children: [] }

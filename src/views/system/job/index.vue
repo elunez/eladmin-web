@@ -85,7 +85,7 @@ export default {
   name: 'Job',
   components: { eForm },
   mixins: [initData, initDict],
-  data() {
+  data () {
     return {
       delLoading: false,
       enabledTypeOptions: [
@@ -94,7 +94,7 @@ export default {
       ]
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
       // 加载数据字典
@@ -104,7 +104,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/job'
       const sort = 'sort,asc'
       this.params = { page: this.page, size: this.size, sort: sort }
@@ -115,7 +115,7 @@ export default {
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -133,12 +133,12 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    add() {
+    add () {
       this.isAdd = true
       this.$refs.form.getDepts()
       this.$refs.form.dialog = true
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getDepts()

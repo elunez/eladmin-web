@@ -30,7 +30,7 @@ import errGif from '@/assets/401_images/401.gif'
 
 export default {
   name: 'Page401',
-  data() {
+  data () {
     return {
       errGif: errGif + '?' + +new Date(),
       ewizardClap: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-    back() {
+    back () {
       if (this.$route.query.noGoBack) {
         this.$router.push({ path: '/dashboard' })
       } else {

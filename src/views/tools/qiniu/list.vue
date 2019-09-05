@@ -106,12 +106,20 @@ import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 export default {
   mixins: [initData],
-  data() {
+  data () {
     return {
-      icon: 'el-icon-refresh', delAllLoading: false,
-      url: '', headers: { 'Authorization': 'Bearer ' + getToken() }, dialog: false,
-      dialogImageUrl: '', dialogVisible: false, fileList: [], files: [],
-      newWin: null, downloadLoading: false, delLoading: false
+      icon: 'el-icon-refresh',
+      delAllLoading: false,
+      url: '',
+      headers: { 'Authorization': 'Bearer ' + getToken() },
+      dialog: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      fileList: [],
+      files: [],
+      newWin: null,
+      downloadLoading: false,
+      delLoading: false
     }
   },
   computed: {
@@ -120,7 +128,7 @@ export default {
     ])
   },
   watch: {
-    url(newVal, oldVal) {
+    url (newVal, oldVal) {
       if (newVal && this.newWin) {
         this.newWin.sessionStorage.clear()
         this.newWin.location.href = newVal
@@ -130,7 +138,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.init()
     })
@@ -138,7 +146,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/qiNiuContent'
       const sort = 'id,desc'
       const query = this.query
@@ -147,7 +155,7 @@ export default {
       if (value) { this.params['key'] = value }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -164,7 +172,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    download(id) {
+    download (id) {
       this.downloadLoading = true
       // 先打开一个空的新窗口，再请求
       this.newWin = window.open()
@@ -176,19 +184,19 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    getExtensionName(name) {
+    getExtensionName (name) {
       const dot = name.lastIndexOf('.')
       if ((dot > -1) && (dot < (name.length - 1))) {
         return name.substring(dot + 1)
       }
       return name
     },
-    handleSuccess(response, file, fileList) {
+    handleSuccess (response, file, fileList) {
       const uid = file.uid
       const id = response.id
       this.files.push({ uid, id })
     },
-    handleBeforeRemove(file, fileList) {
+    handleBeforeRemove (file, fileList) {
       for (let i = 0; i < this.files.length; i++) {
         if (this.files[i].uid === file.uid) {
           del(this.files[i].id).then(res => {})
@@ -196,12 +204,12 @@ export default {
         }
       }
     },
-    handlePictureCardPreview(file) {
+    handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
     // 刷新列表数据
-    doSubmit() {
+    doSubmit () {
       this.fileList = []
       this.dialogVisible = false
       this.dialogImageUrl = ''
@@ -209,7 +217,7 @@ export default {
       this.init()
     },
     // 监听上传失败
-    handleError(e, file, fileList) {
+    handleError (e, file, fileList) {
       const msg = JSON.parse(e.message)
       this.$notify({
         title: msg.message,
@@ -217,7 +225,7 @@ export default {
         duration: 2500
       })
     },
-    synchronize() {
+    synchronize () {
       this.icon = 'el-icon-loading'
       this.buttonName = '同步中'
       sync().then(res => {
@@ -236,7 +244,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doDelete() {
+    doDelete () {
       this.delAllLoading = true
       const data = this.$refs.table.selection
       const ids = []
@@ -257,7 +265,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    open() {
+    open () {
       this.$confirm('你确定删除选中的数据吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

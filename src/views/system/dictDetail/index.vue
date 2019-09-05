@@ -60,17 +60,17 @@ import eForm from './form'
 export default {
   components: { eForm },
   mixins: [initData],
-  data() {
+  data () {
     return {
       delLoading: false, dictName: '', dictId: 0
     }
   },
-  created() {
+  created () {
     this.loading = false
   },
   methods: {
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/dictDetail'
       this.params = { page: this.page, size: this.size, dictName: this.dictName }
       const query = this.query
@@ -78,7 +78,7 @@ export default {
       if (value) { this.params['label'] = value }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -96,7 +96,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.form = {

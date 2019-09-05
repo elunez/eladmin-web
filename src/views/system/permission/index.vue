@@ -65,7 +65,7 @@ export default {
   name: 'Permission',
   components: { treeTable, eForm },
   mixins: [initData],
-  data() {
+  data () {
     return {
       columns: [
         {
@@ -77,10 +77,12 @@ export default {
           value: 'alias'
         }
       ],
-      delLoading: false, expand: true, height: 625
+      delLoading: false,
+      expand: true,
+      height: 625
     }
   },
-  created() {
+  created () {
     this.$nextTick(() => {
       this.height = document.documentElement.clientHeight - 200
       this.init()
@@ -89,7 +91,7 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/permissions'
       const sort = 'id,desc'
       const query = this.query
@@ -98,7 +100,7 @@ export default {
       if (value) { this.params['blurry'] = value }
       return true
     },
-    subDelete(id) {
+    subDelete (id) {
       this.delLoading = true
       del(id).then(res => {
         this.delLoading = false
@@ -115,19 +117,19 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    add() {
+    add () {
       this.isAdd = true
       this.$refs.form.getPermissions()
       this.$refs.form.dialog = true
     },
-    edit(data) {
+    edit (data) {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getPermissions()
       _this.form = { id: data.id, name: data.name, alias: data.alias, pid: data.pid }
       _this.dialog = true
     },
-    changeExpand() {
+    changeExpand () {
       this.expand = !this.expand
       this.init()
     }

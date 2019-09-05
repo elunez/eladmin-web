@@ -54,12 +54,12 @@ export default {
   components: {
     CountTo
   },
-  data() {
+  data () {
     return {
       count: { newIp: 0, newVisits: 0, recentIp: 0, recentVisits: 0 }
     }
   },
-  mounted() {
+  mounted () {
     get().then(res => {
       this.count.newIp = res.newIp
       this.count.newVisits = res.newVisits

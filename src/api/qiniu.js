@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function get() {
+export function get () {
   return request({
     url: 'api/qiNiuConfig',
     method: 'get'
   })
 }
 
-export function update(data) {
+export function update (data) {
   return request({
     url: 'api/qiNiuConfig',
     data,
@@ -15,28 +15,28 @@ export function update(data) {
   })
 }
 
-export function del(id) {
+export function del (id) {
   return request({
     url: 'api/qiNiuContent/' + id,
     method: 'delete'
   })
 }
 
-export function download(id) {
+export function download (id) {
   return request({
     url: 'api/qiNiuContent/download/' + id,
     method: 'get'
   })
 }
 
-export function sync() {
+export function sync () {
   return request({
     url: 'api/qiNiuContent/synchronize',
     method: 'post'
   })
 }
 
-export function delAll(ids) {
+export function delAll (ids) {
   return request({
     url: 'api/qiNiuContent/',
     method: 'delete',

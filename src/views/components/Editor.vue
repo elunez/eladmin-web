@@ -18,7 +18,7 @@ import E from 'wangeditor'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Editor',
-  data() {
+  data () {
     return {
       headers: {
         'Authorization': 'Bearer ' + getToken()
@@ -36,7 +36,7 @@ export default {
       'imagesUploadApi'
     ])
   },
-  mounted() {
+  mounted () {
     var editor = new E(this.$refs.editor)
     editor.customConfig.uploadImgShowBase64 = true // 使用 base64 保存图片
     // 不可修改

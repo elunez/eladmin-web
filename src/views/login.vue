@@ -44,7 +44,7 @@ import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
 export default {
   name: 'Login',
-  data() {
+  data () {
     return {
       codeUrl: '',
       cookiePass: '',
@@ -66,24 +66,24 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
-  created() {
+  created () {
     this.getCode()
     this.getCookie()
   },
   methods: {
-    getCode() {
+    getCode () {
       getCodeImg().then(res => {
         this.codeUrl = 'data:image/gif;base64,' + res.img
         this.loginForm.uuid = res.uuid
       })
     },
-    getCookie() {
+    getCookie () {
       const username = Cookies.get('username')
       let password = Cookies.get('password')
       const rememberMe = Cookies.get('rememberMe')
@@ -97,7 +97,7 @@ export default {
         code: ''
       }
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate(valid => {
         const user = {
           username: this.loginForm.username,
@@ -143,7 +143,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(	https://docs-1255840532.cos.ap-shanghai.myqcloud.com/3968.jpg );
+    background-image:url(https://docs-1255840532.cos.ap-shanghai.myqcloud.com/3968.jpg);
     background-size: cover;
   }
   .title {

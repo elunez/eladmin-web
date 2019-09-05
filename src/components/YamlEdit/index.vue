@@ -21,23 +21,23 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       editor: false
     }
   },
   watch: {
-    value(value) {
+    value (value) {
       const editorValue = this.editor.getValue()
       if (value !== editorValue) {
         this.editor.setValue(this.value)
       }
     },
-    height(value) {
+    height (value) {
       this.editor.setSize('auto', this.height)
     }
   },
-  mounted() {
+  mounted () {
     this.editor = CodeMirror.fromTextArea(this.$refs.textarea, {
       mode: 'text/x-yaml',
       lineNumbers: true,
@@ -56,7 +56,7 @@ export default {
     })
   },
   methods: {
-    getValue() {
+    getValue () {
       return this.editor.getValue()
     }
   }

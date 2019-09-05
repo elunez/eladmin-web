@@ -31,9 +31,10 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      loading: false, dialog: false,
+      loading: false,
+      dialog: false,
       form: {
         id: '',
         label: '',
@@ -51,10 +52,10 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    cancel () {
       this.resetForm()
     },
-    doSubmit() {
+    doSubmit () {
       this.form['dict'] = { id: this.dictId }
       this.$refs['form'].validate((valid) => {
         if (valid) {
@@ -65,7 +66,7 @@ export default {
         }
       })
     },
-    doAdd() {
+    doAdd () {
       add(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -80,7 +81,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    doEdit() {
+    doEdit () {
       edit(this.form).then(res => {
         this.resetForm()
         this.$notify({
@@ -95,7 +96,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    resetForm() {
+    resetForm () {
       this.dialog = false
       this.$refs['form'].resetFields()
       this.form = {

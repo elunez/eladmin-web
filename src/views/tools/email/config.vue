@@ -30,9 +30,10 @@
 import { get, update } from '@/api/email'
 export default {
   name: 'Config',
-  data() {
+  data () {
     return {
-      loading: false, form: { id: 1, fromUser: '', user: '', pass: '', host: '', port: '', sslEnable: '' },
+      loading: false,
+      form: { id: 1, fromUser: '', user: '', pass: '', host: '', port: '', sslEnable: '' },
       rules: {
         fromUser: [
           { required: true, message: '请输入发件人邮箱', trigger: 'blur' },
@@ -53,16 +54,16 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       get().then(res => {
         this.form = res
       })
     },
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true

@@ -21,12 +21,13 @@
 <script>
 import { toAliPay } from '@/api/alipay'
 export default {
-  data() {
+  data () {
     return {
       url: '',
       // 新窗口的引用
       newWin: null,
-      loading: false, form: { subject: '', totalAmount: '', body: '' },
+      loading: false,
+      form: { subject: '', totalAmount: '', body: '' },
       rules: {
         subject: [
           { required: true, message: '商品名称不能为空', trigger: 'blur' }
@@ -41,7 +42,7 @@ export default {
     }
   },
   watch: {
-    url(newVal, oldVal) {
+    url (newVal, oldVal) {
       if (newVal && this.newWin) {
         this.newWin.sessionStorage.clear()
         this.newWin.location.href = newVal
@@ -52,7 +53,7 @@ export default {
     }
   },
   methods: {
-    doSubmit() {
+    doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true

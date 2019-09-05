@@ -88,9 +88,11 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      genLoading: false, dialog: false, columnQuery: '',
+      genLoading: false,
+      dialog: false,
+      columnQuery: '',
       form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
@@ -112,7 +114,7 @@ export default {
     }
   },
   methods: {
-    toGen() {
+    toGen () {
       this.dialog = true
       this.time = 130
       this.$nextTick(() => {
@@ -123,19 +125,19 @@ export default {
         })
       })
     },
-    beforeInit() {
+    beforeInit () {
       this.url = 'api/generator/columns'
       const tableName = this.name
       this.params = { tableName }
       return true
     },
-    cancel() {
+    cancel () {
       this.dialog = false
       this.genLoading = false
       this.$refs['form'].resetFields()
       this.form = { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' }
     },
-    doSubmit() {
+    doSubmit () {
       this.genLoading = true
       this.$refs['form'].validate((valid) => {
         if (valid) {
