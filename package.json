@@ -9,8 +9,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
-    "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
+    "test:e2e": "vue-cli-service test:e2e"
   },
   "repository": {
     "type": "git",
@@ -51,12 +50,15 @@
     "@vue/test-utils": "^1.0.0-beta.10",
     "chai": "^4.2.0",
     "eslint-plugin-cypress": "^2.6.1",
+    "file-loader": "^4.2.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "lint-staged": "^9.2.5",
     "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
+    "svg-sprite-loader": "^4.1.6",
+    "svgo-loader": "^2.2.1",
     "vue-template-compiler": "^2.6.10"
   },
   "engines": {
