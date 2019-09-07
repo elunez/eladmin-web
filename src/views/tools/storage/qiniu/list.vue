@@ -103,82 +103,8 @@
         @size-change="sizeChange"
         @current-change="pageChange"/>
     </div>
-<<<<<<< HEAD:src/views/tools/qiniu/list.vue
-    <!-- 文件上传 -->
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" append-to-body width="500px" @close="doSubmit">
-      <el-upload
-        :before-remove="handleBeforeRemove"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :file-list="fileList"
-        :headers="headers"
-        :action="qiNiuUploadApi"
-        class="upload-demo"
-        multiple>
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，且文件不超过15M</div>
-      </el-upload>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="doSubmit">确认</el-button>
-      </div>
-    </el-dialog>
-    <!--表格渲染-->
-    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
-      <el-table-column type="selection" width="55"/>
-      <el-table-column :show-overflow-tooltip="true" label="文件名">
-        <template slot-scope="scope">
-          <span>{{ scope.row.key }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" label="文件类型">
-        <template slot-scope="scope">
-          <span>{{ getExtensionName(scope.row.key) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="bucket" label="空间名称"/>
-      <el-table-column prop="size" label="文件大小"/>
-      <el-table-column prop="type" label="空间类型"/>
-      <el-table-column width="180px" prop="updateTime" label="创建日期">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="130px" align="center" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            :loading="downloadLoading"
-            size="mini"
-            type="primary"
-            icon="el-icon-download"
-            @click="download(scope.row.id)"/>
-          <el-popover
-            v-permission="['ADMIN','PICTURE_ALL','PICTURE_DELETE']"
-            :ref="scope.row.id"
-            placement="top"
-            width="180">
-            <p>确定删除本条数据吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
-            </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
-          </el-popover>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px;"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"/>
   </div>
 </template>
-=======
-</div></template>
->>>>>>> master:src/views/tools/storage/qiniu/list.vue
 
 <script>
 import initData from '@/mixins/initData'
