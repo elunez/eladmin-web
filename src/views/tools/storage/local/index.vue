@@ -15,18 +15,30 @@
           icon="el-icon-upload"
           @click="add">文件上传</el-button>
       </div>
+      <!-- 多选删除 -->
+      <div style="display: inline-block;margin: 0px 2px;">
+        <el-button
+          :loading="delAllLoading"
+          :disabled="data.length === 0 || $refs.table.selection.length === 0"
+          class="filter-item"
+          size="mini"
+          type="danger"
+          icon="el-icon-delete"
+          @click="open">删除</el-button>
+      </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55"/>
       <el-table-column :show-overflow-tooltip="true" prop="name" label="文件名">
         <template slot-scope="scope">
-          <el-link :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName" target="_blank" type="primary">{{ scope.row.name }}</el-link>
+          <el-link :underline="false" :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName" target="_blank" type="primary">{{ scope.row.name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="suffix" label="后缀"/>
-      <el-table-column prop="type" label="类型"/>
+      <el-table-column prop="suffix" label="文件类型"/>
+      <el-table-column prop="type" label="类别"/>
       <el-table-column prop="size" label="大小"/>
       <el-table-column prop="operate" label="操作人"/>
       <el-table-column prop="createTime" label="创建日期">
@@ -72,7 +84,7 @@
 import { mapGetters } from 'vuex'
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/localStorage'
+import { del, delAll } from '@/api/localStorage'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
@@ -80,7 +92,7 @@ export default {
   mixins: [initData],
   data() {
     return {
-      delLoading: false,
+      delLoading: false, delAllLoading: false,
       queryTypeOptions: [
         { key: 'name', display_name: '文件名' },
         { key: 'suffix', display_name: '后缀' },
@@ -141,6 +153,36 @@ export default {
         name: data.name
       }
       _this.dialog = true
+    },
+    doDelete() {
+      this.delAllLoading = true
+      const data = this.$refs.table.selection
+      const ids = []
+      for (let i = 0; i < data.length; i++) {
+        ids.push(data[i].id)
+      }
+      delAll(ids).then(res => {
+        this.delAllLoading = false
+        this.dleChangePage(ids.length)
+        this.init()
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(err => {
+        this.delAllLoading = false
+        console.log(err.response.data.message)
+      })
+    },
+    open() {
+      this.$confirm('你确定删除选中的数据吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.doDelete()
+      })
     }
   }
 }

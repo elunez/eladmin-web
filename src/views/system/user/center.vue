@@ -15,8 +15,7 @@
                 :headers="headers"
                 :action="updateAvatarApi"
                 class="avatar-uploader">
-                <img v-if="user.avatar" :src="user.avatar" title="点击上传头像" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+                <img :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" title="点击上传头像" class="avatar">
               </el-upload>
             </div>
             <ul class="user-info">
@@ -86,12 +85,14 @@ import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { parseTime } from '@/utils/index'
 import initData from '@/mixins/initData'
+import Avatar from '@/assets/avatar/avatar.png'
 export default {
   name: 'Center',
   components: { updatePass, updateEmail },
   mixins: [initData],
   data() {
     return {
+      Avatar: Avatar,
       ico: 'el-icon-refresh',
       headers: {
         'Authorization': 'Bearer ' + getToken()
@@ -101,7 +102,8 @@ export default {
   computed: {
     ...mapGetters([
       'user',
-      'updateAvatarApi'
+      'updateAvatarApi',
+      'baseApi'
     ])
   },
   created() {
