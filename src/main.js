@@ -21,12 +21,12 @@ Vue.use(mavonEditor)
 Vue.use(permission)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
-require('babel-polyfill')
 
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(error => error)
 }
+require('babel-polyfill')
 
 new Vue({
   el: '#app',
