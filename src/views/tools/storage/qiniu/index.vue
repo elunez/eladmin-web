@@ -19,7 +19,7 @@
           class="filter-item"
           size="mini"
           type="success"
-          icon="el-icon-delete"
+          icon="el-icon-s-tools"
           @click="doConfig">七牛配置</el-button>
       </div>
       <!-- 多选删除 -->
@@ -56,14 +56,10 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column :show-overflow-tooltip="true" label="文件名">
           <template slot-scope="scope">
-            <span>{{ scope.row.key }}</span>
+            <a href="JavaScript:;" class="el-link el-link--primary" target="_blank" type="primary" @click="download(scope.row.id)">{{ scope.row.key }}</a>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="文件类型">
-          <template slot-scope="scope">
-            <span>{{ getExtensionName(scope.row.key) }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="suffix" label="文件类型"/>
         <el-table-column prop="bucket" label="空间名称"/>
         <el-table-column prop="size" label="文件大小"/>
         <el-table-column prop="type" label="空间类型"/>
@@ -72,14 +68,8 @@
             <span>{{ parseTime(scope.row.updateTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="130px" align="center" fixed="right">
+        <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-button
-              :loading="downloadLoading"
-              size="mini"
-              type="primary"
-              icon="el-icon-download"
-              @click="download(scope.row.id)"/>
             <el-popover
               :ref="scope.row.id"
               placement="top"
@@ -103,7 +93,8 @@
         @size-change="sizeChange"
         @current-change="pageChange"/>
     </div>
-</div></template>
+  </div>
+</template>
 
 <script>
 import initData from '@/mixins/initData'
@@ -138,11 +129,6 @@ export default {
         this.newWin = null
       }
     }
-  },
-  created() {
-    this.$nextTick(() => {
-      this.init()
-    })
   },
   methods: {
     parseTime,
@@ -188,13 +174,6 @@ export default {
         this.downloadLoading = false
         console.log(err.response.data.message)
       })
-    },
-    getExtensionName(name) {
-      const dot = name.lastIndexOf('.')
-      if ((dot > -1) && (dot < (name.length - 1))) {
-        return name.substring(dot + 1)
-      }
-      return name
     },
     handleSuccess(response, file, fileList) {
       const uid = file.uid

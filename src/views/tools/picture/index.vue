@@ -27,7 +27,7 @@
       </div>
     </div>
     <!--上传图片-->
-    <el-dialog :visible.sync="dialog" append-to-body width="600px" @close="doSubmit">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" append-to-body width="600px" @close="doSubmit">
       <el-upload
         :on-preview="handlePictureCardPreview"
         :before-remove="handleBeforeRemove"
@@ -64,7 +64,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="100px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"
@@ -99,6 +99,7 @@ import { mapGetters } from 'vuex'
 import { del, delAll } from '@/api/picture'
 import { getToken } from '@/utils/auth'
 export default {
+  name: 'Pictures',
   mixins: [initData],
   data() {
     return {

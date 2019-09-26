@@ -35,6 +35,7 @@ import Config from './config'
 import ToPay from './toPay'
 import '@/styles/description.scss'
 export default {
+  name: 'AliPay',
   components: { Config, ToPay },
   data() {
     return {

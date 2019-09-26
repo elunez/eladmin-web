@@ -15,6 +15,14 @@ export function del(id) {
   })
 }
 
+export function delAll(ids) {
+  return request({
+    url: 'api/localStorage/',
+    method: 'delete',
+    data: ids
+  })
+}
+
 export function edit(data) {
   return request({
     url: 'api/localStorage',

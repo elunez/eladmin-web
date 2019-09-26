@@ -7,6 +7,13 @@ export function add(data) {
     data
   })
 }
+export function downloadUser() {
+  return request({
+    url: 'api/users/download',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
 
 export function del(id) {
   return request({

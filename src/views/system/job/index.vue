@@ -45,7 +45,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_EDIT','USERJOB_DELETE'])" label="操作" width="130px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_EDIT','USERJOB_DELETE'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button v-permission="['ADMIN','USERJOB_ALL','USERJOB_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
@@ -82,6 +82,7 @@ import { del } from '@/api/job'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
+  name: 'Job',
   components: { eForm },
   mixins: [initData, initDict],
   data() {

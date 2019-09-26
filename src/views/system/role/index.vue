@@ -5,7 +5,7 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable placeholder="输入名称或者描述搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['ADMIN','ROLES_ALL','ROLES_CREATE']" style="display: inline-block;margin: 0px 2px;">
@@ -19,7 +19,7 @@
     </div>
     <el-row :gutter="15">
       <!--角色管理-->
-      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17">
+      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17" style="margin-bottom: 10px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <span class="role-span">角色列表</span>
@@ -40,7 +40,7 @@
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkPermission(['ADMIN','ROLES_ALL','ROLES_EDIT','ROLES_DELETE'])" label="操作" width="130px" align="center">
+            <el-table-column v-if="checkPermission(['ADMIN','ROLES_ALL','ROLES_EDIT','ROLES_DELETE'])" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <el-button v-permission="['ADMIN','ROLES_ALL','ROLES_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
                 <el-popover
@@ -133,6 +133,7 @@ import { parseTime } from '@/utils/index'
 import eForm from './form'
 import { editPermission, editMenu, get } from '@/api/role'
 export default {
+  name: 'Role',
   components: { eForm },
   mixins: [initData],
   data() {
@@ -156,15 +157,16 @@ export default {
     parseTime,
     checkPermission,
     beforeInit() {
-      this.$refs.permission.setCheckedKeys([])
-      this.$refs.menu.setCheckedKeys([])
       this.showButton = false
       this.url = 'api/roles'
       const sort = 'level,asc'
       const query = this.query
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['name'] = value }
+      if (value) { this.params['blurry'] = value }
+      // 清空权限与菜单的选中
+      this.$refs.permission.setCheckedKeys([])
+      this.$refs.menu.setCheckedKeys([])
       return true
     },
     subDelete(id) {
@@ -309,5 +311,11 @@ export default {
   .role-span {
     font-weight: bold;color: #303133;
     font-size: 15px;
+  }
+</style>
+
+<style scoped>
+  /deep/ .el-tree-node__label{
+    margin-left: 5px;
   }
 </style>

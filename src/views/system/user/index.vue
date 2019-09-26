@@ -4,21 +4,18 @@
     <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
     <el-row :gutter="20">
       <!--部门数据-->
-      <el-col :xs="7" :sm="6" :md="4" :lg="4" :xl="4">
+      <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
         <div class="head-container">
           <el-input v-model="deptName" clearable placeholder="输入部门名称搜索" prefix-icon="el-icon-search" style="width: 100%;" class="filter-item" @input="getDeptDatas"/>
         </div>
         <el-tree :data="depts" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick"/>
       </el-col>
       <!--用户数据-->
-      <el-col :xs="17" :sm="18" :md="20" :lg="20" :xl="20">
+      <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.value" clearable placeholder="输入关键字搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-          <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
-            <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-          </el-select>
+          <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
           <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
             <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
@@ -35,7 +32,7 @@
           <!-- 导出 -->
           <div style="display: inline-block;">
             <el-button
-              v-permission="['ADMIN']"
+              v-permission="['ADMIN','USER_ALL','USER_SELECT']"
               :loading="downloadLoading"
               size="mini"
               class="filter-item"
@@ -66,7 +63,7 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center">
+          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center" fixed="right">
             <template slot-scope="scope">
               <el-button v-permission="['ADMIN','USER_ALL','USER_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
               <el-popover
@@ -101,11 +98,12 @@
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import initDict from '@/mixins/initDict'
-import { del } from '@/api/user'
+import { del, downloadUser } from '@/api/user'
 import { getDepts } from '@/api/dept'
-import { parseTime } from '@/utils/index'
+import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {
+  name: 'User',
   components: { eForm },
   mixins: [initData, initDict],
   data() {
@@ -117,10 +115,6 @@ export default {
         label: 'name'
       },
       downloadLoading: false,
-      queryTypeOptions: [
-        { key: 'username', display_name: '用户名' },
-        { key: 'email', display_name: '邮箱' }
-      ],
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
@@ -148,11 +142,10 @@ export default {
       this.url = 'api/users'
       const sort = 'id,desc'
       const query = this.query
-      const type = query.type
-      const value = query.value
+      const blurry = query.blurry
       const enabled = query.enabled
       this.params = { page: this.page, size: this.size, sort: sort, deptId: this.deptId }
-      if (type && value) { this.params[type] = value }
+      if (blurry) { this.params['blurry'] = blurry }
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
@@ -200,15 +193,10 @@ export default {
     // 导出
     download() {
       this.downloadLoading = true
-      import('@/utils/export2Excel').then(excel => {
-        const tHeader = ['ID', '用户名', '邮箱', '头像地址', '状态', '注册日期', '最后修改密码日期']
-        const filterVal = ['id', 'username', 'email', 'avatar', 'enabled', 'createTime', 'lastPasswordResetTime']
-        const data = this.formatJson(filterVal, this.data)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
+      downloadUser().then(result => {
+        downloadFile(result, '用户列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
         this.downloadLoading = false
       })
     },

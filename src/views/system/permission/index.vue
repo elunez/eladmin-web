@@ -3,7 +3,7 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable placeholder="输入名称或者别名搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_CREATE']" style="display: inline-block;margin: 0px 2px 0px">
@@ -27,13 +27,13 @@
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="expand" :columns="columns" size="small">
+    <tree-table v-loading="loading" :data="data" :expand-all="expand" :height="height" :columns="columns" size="small">
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_EDIT','PERMISSION_DELETE'])" label="操作" width="130px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','PERMISSION_ALL','PERMISSION_EDIT','PERMISSION_DELETE'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button v-permission="['ADMIN','PERMISSION_ALL','PERMISSION_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
@@ -62,6 +62,7 @@ import { del } from '@/api/permission'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
+  name: 'Permission',
   components: { treeTable, eForm },
   mixins: [initData],
   data() {
@@ -76,11 +77,12 @@ export default {
           value: 'alias'
         }
       ],
-      delLoading: false, expand: true
+      delLoading: false, expand: true, height: 625
     }
   },
   created() {
     this.$nextTick(() => {
+      this.height = document.documentElement.clientHeight - 200
       this.init()
     })
   },
@@ -93,7 +95,7 @@ export default {
       const query = this.query
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['name'] = value }
+      if (value) { this.params['blurry'] = value }
       return true
     },
     subDelete(id) {
