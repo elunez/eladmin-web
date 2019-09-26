@@ -1,15 +1,35 @@
 'use strict'
 // Template version: 1.2.6
-// see http://vuejs-templates.github.io/webpack for documentation.
-
+const devEnv = require('./dev.env')
+// 获取接口地址
+const base_url = devEnv.BASE_API.replace(/"/g,'')
 const path = require('path')
-
 module.exports = {
   dev: {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    // 配置代理
+    proxyTable: {
+      '/auth': {
+        // 测试环境
+        target: base_url,
+        secure: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/auth': 'auth'
+        }
+      },
+      '/api': {
+        // 测试环境
+        target: base_url,
+        secure: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': 'api'
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -57,7 +77,7 @@ module.exports = {
      * then assetsPublicPath should be set to "/bar/".
      * In most cases please use '/' !!!
      */
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

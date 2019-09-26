@@ -194,7 +194,7 @@ export default {
     download() {
       this.downloadLoading = true
       downloadUser().then(result => {
-        downloadFile(result, '用户列表', 'xls')
+        downloadFile(result, '用户列表', 'xlsx')
         this.downloadLoading = false
       }).catch(() => {
         this.downloadLoading = false
