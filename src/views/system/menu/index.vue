@@ -110,7 +110,7 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.height = document.documentElement.clientHeight - 200
+      this.height = document.documentElement.clientHeight - 250
       this.init()
     })
   },
