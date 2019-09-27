@@ -20,7 +20,7 @@
           size="mini"
           type="warning"
           icon="el-icon-more"
-          @click="changExpand">{{ $parent.expand ? '折叠' : '展开' }}</el-button>
+          @click="changExpand">{{ expand ? '折叠' : '展开' }}</el-button>
         <eForm ref="form" :is-add="true"/>
       </div>
     </div>
