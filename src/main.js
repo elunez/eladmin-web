@@ -11,6 +11,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router/routers'
 import permission from './components/permission'
+import dict from './components/dict'
 import store from './store'
 
 import '@/icons' // icon
@@ -19,6 +20,7 @@ import './router/index' // permission control
 
 Vue.use(mavonEditor)
 Vue.use(permission)
+Vue.use(dict)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 
