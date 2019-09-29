@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--form 组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
+    <eForm ref="form" :is-add="isAdd" :dicts="dict.user_status"/>
     <el-row :gutter="20">
       <!--部门数据-->
       <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
@@ -53,9 +53,7 @@
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
-              <div v-for="item in dicts" :key="item.id">
-                <el-tag v-if="scope.row.enabled.toString() === item.value" :type="scope.row.enabled ? '' : 'info'">{{ item.label }}</el-tag>
-              </div>
+              <el-tag>{{ dict.label.user_status[scope.row.enabled] }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
@@ -97,7 +95,6 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import initDict from '@/mixins/initDict'
 import { del, downloadUser } from '@/api/user'
 import { getDepts } from '@/api/dept'
 import { parseTime, downloadFile } from '@/utils/index'
@@ -105,7 +102,9 @@ import eForm from './form'
 export default {
   name: 'User',
   components: { eForm },
-  mixins: [initData, initDict],
+  mixins: [initData],
+  // 设置数据字典
+  dicts: ['user_status'],
   data() {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;', isAdd: false,
@@ -125,8 +124,6 @@ export default {
     this.getDeptDatas()
     this.$nextTick(() => {
       this.init()
-      // 加载数据字典
-      this.getDict('user_status')
     })
   },
   mounted: function() {
