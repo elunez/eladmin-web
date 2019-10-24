@@ -2,11 +2,11 @@ import Vue from 'vue'
 import { get as getDictDetail } from '@/api/dictDetail'
 
 export default class Dict {
-  constructor (dict) {
+  constructor(dict) {
     this.dict = dict
   }
 
-  async init (names, completeCallback) {
+  async init(names, completeCallback) {
     if (names === undefined || name === null) {
       throw new Error('need dict names')
     }

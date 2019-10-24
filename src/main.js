@@ -16,7 +16,7 @@ import store from './store'
 
 import '@/icons' // icon
 import './router/index' // permission control
-// import Router from 'vue-router'
+import Router from 'vue-router'
 
 Vue.use(mavonEditor)
 Vue.use(permission)
@@ -24,10 +24,10 @@ Vue.use(dict)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 
-// const routerPush = Router.prototype.push
-// Router.prototype.push = function push(location) {
-//   return routerPush.call(this, location).catch(error => error)
-// }
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error => error)
+}
 require('babel-polyfill')
 
 new Vue({

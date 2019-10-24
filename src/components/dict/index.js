@@ -1,20 +1,20 @@
 import Dict from './Dict'
 
-const install = function (Vue) {
+const install = function(Vue) {
   Vue.mixin({
-    data () {
+    data() {
       if (this.$options.dicts instanceof Array) {
         const dict = {
           dict: {},
-          label: {},
+          label: {}
         }
         return {
-          dict,
+          dict
         }
       }
       return {}
     },
-    created () {
+    created() {
       if (this.$options.dicts instanceof Array) {
         new Dict(this.dict).init(this.$options.dicts, () => {
           this.$nextTick(() => {
@@ -22,7 +22,7 @@ const install = function (Vue) {
           })
         })
       }
-    },
+    }
   })
 }
 

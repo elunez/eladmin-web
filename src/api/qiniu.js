@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function get() {
   return request({
-    url: 'api/qiNiuConfig',
+    url: 'api/qiNiuContent/config',
     method: 'get'
   })
 }
 
 export function update(data) {
   return request({
-    url: 'api/qiNiuConfig',
+    url: 'api/qiNiuContent/config',
     data,
     method: 'put'
   })
