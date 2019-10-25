@@ -22,7 +22,7 @@ export function getInfo() {
 
 export function getCodeImg() {
   return request({
-    url: 'auth/vCode',
+    url: 'auth/code',
     method: 'get'
   })
 }
