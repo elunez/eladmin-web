@@ -26,3 +26,10 @@ export function getCodeImg() {
     method: 'get'
   })
 }
+
+export function logout() {
+  return request({
+    url: 'auth/logout',
+    method: 'delete'
+  })
+}
