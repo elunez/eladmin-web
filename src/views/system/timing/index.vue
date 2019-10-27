@@ -69,9 +69,9 @@
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
-      <el-table-column :show-overflow-tooltip="true" prop="updateTime" label="更新日期">
+      <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT','JOB_DELETE'])" label="操作" width="180px" align="center" fixed="right">
