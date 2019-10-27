@@ -15,19 +15,15 @@
           @click="add">新增</el-button>
       </div>
       <div style="display: inline-block;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="warning"
-          icon="el-icon-more"
-          @click="changeExpand">{{ expand ? '折叠' : '展开' }}</el-button>
         <eForm ref="form" :is-add="true"/>
       </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="expand" :height="height" :columns="columns" size="small">
+    <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" row-key="id" size="small">
+      <el-table-column label="名称" prop="name"/>
+      <el-table-column label="别名" prop="alias"/>
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -55,39 +51,27 @@
           </el-popover>
         </template>
       </el-table-column>
-    </tree-table>
+    </el-table>
   </div>
 </template>
 
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
-import treeTable from '@/components/TreeTable'
 import initData from '@/mixins/initData'
 import { del } from '@/api/permission'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Permission',
-  components: { treeTable, eForm },
+  components: { eForm },
   mixins: [initData],
   data() {
     return {
-      columns: [
-        {
-          text: '名称',
-          value: 'name'
-        },
-        {
-          text: '别名',
-          value: 'alias'
-        }
-      ],
-      delLoading: false, expand: true, height: 625
+      delLoading: false, expand: false
     }
   },
   created() {
     this.$nextTick(() => {
-      this.height = document.documentElement.clientHeight - 200
       this.init()
     })
   },
@@ -96,10 +80,9 @@ export default {
     checkPermission,
     beforeInit() {
       this.url = 'api/permissions'
-      const sort = 'id,desc'
       const query = this.query
       const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
+      this.params = { page: this.page, size: this.size }
       if (value) { this.params['blurry'] = value }
       return true
     },

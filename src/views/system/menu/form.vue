@@ -14,7 +14,7 @@
           </el-input>
         </el-popover>
       </el-form-item>
-      <el-form-item label="菜单名称" prop="name">
+      <el-form-item label="菜单标题" prop="name">
         <el-input v-model="form.name" placeholder="名称" style="width: 450px;"/>
       </el-form-item>
       <el-form-item label="内部菜单">

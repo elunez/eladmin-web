@@ -18,19 +18,14 @@
           @click="add">新增</el-button>
       </div>
       <div style="display: inline-block;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="warning"
-          icon="el-icon-more"
-          @click="changeExpand">{{ expand ? '折叠' : '展开' }}</el-button>
         <eForm ref="form" :is-add="true" :dicts="dicts"/>
       </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :expand-all="expand" :data="data" :columns="columns" size="small">
+    <el-table v-loading="loading" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" :data="data" row-key="id" size="small">
+      <el-table-column label="名称" prop="name"/>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <div v-for="item in dicts" :key="item.id">
@@ -65,12 +60,11 @@
           </el-popover>
         </template>
       </el-table-column>
-    </tree-table>
+    </el-table>
   </div>
 </template>
 
 <script>
-import treeTable from '@/components/TreeTable'
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import initDict from '@/mixins/initDict'
@@ -79,16 +73,10 @@ import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Dept',
-  components: { eForm, treeTable },
+  components: { eForm },
   mixins: [initData, initDict],
   data() {
     return {
-      columns: [
-        {
-          text: '名称',
-          value: 'name'
-        }
-      ],
       enabledTypeOptions: [
         { key: 'true', display_name: '正常' },
         { key: 'false', display_name: '禁用' }
@@ -142,7 +130,6 @@ export default {
     },
     changeExpand() {
       this.expand = !this.expand
-      this.init()
     },
     edit(data) {
       this.isAdd = false

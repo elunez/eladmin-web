@@ -15,19 +15,14 @@
           @click="add">新增</el-button>
       </div>
       <div style="display: inline-block;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="warning"
-          icon="el-icon-more"
-          @click="changExpand">{{ expand ? '折叠' : '展开' }}</el-button>
         <eForm ref="form" :is-add="true"/>
       </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
-    <tree-table v-loading="loading" :data="data" :expand-all="expand" :columns="columns" :height="height" size="small">
+    <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" row-key="id" size="small">
+      <el-table-column :show-overflow-tooltip="true" label="标题" width="125px" prop="name"/>
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
@@ -81,36 +76,27 @@
           </el-popover>
         </template>
       </el-table-column>
-    </tree-table>
+    </el-table>
   </div>
 </template>
 
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
-import treeTable from '@/components/TreeTable'
 import initData from '@/mixins/initData'
 import { del } from '@/api/menu'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Menu',
-  components: { treeTable, eForm },
+  components: { eForm },
   mixins: [initData],
   data() {
     return {
-      columns: [
-        {
-          text: '名称',
-          value: 'name',
-          width: 140
-        }
-      ],
-      delLoading: false, expand: true, height: 625
+      delLoading: false, expand: false
     }
   },
   created() {
     this.$nextTick(() => {
-      this.height = document.documentElement.clientHeight - 200
       this.init()
     })
   },
