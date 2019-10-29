@@ -8,7 +8,7 @@
       <!-- 新增 -->
       <div style="display: inline-block;margin: 0px 2px;">
         <el-button
-          v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_CREATE']"
+          v-permission="['admin','storage:add']"
           class="filter-item"
           size="mini"
           type="primary"
@@ -18,6 +18,7 @@
       <!-- 多选删除 -->
       <div style="display: inline-block;margin: 0px 2px;">
         <el-button
+          v-permission="['admin','storage:del']"
           :loading="delAllLoading"
           :disabled="data.length === 0 || $refs.table.selection.length === 0"
           class="filter-item"
@@ -51,11 +52,11 @@
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT','LOCALSTORAGE_DELETE'])" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['admin','storage:edit','storage:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','storage:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_DELETE']"
+            v-permission="['admin','storage:del']"
             :ref="scope.row.id"
             placement="top"
             width="180">

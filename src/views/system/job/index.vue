@@ -9,7 +9,7 @@
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div v-permission="['ADMIN','USERJOB_ALL','USERJOB_CREATE']" style="display: inline-block;margin: 0px 2px;">
+      <div v-permission="['admin','job:add']" style="display: inline-block;margin: 0px 2px;">
         <el-button
           class="filter-item"
           size="mini"
@@ -19,7 +19,7 @@
       </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
+    <eForm ref="form" :is-add="isAdd" :dicts="dict.job_status"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column prop="name" label="名称"/>
@@ -35,9 +35,11 @@
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          <div v-for="item in dicts" :key="item.id">
-            <el-tag v-if="scope.row.enabled.toString() === item.value" :type="scope.row.enabled ? '' : 'info'">{{ item.label }}</el-tag>
-          </div>
+          <el-switch
+            v-model="scope.row.enabled"
+            active-color="#409EFF"
+            inactive-color="#F56C6C"
+            @change="changeEnabled(scope.row, scope.row.enabled,)"/>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
@@ -45,11 +47,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_EDIT','USERJOB_DELETE'])" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','job:edit','job:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','USERJOB_ALL','USERJOB_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','job:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','USERJOB_ALL','USERJOB_DELETE']"
+            v-permission="['admin','job:del']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -77,14 +79,15 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import initDict from '@/mixins/initDict'
-import { del } from '@/api/job'
+import { del, edit } from '@/api/job'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Job',
   components: { eForm },
-  mixins: [initData, initDict],
+  mixins: [initData],
+  // 设置数据字典
+  dicts: ['job_status'],
   data() {
     return {
       delLoading: false,
@@ -97,8 +100,6 @@ export default {
   created() {
     this.$nextTick(() => {
       this.init()
-      // 加载数据字典
-      this.getDict('job_status')
     })
   },
   methods: {
@@ -152,6 +153,26 @@ export default {
       }
       _this.deptId = data.dept.id
       _this.dialog = true
+    },
+    // 改变状态
+    changeEnabled(data, val) {
+      this.$confirm('此操作将 "' + this.dict.label.job_status[val] + '" ' + data.name + '岗位, 是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        edit(data).then(res => {
+          this.$notify({
+            title: this.dict.label.job_status[val] + '成功',
+            type: 'success',
+            duration: 2500
+          })
+        }).catch(err => {
+          console.log(err.response.data.message)
+        })
+      }).catch(() => {
+        data.enabled = !data.enabled
+      })
     }
   }
 }

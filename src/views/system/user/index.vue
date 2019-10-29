@@ -21,7 +21,7 @@
           </el-select>
           <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
           <!-- 新增 -->
-          <div v-permission="['ADMIN','USER_ALL','USER_CREATE']" style="display: inline-block;margin: 0px 2px;">
+          <div v-permission="['admin','user:add']" style="display: inline-block;margin: 0px 2px;">
             <el-button
               class="filter-item"
               size="mini"
@@ -32,7 +32,7 @@
           <!-- 导出 -->
           <div style="display: inline-block;">
             <el-button
-              v-permission="['ADMIN','USER_ALL','USER_SELECT']"
+              v-permission="['admin','user:list']"
               :loading="downloadLoading"
               size="mini"
               class="filter-item"
@@ -53,7 +53,11 @@
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
-              <el-tag>{{ dict.label.user_status[scope.row.enabled] }}</el-tag>
+              <el-switch
+                v-model="scope.row.enabled"
+                active-color="#409EFF"
+                inactive-color="#F56C6C"
+                @change="changeEnabled(scope.row, scope.row.enabled,)"/>
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
@@ -61,11 +65,11 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center" fixed="right">
+          <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="125" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-button v-permission="['ADMIN','USER_ALL','USER_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+              <el-button v-permission="['admin','user:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
               <el-popover
-                v-permission="['ADMIN','USER_ALL','USER_DELETE']"
+                v-permission="['admin','user:del']"
                 :ref="scope.row.id"
                 placement="top"
                 width="180">
@@ -95,7 +99,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, downloadUser } from '@/api/user'
+import { del, downloadUser, edit } from '@/api/user'
 import { getDepts } from '@/api/dept'
 import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
@@ -224,6 +228,26 @@ export default {
       _this.jobId = data.job.id
       _this.getJobs(_this.deptId)
       _this.dialog = true
+    },
+    // 改变状态
+    changeEnabled(data, val) {
+      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        edit(data).then(res => {
+          this.$notify({
+            title: this.dict.label.user_status[val] + '成功',
+            type: 'success',
+            duration: 2500
+          })
+        }).catch(err => {
+          console.log(err.response.data.message)
+        })
+      }).catch(() => {
+        data.enabled = !data.enabled
+      })
     }
   }
 }

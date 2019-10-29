@@ -10,8 +10,8 @@ import '@/styles/index.scss' // global css
 
 import App from './App'
 import router from './router/routers'
-import permission from './components/permission'
-import dict from './components/dict'
+import permission from './components/Permission'
+import dict from './components/Dict'
 import store from './store'
 
 import '@/icons' // icon

@@ -8,7 +8,7 @@ export default class Dict {
 
   async init(names, completeCallback) {
     if (names === undefined || name === null) {
-      throw new Error('need dict names')
+      throw new Error('need Dict names')
     }
     const ps = []
     names.forEach(n => {

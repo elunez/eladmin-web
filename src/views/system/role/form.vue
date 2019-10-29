@@ -4,6 +4,9 @@
       <el-form-item label="角色名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;"/>
       </el-form-item>
+      <el-form-item label="角色权限">
+        <el-input v-model="form.permission" style="width: 370px;"/>
+      </el-form-item>
       <el-form-item label="角色级别" prop="sort">
         <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 370px;"/>
       </el-form-item>
@@ -47,7 +50,7 @@ export default {
     return {
       dateScopes: ['全部', '本级', '自定义'],
       loading: false, dialog: false, depts: [], deptIds: [],
-      form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3 },
+      form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -119,7 +122,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3 }
+      this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' }
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {

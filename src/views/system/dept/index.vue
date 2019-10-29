@@ -9,7 +9,7 @@
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div v-permission="['ADMIN','DEPT_ALL','DEPT_CREATE']" style="display: inline-block;margin: 0px 2px;">
+      <div v-permission="['admin','dept:add']" style="display: inline-block;margin: 0px 2px;">
         <el-button
           class="filter-item"
           size="mini"
@@ -17,20 +17,20 @@
           icon="el-icon-plus"
           @click="add">新增</el-button>
       </div>
-      <div style="display: inline-block;">
-        <eForm ref="form" :is-add="true" :dicts="dicts"/>
-      </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
+    <eForm ref="form" :is-add="isAdd" :dicts="dict.dept_status"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" :data="data" row-key="id" size="small">
       <el-table-column label="名称" prop="name"/>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          <div v-for="item in dicts" :key="item.id">
-            <el-tag v-if="scope.row.enabled.toString() === item.value" :type="scope.row.enabled ? '' : 'info'">{{ item.label }}</el-tag>
-          </div>
+          <el-switch
+            v-model="scope.row.enabled"
+            :disabled="scope.row.id == 1"
+            active-color="#409EFF"
+            inactive-color="#F56C6C"
+            @change="changeEnabled(scope.row, scope.row.enabled,)"/>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
@@ -38,11 +38,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_EDIT','DEPT_DELETE'])" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','dept:edit','dept:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','DEPT_ALL','DEPT_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','dept:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','DEPT_ALL','DEPT_DELETE']"
+            v-permission="['admin','dept:del']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -62,14 +62,15 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import initDict from '@/mixins/initDict'
-import { del } from '@/api/dept'
+import { del, edit } from '@/api/dept'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Dept',
   components: { eForm },
-  mixins: [initData, initDict],
+  mixins: [initData],
+  // 设置数据字典
+  dicts: ['dept_status'],
   data() {
     return {
       enabledTypeOptions: [
@@ -82,8 +83,6 @@ export default {
   created() {
     this.$nextTick(() => {
       this.init()
-      // 加载数据字典
-      this.getDict('dept_status')
     })
   },
   methods: {
@@ -138,6 +137,26 @@ export default {
         enabled: data.enabled.toString()
       }
       _this.dialog = true
+    },
+    // 改变状态
+    changeEnabled(data, val) {
+      this.$confirm('此操作将 "' + this.dict.label.dept_status[val] + '" ' + data.name + '部门, 是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        edit(data).then(res => {
+          this.$notify({
+            title: this.dict.label.dept_status[val] + '成功',
+            type: 'success',
+            duration: 2500
+          })
+        }).catch(err => {
+          console.log(err.response.data.message)
+        })
+      }).catch(() => {
+        data.enabled = !data.enabled
+      })
     }
   }
 }

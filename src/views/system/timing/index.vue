@@ -6,7 +6,7 @@
       <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div v-permission="['ADMIN','JOB_ALL','JOB_CREATE']" style="display: inline-block;margin: 0px 2px;">
+      <div v-permission="['admin','timing:add']" style="display: inline-block;margin: 0px 2px;">
         <el-button
           class="filter-item"
           size="mini"
@@ -15,7 +15,7 @@
           @click="dialog = true;isAdd = true">新增</el-button>
       </div>
       <!-- 任务日志 -->
-      <div v-permission="['ADMIN','JOB_ALL','JOB_SELECT']" style="display: inline-block;">
+      <div style="display: inline-block;">
         <el-button
           class="filter-item"
           size="mini"
@@ -74,15 +74,15 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','JOB_ALL','JOB_EDIT','JOB_DELETE'])" label="操作" width="180px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','timing:edit','timing:del'])" label="操作" width="180px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" size="mini" style="margin-right: 3px;" type="text" @click="edit(scope.row)">编辑</el-button>
-          <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
-          <el-button v-permission="['ADMIN','JOB_ALL','JOB_EDIT']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
+          <el-button v-permission="['admin','timing:edit']" size="mini" style="margin-right: 3px;" type="text" @click="edit(scope.row)">编辑</el-button>
+          <el-button v-permission="['admin','timing:edit']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
+          <el-button v-permission="['admin',,'timing:edit']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
             {{ scope.row.isPause ? '恢复' : '暂停' }}
           </el-button>
           <el-popover
-            v-permission="['ADMIN','JOB_ALL','JOB_DELETE']"
+            v-permission="['admin','timing:del']"
             :ref="scope.row.id"
             placement="top"
             width="200">

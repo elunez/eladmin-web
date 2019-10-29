@@ -19,7 +19,7 @@
       <el-table-column prop="createTime" label="操作" width="100px">
         <template slot-scope="scope">
           <el-popover
-            v-permission="['ADMIN']"
+            v-permission="['admin']"
             :ref="scope.$index"
             placement="top"
             width="180">

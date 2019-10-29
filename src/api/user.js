@@ -49,4 +49,3 @@ export function updateEmail(code, data) {
     data
   })
 }
-

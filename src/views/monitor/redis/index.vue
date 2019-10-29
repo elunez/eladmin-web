@@ -7,7 +7,7 @@
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <div style="display: inline-block;">
         <!-- 清空缓存 -->
-        <el-button v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']" :loading="deleteAllLoading" type="warning" size="mini" class="filter-item" icon="el-icon-delete" @click="deleteAll">清空缓存</el-button>
+        <el-button v-permission="['admin','redis:del']" :loading="deleteAllLoading" type="warning" size="mini" class="filter-item" icon="el-icon-delete" @click="deleteAll">清空缓存</el-button>
       </div>
     </div>
     <!--表格渲染-->
@@ -25,10 +25,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT','REDIS_DELETE'])" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','redis:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-popover
-            v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']"
+            v-permission="['admin','redis:del']"
             :ref="scope.$index"
             placement="top"
             width="180">

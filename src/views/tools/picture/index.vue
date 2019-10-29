@@ -8,14 +8,14 @@
       <!-- 上传 -->
       <div style="display: inline-block;margin: 0px 2px;">
         <el-button
-          v-permission="['ADMIN','PICTURE_ALL','PICTURE_UPLOAD']"
+          v-permission="['admin','pictures:add']"
           class="filter-item"
           size="mini"
           type="primary"
           icon="el-icon-upload"
           @click="dialog = true">上传图片</el-button>
       </div>
-      <div v-permission="['ADMIN','PICTURE_ALL','PICTURE_DELETE']" style="display: inline-block;">
+      <div v-permission="['admin','pictures:del']" style="display: inline-block;">
         <el-button
           :loading="delAllLoading"
           :disabled="data.length === 0 || $refs.table.selection.length === 0"
@@ -64,7 +64,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','PICTURE_ALL','PICTURE_DELETE'])" label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','pictures:del'])" label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"

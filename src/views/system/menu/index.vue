@@ -6,7 +6,7 @@
       <el-input v-model="query.value" clearable placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div v-permission="['ADMIN','MENU_ALL','MENU_CREATE']" style="display: inline-block;margin: 0px 2px;">
+      <div v-permission="['admin','menu:add']" style="display: inline-block;margin: 0px 2px;">
         <el-button
           class="filter-item"
           size="mini"
@@ -14,15 +14,12 @@
           icon="el-icon-plus"
           @click="add">新增</el-button>
       </div>
-      <div style="display: inline-block;">
-        <eForm ref="form" :is-add="true"/>
-      </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" row-key="id" size="small">
-      <el-table-column :show-overflow-tooltip="true" label="标题" width="125px" prop="name"/>
+      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name"/>
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
@@ -30,28 +27,29 @@
       </el-table-column>
       <el-table-column prop="sort" align="center" label="排序">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.sort }}</el-tag>
+          {{ scope.row.sort }}
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="path" label="链接地址"/>
-      <el-table-column :show-overflow-tooltip="true" prop="componentName" label="组件名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" width="130px"/>
-      <el-table-column prop="iframe" label="内部菜单">
+      <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址"/>
+      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识"/>
+      <!--<el-table-column :show-overflow-tooltip="true" prop="componentName" label="组件名称"/>-->
+      <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径"/>
+      <el-table-column prop="iframe" label="外链" width="75px">
         <template slot-scope="scope">
-          <span v-if="!scope.row.iframe">是</span>
+          <span v-if="scope.row.iframe">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column prop="iframe" label="是否缓存">
+      <el-table-column prop="iframe" label="缓存" width="75px">
         <template slot-scope="scope">
           <span v-if="scope.row.cache">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column prop="iframe" label="是否隐藏">
+      <el-table-column prop="iframe" label="可见" width="75px">
         <template slot-scope="scope">
-          <span v-if="scope.row.hidden">是</span>
-          <span v-else>否</span>
+          <span v-if="scope.row.hidden">否</span>
+          <span v-else>是</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期" width="135px">
@@ -59,11 +57,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT','MENU_DELETE'])" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','menu:edit','menu:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','MENU_ALL','MENU_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','menu:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','MENU_ALL','MENU_DELETE']"
+            v-permission="['admin','menu:del']"
             :ref="scope.row.id"
             placement="top"
             width="200">
@@ -138,7 +136,7 @@ export default {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getMenus()
-      _this.form = { id: data.id, component: data.component, componentName: data.componentName, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon, cache: data.cache, hidden: data.hidden }
+      _this.form = { id: data.id, component: data.component, componentName: data.componentName, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon, cache: data.cache, hidden: data.hidden, type: data.type, permission: data.permission }
       _this.dialog = true
     },
     changExpand() {
