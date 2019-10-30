@@ -65,7 +65,7 @@
     "file-loader": "1.1.11",
     "friendly-errors-webpack-plugin": "1.7.0",
     "happypack": "^5.0.1",
-    "html-webpack-plugin": "4.0.0-alpha",
+    "html-webpack-plugin": "^3.0.0",
     "mini-css-extract-plugin": "0.4.1",
     "node-notifier": "5.2.1",
     "node-sass": "^4.7.2",
@@ -88,11 +88,11 @@
     "vue-loader": "15.3.0",
     "vue-style-loader": "4.1.2",
     "vue-template-compiler": "2.5.17",
-    "webpack": "4.16.5",
-    "webpack-bundle-analyzer": "3.3.2",
-    "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.3.1",
-    "webpack-merge": "4.1.4"
+    "webpack": "^4.41.2",
+    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-merge": "^4.2.2"
   },
   "engines": {
     "node": ">= 6.0.0",

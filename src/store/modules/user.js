@@ -64,11 +64,10 @@ const user = {
     LogOut({ commit }) {
       return new Promise((resolve, reject) => {
         logout().then(res => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
+          logOut(commit)
           resolve()
         }).catch(error => {
+          logOut(commit)
           reject(error)
         })
       })
@@ -80,6 +79,12 @@ const user = {
       })
     }
   }
+}
+
+export const logOut = (commit) => {
+  commit('SET_TOKEN', '')
+  commit('SET_ROLES', [])
+  removeToken()
 }
 
 export const setUserInfo = (res, commit) => {
