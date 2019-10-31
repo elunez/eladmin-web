@@ -191,6 +191,7 @@ export default {
             duration: 2500
           })
         }).catch(err => {
+          data.enabled = !data.enabled
           console.log(err.response.data.message)
         })
       }).catch(() => {
