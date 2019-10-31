@@ -22,11 +22,6 @@
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column label="序号" width="80" align="center">
-        <template slot-scope="scope">
-          <div>{{ scope.$index + 1 }}</div>
-        </template>
-      </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="key" label="KEY"/>
       <el-table-column prop="value" label="VALUE">
         <template slot-scope="scope">

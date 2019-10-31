@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-button type="primary" size="mini" @click="toGen">生成代码</el-button>
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" title="代码生成配置" append-to-body width="850px">
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="78px">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" title="代码生成配置" append-to-body width="880px">
+      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="90px">
         <el-form-item label="模块名称" prop="moduleName">
           <el-input v-model="form.moduleName"/>
         </el-form-item>
