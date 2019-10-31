@@ -3,6 +3,16 @@
     <div class="head-container">
       <el-input v-model="query.value" clearable placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
+      </div>
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
@@ -46,8 +56,8 @@
 
 <script>
 import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
-import { del } from '@/api/online'
+import { parseTime, downloadFile } from '@/utils/index'
+import { del, downloadOnline } from '@/api/online'
 export default {
   name: 'OnlineUser',
   mixins: [initData],
@@ -85,6 +95,16 @@ export default {
         this.delLoading = false
         this.$refs[index].doClose()
         console.log(err.response.data.message)
+      })
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadOnline(this.params).then(result => {
+        downloadFile(result, '在线用户列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
       })
     }
   }

@@ -21,6 +21,16 @@
             <!-- 搜索 -->
             <el-input v-model="query.value" clearable placeholder="输入名称或者描述搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
             <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+            <!-- 导出 -->
+            <div style="display: inline-block;">
+              <el-button
+                :loading="downloadLoading"
+                size="mini"
+                class="filter-item"
+                type="warning"
+                icon="el-icon-download"
+                @click="download">导出</el-button>
+            </div>
           </div>
           <!--表格渲染-->
           <el-table v-loading="loading" :data="data" size="small" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
@@ -77,8 +87,9 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/dict'
+import { del, downloadDict } from '@/api/dict'
 import dictDetail from '../dictDetail/index'
+import { downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Dict',
@@ -147,6 +158,16 @@ export default {
         remark: data.remark
       }
       _this.dialog = true
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadDict(this.params).then(result => {
+        downloadFile(result, '字典列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }

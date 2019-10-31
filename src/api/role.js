@@ -60,3 +60,12 @@ export function editMenu(data) {
     data
   })
 }
+
+export function downloadRole(params) {
+  return request({
+    url: 'api/roles/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

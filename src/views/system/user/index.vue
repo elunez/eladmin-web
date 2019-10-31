@@ -16,6 +16,15 @@
         <div class="head-container">
           <!-- 搜索 -->
           <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+          <el-date-picker
+            v-model="query.date"
+            type="daterange"
+            range-separator=":"
+            class="el-range-editor--small filter-item"
+            style="height: 30.5px;width: 220px"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"/>
           <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
             <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
@@ -32,7 +41,6 @@
           <!-- 导出 -->
           <div style="display: inline-block;">
             <el-button
-              v-permission="['admin','user:list']"
               :loading="downloadLoading"
               size="mini"
               class="filter-item"
@@ -117,7 +125,6 @@ export default {
         children: 'children',
         label: 'name'
       },
-      downloadLoading: false,
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
@@ -147,8 +154,23 @@ export default {
       const enabled = query.enabled
       this.params = { page: this.page, size: this.size, sort: sort, deptId: this.deptId }
       if (blurry) { this.params['blurry'] = blurry }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
+    },
+    // 导出
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadUser(this.params).then(result => {
+        downloadFile(result, '用户列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     },
     subDelete(id) {
       this.delLoading = true
@@ -190,16 +212,6 @@ export default {
       this.$refs.form.getRoles()
       this.$refs.form.getRoleLevel()
       this.$refs.form.dialog = true
-    },
-    // 导出
-    download() {
-      this.downloadLoading = true
-      downloadUser().then(result => {
-        downloadFile(result, '用户列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
-      })
     },
     // 数据转换
     formatJson(filterVal, jsonData) {
