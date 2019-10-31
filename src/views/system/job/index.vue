@@ -4,6 +4,15 @@
     <div class="head-container">
       <!-- 搜索 -->
       <el-input v-model="query.value" clearable placeholder="输入岗位名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 220px"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"/>
       <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
@@ -16,6 +25,16 @@
           type="primary"
           icon="el-icon-plus"
           @click="add">新增</el-button>
+      </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
       </div>
     </div>
     <!--表单组件-->
@@ -79,8 +98,8 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, edit } from '@/api/job'
-import { parseTime } from '@/utils/index'
+import { del, edit, downloadJob } from '@/api/job'
+import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Job',
@@ -113,6 +132,10 @@ export default {
       const value = query.value
       const enabled = query.enabled
       if (value) { this.params['name'] = value }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
@@ -172,6 +195,16 @@ export default {
         })
       }).catch(() => {
         data.enabled = !data.enabled
+      })
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadJob(this.params).then(result => {
+        downloadFile(result, '岗位列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
       })
     }
   }

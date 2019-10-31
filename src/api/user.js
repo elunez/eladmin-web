@@ -7,10 +7,12 @@ export function add(data) {
     data
   })
 }
-export function downloadUser() {
+
+export function downloadUser(params) {
   return request({
     url: 'api/users/download',
     method: 'get',
+    params,
     responseType: 'blob'
   })
 }

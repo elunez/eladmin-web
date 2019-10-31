@@ -6,6 +6,15 @@
     <div class="head-container">
       <!-- 搜索 -->
       <el-input v-model="query.value" clearable placeholder="输入名称或者描述搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 220px"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['admin','roles:add']" style="display: inline-block;margin: 0px 2px;">
@@ -15,6 +24,16 @@
           type="primary"
           icon="el-icon-plus"
           @click="add">新增</el-button>
+      </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
       </div>
     </div>
     <el-row :gutter="15">
@@ -100,9 +119,9 @@ import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import { del } from '@/api/role'
 import { getMenusTree } from '@/api/menu'
-import { parseTime } from '@/utils/index'
+import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
-import { editMenu, get } from '@/api/role'
+import { editMenu, get, downloadRole } from '@/api/role'
 export default {
   name: 'Role',
   components: { eForm },
@@ -134,6 +153,10 @@ export default {
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
       if (value) { this.params['blurry'] = value }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       // 清空菜单的选中
       this.$refs.menu.setCheckedKeys([])
       return true
@@ -231,6 +254,16 @@ export default {
         _this.deptIds[i] = _this.form.depts[i].id
       }
       _this.dialog = true
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadRole(this.params).then(result => {
+        downloadFile(result, '角色列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }

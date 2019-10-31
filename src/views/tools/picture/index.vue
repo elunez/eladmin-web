@@ -4,6 +4,15 @@
     <div class="head-container">
       <!--搜索-->
       <el-input v-model="query.filename" clearable placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 220px"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 上传 -->
       <div style="display: inline-block;margin: 0px 2px;">
@@ -24,6 +33,16 @@
           type="danger"
           icon="el-icon-delete"
           @click="open">删除</el-button>
+      </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
       </div>
     </div>
     <!--上传图片-->
@@ -94,16 +113,16 @@
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
+import { parseTime, downloadFile } from '@/utils/index'
 import { mapGetters } from 'vuex'
-import { del, delAll } from '@/api/picture'
+import { del, delAll, downloadPicture } from '@/api/picture'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Pictures',
   mixins: [initData],
   data() {
     return {
-      delLoading: false, downloadLoading: false,
+      delLoading: false,
       delAllLoading: false,
       headers: {
         'Authorization': 'Bearer ' + getToken()
@@ -135,6 +154,10 @@ export default {
       const filename = query.filename
       this.params = { page: this.page, size: this.size, sort: sort }
       if (filename) { this.params[filename] = filename }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       return true
     },
     subDelete(id) {
@@ -217,6 +240,16 @@ export default {
         title: msg.message,
         type: 'error',
         duration: 2500
+      })
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadPicture(this.params).then(result => {
+        downloadFile(result, '图片列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
       })
     }
   }

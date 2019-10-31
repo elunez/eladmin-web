@@ -4,6 +4,15 @@
     <div class="head-container">
       <!-- 搜索 -->
       <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 220px"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['admin','timing:add']" style="display: inline-block;margin: 0px 2px;">
@@ -14,14 +23,24 @@
           icon="el-icon-plus"
           @click="dialog = true;isAdd = true">新增</el-button>
       </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
+      </div>
       <!-- 任务日志 -->
       <div style="display: inline-block;">
         <el-button
           class="filter-item"
           size="mini"
-          type="warning"
+          type="info"
           icon="el-icon-tickets"
-          @click="doLog">执行日志</el-button>
+          @click="doLog">日志</el-button>
         <Log ref="log"/>
       </div>
     </div>
@@ -110,8 +129,8 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, updateIsPause, execution, add, edit } from '@/api/timing'
-import { parseTime } from '@/utils/index'
+import { del, updateIsPause, execution, add, edit, downloadJobs } from '@/api/timing'
+import { parseTime, downloadFile } from '@/utils/index'
 import Log from './log'
 export default {
   name: 'Timing',
@@ -153,6 +172,10 @@ export default {
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
       if (value) { this.params['jobName'] = value }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       return true
     },
     execute(id) {
@@ -258,6 +281,16 @@ export default {
       this.isAdd = false
       this.form = { id: data.id, jobName: data.jobName, beanName: data.beanName, methodName: data.methodName, params: data.params, cronExpression: data.cronExpression, isPause: data.isPause.toString(), remark: data.remark }
       this.dialog = true
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadJobs(this.params).then(result => {
+        downloadFile(result, '任务列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }

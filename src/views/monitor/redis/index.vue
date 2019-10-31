@@ -7,7 +7,17 @@
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <div style="display: inline-block;">
         <!-- 清空缓存 -->
-        <el-button v-permission="['admin','redis:del']" :loading="deleteAllLoading" type="warning" size="mini" class="filter-item" icon="el-icon-delete" @click="deleteAll">清空缓存</el-button>
+        <el-button v-permission="['admin','redis:del']" :loading="deleteAllLoading" type="danger" size="mini" class="filter-item" icon="el-icon-delete" @click="deleteAll">清空</el-button>
+      </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
       </div>
     </div>
     <!--表格渲染-->
@@ -56,7 +66,8 @@
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
-import { del, delAll } from '@/api/redis'
+import { del, delAll, downloadRedis } from '@/api/redis'
+import { downloadFile } from '@/utils/index'
 export default {
   name: 'Redis',
   mixins: [initData],
@@ -114,6 +125,16 @@ export default {
           this.init()
           this.deleteAllLoading = false
         })
+      })
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadRedis(this.params).then(result => {
+        downloadFile(result, '缓存列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
       })
     }
   }

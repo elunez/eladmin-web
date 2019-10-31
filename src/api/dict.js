@@ -22,3 +22,12 @@ export function edit(data) {
     data
   })
 }
+
+export function downloadDict(params) {
+  return request({
+    url: 'api/dict/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}
