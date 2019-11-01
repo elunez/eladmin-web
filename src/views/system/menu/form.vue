@@ -21,7 +21,7 @@
           </el-input>
         </el-popover>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() === '1'" label="外链菜单">
+      <el-form-item v-show="form.type.toString() !== '2'" label="外链菜单">
         <el-radio-group v-model="form.iframe" size="mini">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
@@ -33,10 +33,10 @@
           <el-radio-button label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() === '1'" label="菜单可见">
+      <el-form-item v-show="form.type.toString() !== '2'" label="菜单可见">
         <el-radio-group v-model="form.hidden" size="mini">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
+          <el-radio-button label="false">是</el-radio-button>
+          <el-radio-button label="true">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-show="form.type.toString() !== '2'" label="菜单标题" prop="name">

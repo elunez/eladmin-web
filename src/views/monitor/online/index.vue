@@ -26,7 +26,7 @@
           <span>{{ parseTime(scope.row.loginTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="操作" width="100px">
+      <el-table-column prop="createTime" label="操作" width="100px" fixed="right">
         <template slot-scope="scope">
           <el-popover
             v-permission="['admin']"
