@@ -30,3 +30,12 @@ export function edit(data) {
     data
   })
 }
+
+export function downloadStorage(params) {
+  return request({
+    url: 'api/localStorage/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

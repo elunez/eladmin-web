@@ -22,11 +22,11 @@
         <el-table-column prop="label" label="字典标签"/>
         <el-table-column prop="value" label="字典值"/>
         <el-table-column prop="sort" label="排序"/>
-        <el-table-column v-if="checkPermission(['ADMIN','DICT_ALL','DICT_EDIT','DICT_DELETE'])" label="操作" width="130px" align="center" fixed="right">
+        <el-table-column v-if="checkPermission(['admin','dict:edit','dict:del'])" label="操作" width="130px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-button v-permission="['ADMIN','DICT_ALL','DICT_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+            <el-button v-permission="['admin','dict:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
             <el-popover
-              v-permission="['ADMIN','DICT_ALL','DICT_DELETE']"
+              v-permission="['admin','dict:del']"
               :ref="scope.row.id"
               placement="top"
               width="180">

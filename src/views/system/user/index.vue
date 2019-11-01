@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--form 组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
+    <eForm ref="form" :is-add="isAdd" :dicts="dict.user_status"/>
     <el-row :gutter="20">
       <!--部门数据-->
       <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
@@ -16,12 +16,21 @@
         <div class="head-container">
           <!-- 搜索 -->
           <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+          <el-date-picker
+            v-model="query.date"
+            type="daterange"
+            range-separator=":"
+            class="el-range-editor--small filter-item"
+            style="height: 30.5px;width: 220px"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"/>
           <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
             <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
           <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
           <!-- 新增 -->
-          <div v-permission="['ADMIN','USER_ALL','USER_CREATE']" style="display: inline-block;margin: 0px 2px;">
+          <div v-permission="['admin','user:add']" style="display: inline-block;margin: 0px 2px;">
             <el-button
               class="filter-item"
               size="mini"
@@ -32,7 +41,6 @@
           <!-- 导出 -->
           <div style="display: inline-block;">
             <el-button
-              v-permission="['ADMIN','USER_ALL','USER_SELECT']"
               :loading="downloadLoading"
               size="mini"
               class="filter-item"
@@ -53,9 +61,11 @@
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
-              <div v-for="item in dicts" :key="item.id">
-                <el-tag v-if="scope.row.enabled.toString() === item.value" :type="scope.row.enabled ? '' : 'info'">{{ item.label }}</el-tag>
-              </div>
+              <el-switch
+                v-model="scope.row.enabled"
+                active-color="#409EFF"
+                inactive-color="#F56C6C"
+                @change="changeEnabled(scope.row, scope.row.enabled,)"/>
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
@@ -63,11 +73,11 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center" fixed="right">
+          <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="125" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-button v-permission="['ADMIN','USER_ALL','USER_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+              <el-button v-permission="['admin','user:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
               <el-popover
-                v-permission="['ADMIN','USER_ALL','USER_DELETE']"
+                v-permission="['admin','user:del']"
                 :ref="scope.row.id"
                 placement="top"
                 width="180">
@@ -97,15 +107,16 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import initDict from '@/mixins/initDict'
-import { del, downloadUser } from '@/api/user'
+import { del, downloadUser, edit } from '@/api/user'
 import { getDepts } from '@/api/dept'
 import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'User',
   components: { eForm },
-  mixins: [initData, initDict],
+  mixins: [initData],
+  // 设置数据字典
+  dicts: ['user_status'],
   data() {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;', isAdd: false,
@@ -114,7 +125,6 @@ export default {
         children: 'children',
         label: 'name'
       },
-      downloadLoading: false,
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
@@ -125,8 +135,6 @@ export default {
     this.getDeptDatas()
     this.$nextTick(() => {
       this.init()
-      // 加载数据字典
-      this.getDict('user_status')
     })
   },
   mounted: function() {
@@ -146,8 +154,23 @@ export default {
       const enabled = query.enabled
       this.params = { page: this.page, size: this.size, sort: sort, deptId: this.deptId }
       if (blurry) { this.params['blurry'] = blurry }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
+    },
+    // 导出
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadUser(this.params).then(result => {
+        downloadFile(result, '用户列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     },
     subDelete(id) {
       this.delLoading = true
@@ -190,16 +213,6 @@ export default {
       this.$refs.form.getRoleLevel()
       this.$refs.form.dialog = true
     },
-    // 导出
-    download() {
-      this.downloadLoading = true
-      downloadUser().then(result => {
-        downloadFile(result, '用户列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
-      })
-    },
     // 数据转换
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
@@ -227,6 +240,27 @@ export default {
       _this.jobId = data.job.id
       _this.getJobs(_this.deptId)
       _this.dialog = true
+    },
+    // 改变状态
+    changeEnabled(data, val) {
+      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        edit(data).then(res => {
+          this.$notify({
+            title: this.dict.label.user_status[val] + '成功',
+            type: 'success',
+            duration: 2500
+          })
+        }).catch(err => {
+          data.enabled = !data.enabled
+          console.log(err.response.data.message)
+        })
+      }).catch(() => {
+        data.enabled = !data.enabled
+      })
     }
   }
 }

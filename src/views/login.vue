@@ -79,7 +79,7 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.codeUrl = 'data:image/gif;base64,' + res.img
+        this.codeUrl = res.img
         this.loginForm.uuid = res.uuid
       })
     },
@@ -155,7 +155,7 @@ export default {
   .login-form {
     border-radius: 6px;
     background: #ffffff;
-    width: 400px;
+    width: 385px;
     padding: 25px 25px 5px 25px;
     .el-input {
       height: 38px;

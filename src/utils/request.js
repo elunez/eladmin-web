@@ -81,7 +81,7 @@ service.interceptors.response.use(
       if (errorMsg !== undefined) {
         Notification.error({
           title: errorMsg,
-          duration: 2500
+          duration: 3000
         })
       }
     }

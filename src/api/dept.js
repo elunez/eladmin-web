@@ -30,3 +30,12 @@ export function edit(data) {
     data
   })
 }
+
+export function downloadDept(params) {
+  return request({
+    url: 'api/dept/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

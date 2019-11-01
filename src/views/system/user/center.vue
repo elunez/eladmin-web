@@ -46,6 +46,7 @@
               <el-table-column prop="description" label="行为"/>
               <el-table-column prop="requestIp" label="IP"/>
               <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源"/>
+              <el-table-column prop="browser" label="浏览器"/>
               <el-table-column prop="time" label="请求耗时" align="center">
                 <template slot-scope="scope">
                   <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>

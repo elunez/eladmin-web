@@ -33,3 +33,12 @@ export function edit(data) {
     data
   })
 }
+
+export function downloadRedis(params) {
+  return request({
+    url: 'api/redis/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

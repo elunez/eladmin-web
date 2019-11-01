@@ -1,4 +1,4 @@
-import { login, getInfo } from '@/api/login'
+import { login, getInfo, logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { decrypt } from '@/utils/rsaEncrypt'
 
@@ -63,10 +63,13 @@ const user = {
     // 登出
     LogOut({ commit }) {
       return new Promise((resolve, reject) => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resolve()
+        logout().then(res => {
+          logOut(commit)
+          resolve()
+        }).catch(error => {
+          logOut(commit)
+          reject(error)
+        })
       })
     },
 
@@ -76,6 +79,12 @@ const user = {
       })
     }
   }
+}
+
+export const logOut = (commit) => {
+  commit('SET_TOKEN', '')
+  commit('SET_ROLES', [])
+  removeToken()
 }
 
 export const setUserInfo = (res, commit) => {

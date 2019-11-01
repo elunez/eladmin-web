@@ -3,18 +3,21 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input
-        v-model="query.value"
-        clearable
-        placeholder="输入内容模糊搜索"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 220px"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div style="display: inline-block;margin: 0px 2px;">
         <el-button
-          v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_CREATE']"
+          v-permission="['admin','storage:add']"
           class="filter-item"
           size="mini"
           type="primary"
@@ -25,6 +28,7 @@
       <!-- 多选删除 -->
       <div style="display: inline-block;margin: 0px 2px;">
         <el-button
+          v-permission="['admin','storage:del']"
           :loading="delAllLoading"
           :disabled="data.length === 0 || $refs.table.selection.length === 0"
           class="filter-item"
@@ -34,13 +38,23 @@
           @click="open">删除
         </el-button>
       </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
+      </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
     <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
       <el-table-column type="selection" width="55"/>
-      <el-table-column :show-overflow-tooltip="true" prop="name" label="文件名">
+      <el-table-column prop="name" width="150px" label="文件名">
         <template slot-scope="scope">
           <el-popover
             :content="'file/' + scope.row.type + '/' + scope.row.realName"
@@ -48,28 +62,33 @@
             title="路径"
             width="200"
             trigger="hover">
-            <el-link
+            <a
               slot="reference"
-              :underline="false"
               :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName"
-              target="_blank"
-              type="primary">{{ scope.row.name }}
-            </el-link>
+              class="el-link--primary"
+              style="word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color: #1890ff;font-size: 13px;"
+              target="_blank">
+              {{ scope.row.name }}
+            </a>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="suffix" label="文件类型"/>
-      <el-table-column prop="type" label="类别"/>
-      <el-table-column prop="path" label="预览">
+      <el-table-column prop="path" label="预览图">
         <template slot-scope="{row}">
           <el-image
             :src=" baseApi + '/file/' + row.type + '/' + row.realName"
             :preview-src-list="[baseApi + '/file/' + row.type + '/' + row.realName]"
             fit="contain"
             lazy
-            style="width: 60px; height: 40px"/>
+            class="el-avatar">
+            <div slot="error">
+              <i class="el-icon-document"/>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
+      <el-table-column prop="suffix" label="文件类型"/>
+      <el-table-column prop="type" label="类别"/>
       <el-table-column prop="size" label="大小"/>
       <el-table-column prop="operate" label="操作人"/>
       <el-table-column prop="createTime" label="创建日期">
@@ -77,25 +96,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="修改日期">
+      <el-table-column v-if="checkPermission(['admin','storage:edit','storage:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="checkPermission(['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT','LOCALSTORAGE_DELETE'])"
-        label="操作"
-        width="150px"
-        align="center">
-        <template slot-scope="scope">
-          <el-button
-            v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT']"
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','storage:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_DELETE']"
+            v-permission="['admin','storage:del']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -125,10 +130,9 @@
 import { mapGetters } from 'vuex'
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, delAll } from '@/api/localStorage'
-import { parseTime } from '@/utils/index'
+import { del, delAll, downloadStorage } from '@/api/localStorage'
+import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
-
 export default {
   components: { eForm },
   mixins: [initData],
@@ -162,8 +166,10 @@ export default {
       this.params = { page: this.page, size: this.size, sort: sort }
       const query = this.query
       const value = query.value
-      if (value) {
-        this.params['blurry'] = value
+      if (value) { this.params['blurry'] = value }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
       }
       return true
     },
@@ -227,11 +233,23 @@ export default {
       }).then(() => {
         this.doDelete()
       })
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadStorage(this.params).then(result => {
+        downloadFile(result, '文件列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-
+  /deep/ .el-image__error, .el-image__placeholder{
+    background: none;
+  }
 </style>

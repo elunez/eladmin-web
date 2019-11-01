@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function get() {
   return request({
-    url: 'api/qiNiuConfig',
+    url: 'api/qiNiuContent/config',
     method: 'get'
   })
 }
 
 export function update(data) {
   return request({
-    url: 'api/qiNiuConfig',
+    url: 'api/qiNiuContent/config',
     data,
     method: 'put'
   })
@@ -41,5 +41,14 @@ export function delAll(ids) {
     url: 'api/qiNiuContent/',
     method: 'delete',
     data: ids
+  })
+}
+
+export function downloadQiNiu(params) {
+  return request({
+    url: 'api/qiNiuContent/download/list',
+    method: 'get',
+    params,
+    responseType: 'blob'
   })
 }

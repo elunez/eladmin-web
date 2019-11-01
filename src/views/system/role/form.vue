@@ -1,14 +1,14 @@
 <template>
-  <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增角色' : '编辑角色'" append-to-body width="500px">
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
+  <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增角色' : '编辑角色'" append-to-body width="520px">
+    <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="角色名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;"/>
+        <el-input v-model="form.name" style="width: 145px;"/>
       </el-form-item>
-      <el-form-item label="角色级别" prop="sort">
-        <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 370px;"/>
+      <el-form-item label="角色权限" prop="permission">
+        <el-input v-model="form.permission" style="width: 145px;"/>
       </el-form-item>
       <el-form-item label="数据范围">
-        <el-select v-model="form.dataScope" style="width: 370px" placeholder="请选择数据范围" @change="changeScope">
+        <el-select v-model="form.dataScope" style="width: 145px" placeholder="请选择数据范围" @change="changeScope">
           <el-option
             v-for="item in dateScopes"
             :key="item"
@@ -16,11 +16,14 @@
             :value="item"/>
         </el-select>
       </el-form-item>
+      <el-form-item label="角色级别" prop="sort">
+        <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 145px;"/>
+      </el-form-item>
       <el-form-item v-if="form.dataScope === '自定义'" label="数据权限">
-        <treeselect v-model="deptIds" :options="depts" multiple style="width: 370px" placeholder="请选择" />
+        <treeselect v-model="deptIds" :options="depts" multiple style="width: 380px" placeholder="请选择" />
       </el-form-item>
       <el-form-item label="描述信息">
-        <el-input v-model="form.remark" style="width: 370px;" rows="5" type="textarea"/>
+        <el-input v-model="form.remark" style="width: 380px;" rows="5" type="textarea"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -47,10 +50,13 @@ export default {
     return {
       dateScopes: ['全部', '本级', '自定义'],
       loading: false, dialog: false, depts: [], deptIds: [],
-      form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3 },
+      form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        permission: [
+          { required: true, message: '请输入权限', trigger: 'blur' }
         ]
       }
     }
@@ -119,7 +125,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3 }
+      this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' }
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {

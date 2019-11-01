@@ -7,16 +7,21 @@
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <div style="display: inline-block;">
         <!-- 清空缓存 -->
-        <el-button v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']" :loading="deleteAllLoading" type="warning" size="mini" class="filter-item" icon="el-icon-delete" @click="deleteAll">清空缓存</el-button>
+        <el-button v-permission="['admin','redis:del']" :loading="deleteAllLoading" type="danger" size="mini" class="filter-item" icon="el-icon-delete" @click="deleteAll">清空</el-button>
+      </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
       </div>
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column label="序号" width="80" align="center">
-        <template slot-scope="scope">
-          <div>{{ scope.$index + 1 }}</div>
-        </template>
-      </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="key" label="KEY"/>
       <el-table-column prop="value" label="VALUE">
         <template slot-scope="scope">
@@ -25,10 +30,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','REDIS_ALL','REDIS_EDIT','REDIS_DELETE'])" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(['admin','redis:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-popover
-            v-permission="['ADMIN','REDIS_ALL','REDIS_DELETE']"
+            v-permission="['admin','redis:del']"
             :ref="scope.$index"
             placement="top"
             width="180">
@@ -56,7 +61,8 @@
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
-import { del, delAll } from '@/api/redis'
+import { del, delAll, downloadRedis } from '@/api/redis'
+import { downloadFile } from '@/utils/index'
 export default {
   name: 'Redis',
   mixins: [initData],
@@ -114,6 +120,16 @@ export default {
           this.init()
           this.deleteAllLoading = false
         })
+      })
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadRedis(this.params).then(result => {
+        downloadFile(result, '缓存列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
       })
     }
   }

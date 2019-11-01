@@ -3,10 +3,29 @@
     <!-- 搜索 -->
     <div class="head-container">
       <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 220px"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"/>
       <el-select v-model="query.isSuccess" placeholder="日志状态" clearable class="filter-item" style="width: 110px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
+      </div>
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;margin-top: -10px;">
@@ -52,7 +71,8 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
+import { downloadLogs } from '@/api/timing'
+import { parseTime, downloadFile } from '@/utils/index'
 export default {
   mixins: [initData],
   data() {
@@ -78,7 +98,7 @@ export default {
       this.doInit()
     },
     beforeInit() {
-      this.url = 'api/jobLogs'
+      this.url = 'api/jobs/logs'
       const sort = 'id,desc'
       const query = this.query
       const value = query.value
@@ -86,12 +106,26 @@ export default {
       this.size = 6
       this.params = { page: this.page, size: this.size, sort: sort }
       if (value) { this.params['jobName'] = value }
+      if (query.date) {
+        this.params['startTime'] = query.date[0]
+        this.params['endTime'] = query.date[1]
+      }
       if (isSuccess !== '' && isSuccess !== null) { this.params['isSuccess'] = isSuccess }
       return true
     },
     info(errorInfo) {
       this.errorInfo = errorInfo
       this.errorDialog = true
+    },
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      downloadLogs(this.params).then(result => {
+        downloadFile(result, '任务日志列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }

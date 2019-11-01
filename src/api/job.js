@@ -35,3 +35,12 @@ export function edit(data) {
     data
   })
 }
+
+export function downloadJob(params) {
+  return request({
+    url: 'api/job/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}
