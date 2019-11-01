@@ -3,7 +3,13 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input
+        v-model="query.value"
+        clearable
+        placeholder="输入内容模糊搜索"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div style="display: inline-block;margin: 0px 2px;">
@@ -13,7 +19,8 @@
           size="mini"
           type="primary"
           icon="el-icon-upload"
-          @click="add">文件上传</el-button>
+          @click="add">文件上传
+        </el-button>
       </div>
       <!-- 多选删除 -->
       <div style="display: inline-block;margin: 0px 2px;">
@@ -24,7 +31,8 @@
           size="mini"
           type="danger"
           icon="el-icon-delete"
-          @click="open">删除</el-button>
+          @click="open">删除
+        </el-button>
       </div>
     </div>
     <!--表单组件-->
@@ -34,11 +42,34 @@
       <el-table-column type="selection" width="55"/>
       <el-table-column :show-overflow-tooltip="true" prop="name" label="文件名">
         <template slot-scope="scope">
-          <el-link :underline="false" :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName" target="_blank" type="primary">{{ scope.row.name }}</el-link>
+          <el-popover
+            :content="'file/' + scope.row.type + '/' + scope.row.realName"
+            placement="top-start"
+            title="路径"
+            width="200"
+            trigger="hover">
+            <el-link
+              slot="reference"
+              :underline="false"
+              :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName"
+              target="_blank"
+              type="primary">{{ scope.row.name }}
+            </el-link>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column prop="suffix" label="文件类型"/>
       <el-table-column prop="type" label="类别"/>
+      <el-table-column prop="path" label="预览">
+        <template slot-scope="{row}">
+          <el-image
+            :src=" baseApi + '/file/' + row.type + '/' + row.realName"
+            :preview-src-list="[baseApi + '/file/' + row.type + '/' + row.realName]"
+            fit="contain"
+            lazy
+            style="width: 60px; height: 40px"/>
+        </template>
+      </el-table-column>
       <el-table-column prop="size" label="大小"/>
       <el-table-column prop="operate" label="操作人"/>
       <el-table-column prop="createTime" label="创建日期">
@@ -51,9 +82,18 @@
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT','LOCALSTORAGE_DELETE'])" label="操作" width="150px" align="center">
+      <el-table-column
+        v-if="checkPermission(['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT','LOCALSTORAGE_DELETE'])"
+        label="操作"
+        width="150px"
+        align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button
+            v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT']"
+            size="mini"
+            type="primary"
+            icon="el-icon-edit"
+            @click="edit(scope.row)"/>
           <el-popover
             v-permission="['ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_DELETE']"
             :ref="scope.row.id"
@@ -62,7 +102,8 @@
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定
+              </el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
@@ -87,6 +128,7 @@ import initData from '@/mixins/initData'
 import { del, delAll } from '@/api/localStorage'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
+
 export default {
   components: { eForm },
   mixins: [initData],
@@ -120,7 +162,9 @@ export default {
       this.params = { page: this.page, size: this.size, sort: sort }
       const query = this.query
       const value = query.value
-      if (value) { this.params['blurry'] = value }
+      if (value) {
+        this.params['blurry'] = value
+      }
       return true
     },
     subDelete(id) {
