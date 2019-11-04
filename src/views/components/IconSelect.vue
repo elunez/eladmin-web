@@ -49,10 +49,10 @@ export default {
     margin: 0 auto;
   }
   .icon-item {
-    margin: 20px;
+    margin: 16px;
     height: 110px;
     text-align: center;
-    width: 110px;
+    width: 100px;
     float: left;
     font-size: 30px;
     color: #24292e;
