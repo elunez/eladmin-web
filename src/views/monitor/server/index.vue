@@ -86,6 +86,7 @@ import initData from '@/mixins/initData'
 import { del } from '@/api/server'
 import eForm from './form'
 export default {
+  name: 'ServerMonitor',
   components: { eForm },
   mixins: [initData],
   data() {

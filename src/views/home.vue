@@ -5,30 +5,30 @@
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
         <line-chart/>
       </el-row>
+      <!--      <el-row :gutter="32">-->
+      <!--        <el-col :xs="24" :sm="24" :lg="8">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <radar-chart/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--        <el-col :xs="24" :sm="24" :lg="8">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <pie-chart/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--        <el-col :xs="24" :sm="24" :lg="8">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <bar-chart/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--      </el-row>-->
+      <!--      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">-->
+      <!--        <heat-map/>-->
+      <!--      </el-row>-->
       <el-row :gutter="32">
         <el-col :xs="24" :sm="24" :lg="8">
           <div class="chart-wrapper">
             <radar-chart/>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <pie-chart/>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <bar-chart/>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <heat-map/>
-      </el-row>
-      <el-row :gutter="32">
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <funnel/>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="8">
@@ -42,52 +42,52 @@
           </div>
         </el-col>
       </el-row>
-      <el-row :gutter="12">
-        <el-col :span="12">
-          <div class="chart-wrapper">
-            <rich/>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="chart-wrapper">
-            <theme-river/>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="32">
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <graph/>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <sankey/>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <line3-d/>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="12">
-        <el-col :span="12">
-          <div class="chart-wrapper">
-            <scatter/>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="chart-wrapper">
-            <point/>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <div class="chart-wrapper">
-          <category/>
-        </div>
-      </el-row>
+      <!--      <el-row :gutter="12">-->
+      <!--        <el-col :span="12">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <rich/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--        <el-col :span="12">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <theme-river/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--      </el-row>-->
+      <!--      <el-row :gutter="32">-->
+      <!--        <el-col :xs="24" :sm="24" :lg="8">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <graph/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--        <el-col :xs="24" :sm="24" :lg="8">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <sankey/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--        <el-col :xs="24" :sm="24" :lg="8">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <line3-d/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--      </el-row>-->
+      <!--      <el-row :gutter="12">-->
+      <!--        <el-col :span="12">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <scatter/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--        <el-col :span="12">-->
+      <!--          <div class="chart-wrapper">-->
+      <!--            <point/>-->
+      <!--          </div>-->
+      <!--        </el-col>-->
+      <!--      </el-row>-->
+      <!--      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">-->
+      <!--        <div class="chart-wrapper">-->
+      <!--          <category/>-->
+      <!--        </div>-->
+      <!--      </el-row>-->
     </div>
   </div>
 </template>
