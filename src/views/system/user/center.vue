@@ -143,7 +143,7 @@ export default {
     },
     refresh() {
       this.ico = 'el-icon-loading'
-      this.$refs.log.init()
+      this.init()
       setTimeout(() => {
         this.ico = 'el-icon-refresh'
       }, 300)
