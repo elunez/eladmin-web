@@ -26,17 +26,15 @@
           class="filter-item"
           type="warning"
           icon="el-icon-refresh"
-          @click="refresh">刷新</el-button>
+          @click="refresh">刷新
+        </el-button>
       </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column prop="name" label="名称"/>
-      <el-table-column prop="ip" label="IP地址"/>
-      <el-table-column prop="port" label="访问端口"/>
-      <el-table-column label="状态">
+      <el-table-column label="状态" width="50px">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.state === '1' ? 'success' : 'info'"
@@ -46,11 +44,47 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column :formatter="percentNumber" prop="cpuRate" label="CPU使用率"/>
-      <el-table-column prop="cpuCore" label="CPU内核数"/>
-      <el-table-column :formatter="formatMem" label="物理内存"/>
-      <el-table-column :formatter="formatDisk" label="磁盘使用情况"/>
-      <el-table-column :formatter="formatSwap" label="交换空间"/>
+      <el-table-column prop="name" label="名称"/>
+      <el-table-column prop="ip" label="IP地址"/>
+      <el-table-column prop="port" label="访问端口" width="80px" align="center"/>
+      <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center"/>
+      <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center"/>
+      <el-table-column label="物理内存" align="center">
+        <template slot-scope="scope">
+          <el-row>
+            <el-col :span="24">{{ formatMem(scope.row) }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-progress :percentage="percentNumber(scope.row.memUsed,scope.row.memTotal)" :status="percentStatus(scope.row.memUsed,scope.row.memTotal)" :show-text="false"/>
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
+      <el-table-column :formatter="formatDisk" label="磁盘使用情况" align="center">
+        <template slot-scope="scope">
+          <el-row>
+            <el-col :span="24">{{ formatDisk(scope.row) }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-progress :percentage="percentNumber(scope.row.diskUsed,scope.row.diskTotal)" :status="percentStatus(scope.row.diskUsed,scope.row.diskTotal)" :show-text="false"/>
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
+      <el-table-column label="交换空间" align="center">
+        <template slot-scope="scope">
+          <el-row>
+            <el-col :span="24">{{ formatSwap(scope.row) }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-progress :percentage="percentNumber(scope.row.swapUsed,scope.row.swapTotal)" :status="percentStatus(scope.row.swapUsed,scope.row.swapTotal)" :show-text="false"/>
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
       <el-table-column v-if="checkPermission(['admin','server:edit','server:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <el-button v-permission="['admin','server:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
@@ -107,7 +141,7 @@ export default {
     checkPermission,
     beforeInit() {
       this.url = 'api/server'
-      const sort = 'id,desc'
+      const sort = 'sort,asc'
       this.params = { page: this.page, size: this.size, sort: sort }
       const query = this.query
       const type = query.type
@@ -163,26 +197,40 @@ export default {
     refresh() {
       this.init()
     },
-    percentNumber(row, column) {
-      let num = row.cpuRate
-      if (!num) {
-        return '-'
+    formatCpuRate(row, column) {
+      const value = row.cpuRate
+      if (!value) {
+        return 0
       }
-      num = num * 100 + ''
-      if (num.length > 5) {
-        num = num.substring(0, 5)
+      return (Math.floor(value * 10000) / 100) + '%'
+    },
+    percentNumber(value, total) {
+      if (!value || !total) {
+        return 0
       }
-      return num + '%'
+      return value / total * 100
+    },
+    percentStatus(value, total) {
+      const percent = this.percentNumber(value, total)
+      if (percent < 60) {
+        return 'success'
+      } else if (percent < 90) {
+        return 'warning'
+      } else {
+        return 'exception'
+      }
     },
     convertToGb(num) {
       if (!num) {
         return '-'
       }
-      num = num + ''
-      if (num.length > 5) {
-        num = num.substring(0, 5)
+      let unit = 'G'
+      if (num > 1024) {
+        num = num / 1024
+        unit = 'T'
       }
-      return num + 'GB'
+      num = Math.floor(num * 100) / 100
+      return num + unit
     },
     formatMem(row, column) {
       return this.convertToGb(row.memUsed) + ' / ' + this.convertToGb(row.memTotal)
@@ -198,5 +246,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .el-col {
+    text-align: center;
+  }
 </style>
