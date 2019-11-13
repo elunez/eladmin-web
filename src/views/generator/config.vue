@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <el-button type="primary" icon="el-icon-position" size="mini" @click="toGen"/>
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" title="代码生成配置" append-to-body width="880px">
+  <el-tabs v-model="activeName" style="padding-left: 5px;">
+    <el-tab-pane label="基本配置" name="first">
       <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="90px">
         <el-form-item label="模块名称" prop="moduleName">
           <el-input v-model="form.moduleName"/>
@@ -12,6 +11,25 @@
         <el-form-item label="前端路径" prop="path">
           <el-input v-model="form.path"/>
         </el-form-item>
+        <el-form-item label="作者名称" prop="author">
+          <el-input v-model="form.author"/>
+        </el-form-item>
+        <el-form-item label="去表前缀" prop="prefix">
+          <el-input v-model="form.prefix" placeholder="默认不去除表前缀"/>
+        </el-form-item>
+        <!--        <el-form-item label="Api路径">-->
+        <!--          <el-input v-model="form.apiPath"/>-->
+        <!--        </el-form-item>-->
+        <el-form-item label="是否覆盖" prop="cover">
+          <el-radio-group v-model="form.cover" size="mini">
+            <el-radio-button label="true">是</el-radio-button>
+            <el-radio-button label="false">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </el-tab-pane>
+    <el-tab-pane label="字段配置" name="second">
+      <el-form size="small" label-width="90px">
         <el-table v-loading="loading" :data="data" size="small" style="width: 100%;margin-bottom: 15px">
           <el-table-column label="序号" width="80" align="center">
             <template slot-scope="scope">
@@ -50,47 +68,21 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-form-item label="作者名称" prop="author">
-          <el-input v-model="form.author"/>
-        </el-form-item>
-        <el-form-item label="去表前缀" prop="prefix">
-          <el-input v-model="form.prefix" placeholder="默认不去除表前缀"/>
-        </el-form-item>
-        <!--    可自定义显示配置    -->
-        <!--        <el-form-item label="Api路径">-->
-        <!--          <el-input v-model="form.apiPath"/>-->
-        <!--        </el-form-item>-->
-        <el-form-item label="是否覆盖" prop="cover">
-          <el-radio-group v-model="form.cover" size="mini">
-            <el-radio-button label="true">是</el-radio-button>
-            <el-radio-button label="false">否</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="cancel">取消</el-button>
-        <el-button :loading="genLoading" type="primary" @click="doSubmit">生成</el-button>
-      </div>
-    </el-dialog>
-  </div>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
 import initData from '@/mixins/initData'
 import { update, get } from '@/api/genConfig'
-import { generator } from '@/api/generator'
 export default {
-  name: 'Generator',
+  name: 'GeneratorConfig',
+  components: {},
   mixins: [initData],
-  props: {
-    name: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
-      genLoading: false, dialog: false, columnQuery: '',
+      activeName: 'second', tableName: '',
       form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
@@ -111,45 +103,30 @@ export default {
       }
     }
   },
-  methods: {
-    toGen() {
-      this.dialog = true
-      this.$nextTick(() => {
-        this.init()
-        get().then(data => {
-          this.form = data
-          this.form.cover = this.form.cover.toString()
-        })
+  created() {
+    this.tableName = this.$route.params.tableName
+    this.$nextTick(() => {
+      this.init()
+      get().then(data => {
+        this.form = data
+        this.form.cover = this.form.cover.toString()
       })
-    },
+    })
+  },
+  methods: {
     beforeInit() {
       this.url = 'api/generator/columns'
-      const tableName = this.name
+      const tableName = this.tableName
       this.params = { tableName }
       return true
     },
     cancel() {
-      this.dialog = false
-      this.genLoading = false
       this.$refs['form'].resetFields()
-      this.form = { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' }
     },
     doSubmit() {
-      this.genLoading = true
       this.$refs['form'].validate((valid) => {
         if (valid) {
           update(this.form).then(res => {
-            generator(this.data, this.name).then(res => {
-              this.$notify({
-                title: '生成成功',
-                type: 'success',
-                duration: 2500
-              })
-              this.cancel()
-            }).catch(err => {
-              this.cancel()
-              console.log(err.response.data.message)
-            })
           }).catch(err => {
             this.cancel()
             console.log(err.response.data.message)
@@ -172,9 +149,6 @@ export default {
 </style>
 
 <style scoped>
-  /deep/ .el-dialog__body{
-    padding-bottom: 5px;
-  }
   /deep/ .input-with-select .el-input-group__prepend {
     background-color: #fff;
   }
