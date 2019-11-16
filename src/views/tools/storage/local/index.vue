@@ -252,4 +252,7 @@ export default {
   /deep/ .el-image__error, .el-image__placeholder{
     background: none;
   }
+  /deep/ .el-image-viewer__wrapper{
+    top: 55px;
+  }
 </style>
