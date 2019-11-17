@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function get() {
+export function get(tableName) {
   return request({
-    url: 'api/genConfig',
+    url: 'api/genConfig/' + tableName,
     method: 'get'
   })
 }

@@ -25,7 +25,7 @@
         <template slot-scope="scope">
           <el-button size="mini" style="margin-right: 2px" type="text">预览</el-button>
           <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text">
-            <router-link :to="'/generator/config/' + scope.row.tableName">
+            <router-link :to="'/sys-tools/generator/config/' + scope.row.tableName">
               编辑
             </router-link>
           </el-button>
@@ -47,10 +47,8 @@
 <script>
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
-import Generator from './generator'
 export default {
   name: 'GeneratorIndex',
-  components: { Generator },
   mixins: [initData],
   data() {
     return {
