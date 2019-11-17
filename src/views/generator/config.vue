@@ -30,7 +30,7 @@
     </el-tab-pane>
     <el-tab-pane label="字段配置" name="second">
       <el-form size="small" label-width="90px">
-        <el-table v-loading="loading" :data="data" size="small" style="width: 100%;margin-bottom: 15px">
+        <el-table v-loading="loading" :data="data" :height="tableHeight" size="small" style="width: 100%;margin-bottom: 15px">
           <el-table-column label="序号" width="80" align="center">
             <template slot-scope="scope">
               <div>{{ scope.$index + 1 }}</div>
@@ -38,14 +38,44 @@
           </el-table-column>
           <el-table-column prop="columnName" label="字段名称"/>
           <el-table-column prop="columnType" label="字段类型"/>
-          <el-table-column prop="columnComment" label="字段标题">
+          <el-table-column prop="columnComment" label="字段描述">
             <template slot-scope="scope">
-              <el-input v-model="data[scope.$index].columnComment" class="edit-input"/>
+              <el-input v-model="data[scope.$index].columnComment" size="mini" class="edit-input"/>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="columnShow" label="必填">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="data[scope.$index].columnShow"
+                active-color="#409EFF"
+                inactive-color="#F56C6C"
+                active-value="true"
+                inactive-value="false"/>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="columnShow" label="表单">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="data[scope.$index].columnShow"
+                active-color="#409EFF"
+                inactive-color="#F56C6C"
+                active-value="true"
+                inactive-value="false"/>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="columnShow" label="列表">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="data[scope.$index].columnShow"
+                active-color="#409EFF"
+                inactive-color="#F56C6C"
+                active-value="true"
+                inactive-value="false"/>
             </template>
           </el-table-column>
           <el-table-column label="查询方式">
             <template slot-scope="scope">
-              <el-select v-model="data[scope.$index].columnQuery" class="edit-input" clearable placeholder="请选择">
+              <el-select v-model="data[scope.$index].columnQuery" class="edit-input" clearable size="mini" placeholder="请选择">
                 <el-option
                   label="模糊查询"
                   value="1"/>
@@ -55,16 +85,16 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="columnShow" label="列表显示">
+          <el-table-column label="关联字典">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.columnShow === 'true' ?'显示':'不显示'" placement="top">
-                <el-switch
-                  v-model="data[scope.$index].columnShow"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                  active-value="true"
-                  inactive-value="false"/>
-              </el-tooltip>
+              <el-select v-model="data[scope.$index].columnQuery" class="edit-input" clearable size="mini" placeholder="请选择">
+                <el-option
+                  label="模糊查询"
+                  value="1"/>
+                <el-option
+                  label="精确查询"
+                  value="2"/>
+              </el-select>
             </template>
           </el-table-column>
         </el-table>
@@ -82,7 +112,7 @@ export default {
   mixins: [initData],
   data() {
     return {
-      activeName: 'second', tableName: '',
+      activeName: 'second', tableName: '', tableHeight: 550,
       form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
@@ -104,6 +134,7 @@ export default {
     }
   },
   created() {
+    this.tableHeight = document.documentElement.clientHeight - 260
     this.tableName = this.$route.params.tableName
     this.$nextTick(() => {
       this.init()
@@ -143,7 +174,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
   .edit-input {
     .el-input__inner {
-      border: none;
+      border: 1px solid #e5e6e7;
     }
   }
 </style>

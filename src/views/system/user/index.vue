@@ -18,6 +18,7 @@
           <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
           <el-date-picker
             v-model="query.date"
+            :default-time="['00:00:00','23:59:59']"
             type="daterange"
             range-separator=":"
             class="el-range-editor--small filter-item"
