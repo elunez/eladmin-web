@@ -29,7 +29,7 @@
               编辑
             </router-link>
           </el-button>
-          <el-button type="text" style="margin-left: -1px" size="mini">生成</el-button>
+          <el-button type="text" style="margin-left: -1px" size="mini" @click="toGen(scope.row.tableName)">生成</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,6 +47,7 @@
 <script>
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
+import { generator } from '@/api/generator'
 export default {
   name: 'GeneratorIndex',
   mixins: [initData],
@@ -91,17 +92,14 @@ export default {
       if (name) { this.params['name'] = name }
       return true
     },
-    cancel() {
-      this.resetForm()
-    },
-    doSubmit() {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          this.doUpdate()
-        } else {
-          return false
-        }
+    toGen(tableName) {
+      // 生成代码
+      generator(tableName, 0).then(data => {
+        this.$notify({
+          title: '生成成功',
+          type: 'success',
+          duration: 2500
+        })
       })
     }
   }
