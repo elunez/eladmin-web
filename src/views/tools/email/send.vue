@@ -23,7 +23,7 @@
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import { send } from '@/api/email'
-import { validatEmail } from '@/utils/validate'
+import { validEmail } from '@/utils/validate'
 import E from 'wangeditor'
 export default {
   name: 'Index',
@@ -96,7 +96,7 @@ export default {
                 type: 'warning'
               })
               sub = true
-            } else if (validatEmail(data.value)) {
+            } else if (validEmail(data.value)) {
               _this.form.tos.push(data.value)
             } else {
               _this.$message({

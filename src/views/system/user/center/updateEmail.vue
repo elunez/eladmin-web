@@ -23,7 +23,7 @@
 
 <script>
 import store from '@/store'
-import { validatEmail } from '@/utils/validate'
+import { validEmail } from '@/utils/validate'
 import { updateEmail } from '@/api/user'
 import { resetEmail } from '@/api/code'
 export default {
@@ -39,7 +39,7 @@ export default {
         callback(new Error('新邮箱不能为空'))
       } else if (value === this.email) {
         callback(new Error('新邮箱不能与旧邮箱相同'))
-      } else if (validatEmail(value)) {
+      } else if (validEmail(value)) {
         callback()
       } else {
         callback(new Error('邮箱格式错误'))

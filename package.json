@@ -25,6 +25,13 @@
       "git add"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PanJiaChen/vue-element-admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elunez/eladmin/issues"
+  },
   "dependencies": {
     "clipboard": "2.0.4",
     "@riophae/vue-treeselect": "0.1.0",
