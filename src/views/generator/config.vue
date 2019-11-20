@@ -102,13 +102,6 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column label="实体关联">
-                <template slot-scope="scope">
-                  <el-select v-model="data[scope.$index].joinName" filterable class="edit-input" clearable size="mini" placeholder="请选择" @change="toConfig">
-                    <el-option v-for="item in tables" :key="item[0]" :label="item[0]" :value="item[0]"/>
-                  </el-select>
-                </template>
-              </el-table-column>
             </el-table>
           </el-form>
         </el-card>
@@ -167,7 +160,7 @@
 <script>
 import initData from '@/mixins/initData'
 import { update, get } from '@/api/genConfig'
-import { save, getAllTable } from '@/api/generator'
+import { save } from '@/api/generator'
 import { getDicts } from '@/api/dict'
 export default {
   name: 'GeneratorConfig',
@@ -175,7 +168,7 @@ export default {
   mixins: [initData],
   data() {
     return {
-      activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [], tables: [],
+      activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [],
       form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
@@ -207,9 +200,6 @@ export default {
       })
       getDicts().then(data => {
         this.dicts = data
-      })
-      getAllTable().then(data => {
-        this.tables = data
       })
     })
   },
@@ -253,11 +243,6 @@ export default {
           })
         }
       })
-    },
-    toConfig(tableName) {
-      if (tableName) {
-        this.$router.push('/sys-tools/generator/config/' + tableName)
-      }
     }
   }
 }
