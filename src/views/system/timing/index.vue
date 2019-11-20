@@ -3,17 +3,18 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable size="small" placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
         v-model="query.date"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
+        class="el-range-editor--small date-item"
+        style="width: 220px;height: 30.5px"
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['admin','timing:add']" style="display: inline-block;margin: 0px 2px;">
@@ -22,7 +23,8 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
-          @click="dialog = true;isAdd = true">新增</el-button>
+          @click="dialog = true;isAdd = true"
+        >新增</el-button>
       </div>
       <!-- 导出 -->
       <div style="display: inline-block;">
@@ -32,7 +34,8 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download">导出</el-button>
+          @click="download"
+        >导出</el-button>
       </div>
       <!-- 任务日志 -->
       <div style="display: inline-block;">
@@ -41,34 +44,35 @@
           size="mini"
           type="info"
           icon="el-icon-tickets"
-          @click="doLog">日志</el-button>
-        <Log ref="log"/>
+          @click="doLog"
+        >日志</el-button>
+        <Log ref="log" />
       </div>
     </div>
     <!--Form表单-->
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增任务' : '编辑任务'" append-to-body width="600px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="任务名称" prop="jobName">
-          <el-input v-model="form.jobName" style="width: 460px;"/>
+          <el-input v-model="form.jobName" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="Bean名称" prop="beanName">
-          <el-input v-model="form.beanName" style="width: 460px;"/>
+          <el-input v-model="form.beanName" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="执行方法" prop="methodName">
-          <el-input v-model="form.methodName" style="width: 460px;"/>
+          <el-input v-model="form.methodName" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="参数内容">
-          <el-input v-model="form.params" style="width: 460px;"/>
+          <el-input v-model="form.params" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="Cron表达式" prop="cronExpression">
-          <el-input v-model="form.cronExpression" style="width: 460px;"/>
+          <el-input v-model="form.cronExpression" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="任务状态">
           <el-radio v-model="form.isPause" label="false">启用</el-radio>
-          <el-radio v-model="form.isPause" label="true" >暂停</el-radio>
+          <el-radio v-model="form.isPause" label="true">暂停</el-radio>
         </el-form-item>
         <el-form-item label="任务描述">
-          <el-input v-model="form.remark" style="width: 460px;" rows="2" type="textarea"/>
+          <el-input v-model="form.remark" style="width: 460px;" rows="2" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -78,17 +82,17 @@
     </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法"/>
-      <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数"/>
-      <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式"/>
+      <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />
+      <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数" />
+      <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式" />
       <el-table-column :show-overflow-tooltip="true" prop="isPause" width="90px" label="状态">
         <template slot-scope="scope">
           <el-tag :type="scope.row.isPause ? 'warning' : 'success'">{{ scope.row.isPause ? '已暂停' : '运行中' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
+      <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
       <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -102,10 +106,11 @@
             {{ scope.row.isPause ? '恢复' : '暂停' }}
           </el-button>
           <el-popover
-            v-permission="['admin','timing:del']"
             :ref="scope.row.id"
+            v-permission="['admin','timing:del']"
             placement="top"
-            width="200">
+            width="200"
+          >
             <p>确定停止并删除该任务吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
@@ -123,7 +128,8 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 

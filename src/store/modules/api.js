@@ -1,4 +1,4 @@
-const baseUrl = process.env.BASE_API
+const baseUrl = process.env.VUE_APP_BASE_API
 const api = {
   state: {
     // 实时控制台

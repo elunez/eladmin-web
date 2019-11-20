@@ -1,10 +1,10 @@
 <template>
   <el-tabs v-model="activeName" style="padding-left: 5px;">
     <el-tab-pane label="邮箱配置" name="first">
-      <Config/>
+      <Config />
     </el-tab-pane>
     <el-tab-pane label="发送邮件" name="second">
-      <Send/>
+      <Send />
     </el-tab-pane>
     <el-tab-pane label="使用说明" name="third">
       <div>
@@ -26,7 +26,6 @@
 <script>
 import Config from './config'
 import Send from './send'
-import '@/styles/description.scss'
 export default {
   name: 'Email',
   components: { Config, Send },

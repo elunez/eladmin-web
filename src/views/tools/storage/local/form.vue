@@ -1,8 +1,8 @@
 <template>
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="isAdd ? '上传文件' : '编辑文件'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="文件名" >
-        <el-input v-model="form.name" style="width: 370px;"/>
+      <el-form-item label="文件名">
+        <el-input v-model="form.name" style="width: 370px;" />
       </el-form-item>
       <!--   上传文件   -->
       <el-form-item v-if="isAdd" label="上传">
@@ -14,8 +14,9 @@
           :headers="headers"
           :on-success="handleSuccess"
           :on-error="handleError"
-          :action="fileUploadApi + '?name=' + form.name">
-          <div class="eladmin-upload"><i class="el-icon-upload"/> 添加文件</div>
+          :action="fileUploadApi + '?name=' + form.name"
+        >
+          <div class="eladmin-upload"><i class="el-icon-upload" /> 添加文件</div>
           <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过100M</div>
         </el-upload>
       </el-form-item>

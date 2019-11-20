@@ -1,23 +1,25 @@
 <template>
   <div class="navbar">
-    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
-    <breadcrumb class="breadcrumb-container"/>
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <Github class="screenfull right-menu-item"/>
+        <search id="header-search" class="right-menu-item" />
+
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+
+        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
+
       </template>
-      <template v-if="device!=='mobile'">
-        <el-tooltip content="全屏" effect="dark" placement="bottom">
-          <screenfull class="screenfull right-menu-item"/>
-        </el-tooltip>
-      </template>
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
+          <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <a target="_blank" href="https://docs.auauz.net/">
@@ -51,14 +53,17 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-import Github from '@/components/Github'
-import Avatar from '@/assets/avatar/avatar.png'
+import SizeSelect from '@/components/SizeSelect'
+import Search from '@/components/HeaderSearch'
+import Avatar from '@/assets/images/avatar.png'
+
 export default {
   components: {
     Breadcrumb,
     Hamburger,
     Screenfull,
-    Github
+    SizeSelect,
+    Search
   },
   data() {
     return {
@@ -69,23 +74,26 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'user',
       'device',
+      'user',
       'baseApi'
     ]),
     show: {
       get() {
-        return this.$store.state.settings.showRightPanel
+        return this.$store.state.settings.showSettings
       },
       set(val) {
-        this.$store.dispatch('changeSetting', {
-          key: 'showRightPanel',
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
           value: val
         })
       }
     }
   },
   methods: {
+    toggleSideBar() {
+      this.$store.dispatch('app/toggleSideBar')
+    },
     open() {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '确定',
@@ -95,77 +103,95 @@ export default {
         this.logout()
       })
     },
-    toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
-    },
     logout() {
-      this.dialogVisible = false
       this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+        location.reload()
       })
     }
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .navbar {
-    height: 50px;
+<style lang="scss" scoped>
+.navbar {
+  height: 50px;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+
+  .hamburger-container {
+    line-height: 46px;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-tap-highlight-color:transparent;
+
+    &:hover {
+      background: rgba(0, 0, 0, .025)
+    }
+  }
+
+  .breadcrumb-container {
+    float: left;
+  }
+
+  .errLog-container {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .right-menu {
+    float: right;
+    height: 100%;
     line-height: 50px;
-    border-radius: 0px !important;
-    .hamburger-container {
-      line-height: 58px;
-      height: 50px;
-      float: left;
-      padding: 0 10px;
+
+    &:focus {
+      outline: none;
     }
-    .breadcrumb-container{
-      float: left;
-    }
-    .errLog-container {
+
+    .right-menu-item {
       display: inline-block;
-      vertical-align: top;
-    }
-    .right-menu {
-      float: right;
+      padding: 0 8px;
       height: 100%;
-      &:focus{
-        outline: none;
+      font-size: 18px;
+      color: #5a5e66;
+      vertical-align: text-bottom;
+
+      &.hover-effect {
+        cursor: pointer;
+        transition: background .3s;
+
+        &:hover {
+          background: rgba(0, 0, 0, .025)
+        }
       }
-      .right-menu-item {
-        display: inline-block;
-        margin: 0 8px;
-      }
-      .screenfull {
-        height: 20px;
-      }
-      .international{
-        vertical-align: top;
-      }
-      .theme-switch {
-        vertical-align: 15px;
-      }
-      .avatar-container {
-        height: 50px;
-        margin-right: 30px;
-        .avatar-wrapper {
-          margin-top: 5px;
-          position: relative;
-          .user-avatar {
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-          }
-          .el-icon-caret-bottom {
-            cursor: pointer;
-            position: absolute;
-            right: -20px;
-            top: 25px;
-            font-size: 12px;
-          }
+    }
+
+    .avatar-container {
+      margin-right: 30px;
+
+      .avatar-wrapper {
+        margin-top: 5px;
+        position: relative;
+
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
         }
       }
     }
   }
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Search :query="query"/>
+    <Search :query="query" />
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column type="expand">
@@ -15,11 +15,11 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="requestIp" label="IP"/>
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column prop="browser" label="浏览器"/>
+      <el-table-column prop="username" label="用户名" />
+      <el-table-column prop="requestIp" label="IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
+      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="browser" label="浏览器" />
       <el-table-column prop="time" label="请求耗时" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
@@ -40,7 +40,8 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 

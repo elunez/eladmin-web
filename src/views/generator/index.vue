@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <el-input v-model="query.name" clearable placeholder="请输入表名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.name" clearable size="small" placeholder="请输入表名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </div>
     <!--表格渲染-->
@@ -12,10 +12,10 @@
           <div>{{ scope.$index + 1 }}</div>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="tableName" label="表名"/>
-      <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎"/>
-      <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集"/>
-      <el-table-column :show-overflow-tooltip="true" prop="remark" label="备注"/>
+      <el-table-column :show-overflow-tooltip="true" prop="tableName" label="表名" />
+      <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
+      <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
+      <el-table-column :show-overflow-tooltip="true" prop="remark" label="备注" />
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -40,7 +40,8 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 

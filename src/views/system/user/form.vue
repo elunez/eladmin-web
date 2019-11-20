@@ -2,7 +2,7 @@
   <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增用户' : '编辑用户'" append-to-body width="570px">
     <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username"/>
+        <el-input v-model="form.username" />
       </el-form-item>
       <el-form-item label="状态" prop="enabled">
         <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
@@ -22,17 +22,19 @@
             v-for="(item, index) in jobs"
             :key="item.name + index"
             :label="item.name"
-            :value="item.id"/>
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
       <el-form-item style="margin-bottom: 0px;" label="角色">
         <el-select v-model="roleIds" style="width: 450px;" multiple placeholder="请选择">
           <el-option
             v-for="(item, index) in roles"
-            :disabled="level !== 1 && item.level <= level"
             :key="item.name + index"
+            :disabled="level !== 1 && item.level <= level"
             :label="item.name"
-            :value="item.id"/>
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
     </el-form>

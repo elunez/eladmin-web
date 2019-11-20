@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
+    <eForm ref="form" :is-add="isAdd" />
     <el-row :gutter="10">
       <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10" style="margin-bottom: 10px">
         <el-card class="box-card">
@@ -14,12 +14,13 @@
               style="float: right;padding: 4px 10px"
               type="primary"
               icon="el-icon-plus"
-              @click="$refs.form.dialog = true;isAdd = true">新增</el-button>
+              @click="$refs.form.dialog = true;isAdd = true"
+            >新增</el-button>
           </div>
           <!--工具栏-->
           <div class="head-container">
             <!-- 搜索 -->
-            <el-input v-model="query.value" clearable placeholder="输入名称或者描述搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+            <el-input v-model="query.value" clearable size="small" placeholder="输入名称或者描述搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
             <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
             <!-- 导出 -->
             <div style="display: inline-block;">
@@ -29,27 +30,29 @@
                 class="filter-item"
                 type="warning"
                 icon="el-icon-download"
-                @click="download">导出</el-button>
+                @click="download"
+              >导出</el-button>
             </div>
           </div>
           <!--表格渲染-->
           <el-table v-loading="loading" :data="data" size="small" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
-            <el-table-column :show-overflow-tooltip="true" prop="name" label="名称"/>
-            <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
+            <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
+            <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
             <el-table-column v-if="checkPermission(['admin','dict:edit','dict:del'])" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
-                <el-button v-permission="['admin','dict:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+                <el-button v-permission="['admin','dict:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
                 <el-popover
-                  v-permission="['admin','dict:del']"
                   :ref="scope.row.id"
+                  v-permission="['admin','dict:del']"
                   placement="top"
-                  width="180">
+                  width="180"
+                >
                   <p>此操作将删除字典与对应的字典详情，确定要删除吗？</p>
                   <div style="text-align: right; margin: 0">
                     <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
                     <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
                   </div>
-                  <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+                  <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
                 </el-popover>
               </template>
             </el-table-column>
@@ -61,7 +64,8 @@
             style="margin-top: 8px;"
             layout="total, prev, pager, next, sizes"
             @size-change="sizeChange"
-            @current-change="pageChange"/>
+            @current-change="pageChange"
+          />
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="14" :lg="14" :xl="14">
@@ -75,9 +79,10 @@
               style="float: right;padding: 4px 10px"
               type="primary"
               icon="el-icon-plus"
-              @click="$refs.dictDetail.$refs.form.dialog = true;$refs.dictDetail.isAdd = true">新增</el-button>
+              @click="$refs.dictDetail.$refs.form.dialog = true;$refs.dictDetail.isAdd = true"
+            >新增</el-button>
           </div>
-          <dictDetail ref="dictDetail"/>
+          <dictDetail ref="dictDetail" />
         </el-card>
       </el-col>
     </el-row>

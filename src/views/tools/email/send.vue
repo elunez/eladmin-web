@@ -2,17 +2,18 @@
   <div>
     <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="100px">
       <el-form-item label="邮件标题" prop="subject">
-        <el-input v-model="form.subject" style="width: 40%"/>
+        <el-input v-model="form.subject" style="width: 40%" />
       </el-form-item>
       <el-form-item
         v-for="(domain, index) in tos"
+        :key="domain.key"
         :label="'收件邮箱' + (index === 0 ? '': index)"
-        :key="domain.key">
-        <el-input v-model="domain.value" style="width: 31%"/>
+      >
+        <el-input v-model="domain.value" style="width: 31%" />
         <el-button icon="el-icon-plus" @click="addDomain" />
-        <el-button style="margin-left:0px;" icon="el-icon-minus" @click.prevent="removeDomain(domain)"/>
+        <el-button style="margin-left:0px;" icon="el-icon-minus" @click.prevent="removeDomain(domain)" />
       </el-form-item>
-      <div ref="editor" class="editor"/>
+      <div ref="editor" class="editor" />
       <el-button :loading="loading" style="margin-left:1.6%;" size="medium" type="primary" @click="doSubmit">发送邮件</el-button>
     </el-form>
   </div>

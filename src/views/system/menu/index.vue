@@ -3,17 +3,18 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable size="small" placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
         v-model="query.date"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
+        class="el-range-editor--small date-item"
+        style="width: 220px;height: 30.5px"
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['admin','menu:add']" style="display: inline-block;margin: 0px 2px;">
@@ -22,7 +23,8 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
-          @click="add">新增</el-button>
+          @click="add"
+        >新增</el-button>
       </div>
       <!-- 导出 -->
       <div style="display: inline-block;">
@@ -32,14 +34,15 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download">导出</el-button>
+          @click="download"
+        >导出</el-button>
       </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
+    <eForm ref="form" :is-add="isAdd" />
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" row-key="id" size="small">
-      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name"/>
+      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
@@ -50,10 +53,10 @@
           {{ scope.row.sort }}
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址"/>
-      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识"/>
+      <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址" />
+      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
       <!--<el-table-column :show-overflow-tooltip="true" prop="componentName" label="组件名称"/>-->
-      <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径"/>
+      <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" />
       <el-table-column prop="iframe" label="外链" width="75px">
         <template slot-scope="scope">
           <span v-if="scope.row.iframe">是</span>
@@ -79,18 +82,19 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','menu:edit','menu:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','menu:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','menu:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-popover
-            v-permission="['admin','menu:del']"
             :ref="scope.row.id"
+            v-permission="['admin','menu:del']"
             placement="top"
-            width="200">
+            width="200"
+          >
             <p>确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>

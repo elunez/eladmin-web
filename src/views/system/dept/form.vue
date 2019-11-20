@@ -2,7 +2,7 @@
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="isAdd ? '新增部门' : '编辑部门'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;"/>
+        <el-input v-model="form.name" style="width: 370px;" />
       </el-form-item>
       <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
         <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>

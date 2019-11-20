@@ -3,17 +3,18 @@
     <!--工具栏-->
     <div class="head-container">
       <!--搜索-->
-      <el-input v-model="query.filename" clearable placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.filename" clearable size="small" placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
         v-model="query.date"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
+        class="el-range-editor--small date-item"
+        style="width: 220px;height: 30.5px"
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 上传 -->
       <div style="display: inline-block;margin: 0px 2px;">
@@ -23,7 +24,8 @@
           size="mini"
           type="primary"
           icon="el-icon-upload"
-          @click="dialog = true">上传图片</el-button>
+          @click="dialog = true"
+        >上传图片</el-button>
       </div>
       <div v-permission="['admin','pictures:del']" style="display: inline-block;">
         <el-button
@@ -33,7 +35,8 @@
           size="mini"
           type="danger"
           icon="el-icon-delete"
-          @click="open">删除</el-button>
+          @click="open"
+        >删除</el-button>
       </div>
       <!-- 导出 -->
       <div style="display: inline-block;">
@@ -43,7 +46,8 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download">导出</el-button>
+          @click="download"
+        >导出</el-button>
       </div>
     </div>
     <!--上传图片-->
@@ -56,8 +60,9 @@
         :headers="headers"
         :file-list="fileList"
         :action="imagesUploadApi"
-        list-type="picture-card">
-        <i class="el-icon-plus"/>
+        list-type="picture-card"
+      >
+        <i class="el-icon-plus" />
       </el-upload>
       <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
         <img :src="dialogImageUrl" width="100%" alt="">
@@ -67,18 +72,18 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
-      <el-table-column type="selection" width="55"/>
-      <el-table-column prop="filename" label="文件名"/>
-      <el-table-column prop="username" label="上传者"/>
+    <el-table ref="table" v-loading="loading" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55" />
+      <el-table-column prop="filename" label="文件名" />
+      <el-table-column prop="username" label="上传者" />
       <el-table-column ref="table" :show-overflow-tooltip="true" prop="url" label="缩略图">
         <template slot-scope="scope">
           <a :href="scope.row.url" style="color: #42b983" target="_blank"><img :src="scope.row.url" alt="点击打开" class="el-avatar"></a>
         </template>
       </el-table-column>
-      <el-table-column prop="size" label="文件大小"/>
-      <el-table-column prop="height" label="高度"/>
-      <el-table-column prop="width" label="宽度"/>
+      <el-table-column prop="size" label="文件大小" />
+      <el-table-column prop="height" label="高度" />
+      <el-table-column prop="width" label="宽度" />
       <el-table-column width="180px" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -89,13 +94,14 @@
           <el-popover
             :ref="scope.row.id"
             placement="top"
-            width="180">
+            width="180"
+          >
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>
@@ -107,7 +113,8 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 

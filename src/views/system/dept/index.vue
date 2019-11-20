@@ -3,19 +3,20 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入部门名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable size="small" placeholder="输入部门名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
         v-model="query.date"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
+        class="el-range-editor--small date-item"
+        style="width: 220px;height: 30.5px"
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
-      <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
-        <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
+        end-placeholder="结束日期"
+      />
+      <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
+        <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
@@ -25,7 +26,8 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
-          @click="add">新增</el-button>
+          @click="add"
+        >新增</el-button>
       </div>
       <!-- 导出 -->
       <div style="display: inline-block;">
@@ -35,14 +37,15 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download">导出</el-button>
+          @click="download"
+        >导出</el-button>
       </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dict.dept_status"/>
+    <eForm ref="form" :is-add="isAdd" :dicts="dict.dept_status" />
     <!--表格渲染-->
     <el-table v-loading="loading" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" :data="data" row-key="id" size="small">
-      <el-table-column label="名称" prop="name"/>
+      <el-table-column label="名称" prop="name" />
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
@@ -50,7 +53,8 @@
             :disabled="scope.row.id == 1"
             active-color="#409EFF"
             inactive-color="#F56C6C"
-            @change="changeEnabled(scope.row, scope.row.enabled,)"/>
+            @change="changeEnabled(scope.row, scope.row.enabled,)"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
@@ -60,18 +64,19 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','dept:edit','dept:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','dept:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','dept:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-popover
-            v-permission="['admin','dept:del']"
             :ref="scope.row.id"
+            v-permission="['admin','dept:del']"
             placement="top"
-            width="180">
+            width="180"
+          >
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" icon="el-icon-delete" size="mini"/>
+            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>

@@ -3,17 +3,18 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
         v-model="query.date"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
+        class="el-range-editor--small date-item"
+        style="width: 220px;height: 30.5px"
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div style="display: inline-block;margin: 0px 2px;">
@@ -23,7 +24,8 @@
           size="mini"
           type="primary"
           icon="el-icon-upload"
-          @click="add">文件上传
+          @click="add"
+        >文件上传
         </el-button>
       </div>
       <!-- 多选删除 -->
@@ -36,7 +38,8 @@
           size="mini"
           type="danger"
           icon="el-icon-delete"
-          @click="open">删除
+          @click="open"
+        >删除
         </el-button>
       </div>
       <!-- 导出 -->
@@ -47,14 +50,15 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download">导出</el-button>
+          @click="download"
+        >导出</el-button>
       </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
+    <eForm ref="form" :is-add="isAdd" />
     <!--表格渲染-->
-    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
-      <el-table-column type="selection" width="55"/>
+    <el-table ref="table" v-loading="loading" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55" />
       <el-table-column prop="name" width="150px" label="文件名">
         <template slot-scope="scope">
           <el-popover
@@ -62,13 +66,15 @@
             placement="top-start"
             title="路径"
             width="200"
-            trigger="hover">
+            trigger="hover"
+          >
             <a
               slot="reference"
               :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName"
               class="el-link--primary"
               style="word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color: #1890ff;font-size: 13px;"
-              target="_blank">
+              target="_blank"
+            >
               {{ scope.row.name }}
             </a>
           </el-popover>
@@ -81,17 +87,18 @@
             :preview-src-list="[baseApi + '/file/' + row.type + '/' + row.realName]"
             fit="contain"
             lazy
-            class="el-avatar">
+            class="el-avatar"
+          >
             <div slot="error">
-              <i class="el-icon-document"/>
+              <i class="el-icon-document" />
             </div>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="suffix" label="文件类型"/>
-      <el-table-column prop="type" label="类别"/>
-      <el-table-column prop="size" label="大小"/>
-      <el-table-column prop="operate" label="操作人"/>
+      <el-table-column prop="suffix" label="文件类型" />
+      <el-table-column prop="type" label="类别" />
+      <el-table-column prop="size" label="大小" />
+      <el-table-column prop="operate" label="操作人" />
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -99,19 +106,20 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','storage:edit','storage:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','storage:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','storage:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-popover
-            v-permission="['admin','storage:del']"
             :ref="scope.row.id"
+            v-permission="['admin','storage:del']"
             placement="top"
-            width="180">
+            width="180"
+          >
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定
               </el-button>
             </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>
@@ -123,7 +131,8 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 
@@ -252,8 +261,5 @@ export default {
 <style scoped>
   /deep/ .el-image__error, .el-image__placeholder{
     background: none;
-  }
-  /deep/ .el-image-viewer__wrapper{
-    top: 55px;
   }
 </style>

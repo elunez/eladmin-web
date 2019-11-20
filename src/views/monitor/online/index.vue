@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <el-input v-model="query.value" clearable placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.value" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 导出 -->
       <div style="display: inline-block;">
@@ -11,16 +11,17 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download">导出</el-button>
+          @click="download"
+        >导出</el-button>
       </div>
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column prop="userName" label="用户名"/>
-      <el-table-column prop="job" label="岗位"/>
-      <el-table-column prop="ip" label="登录IP"/>
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点"/>
-      <el-table-column prop="browser" label="浏览器"/>
+      <el-table-column prop="userName" label="用户名" />
+      <el-table-column prop="job" label="岗位" />
+      <el-table-column prop="ip" label="登录IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点" />
+      <el-table-column prop="browser" label="浏览器" />
       <el-table-column prop="loginTime" label="登录时间">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.loginTime) }}</span>
@@ -29,10 +30,11 @@
       <el-table-column prop="createTime" label="操作" width="100px" fixed="right">
         <template slot-scope="scope">
           <el-popover
-            v-permission="['admin']"
             :ref="scope.$index"
+            v-permission="['admin']"
             placement="top"
-            width="180">
+            width="180"
+          >
             <p>确定踢出该用户吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
@@ -50,7 +52,8 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 

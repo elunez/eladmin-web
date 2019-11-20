@@ -2,13 +2,13 @@
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="isAdd ? '新增字典详情' : '编辑字典详情'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="字典标签" prop="label">
-        <el-input v-model="form.label" style="width: 370px;"/>
+        <el-input v-model="form.label" style="width: 370px;" />
       </el-form-item>
       <el-form-item label="字典值">
-        <el-input v-model="form.value" style="width: 370px;"/>
+        <el-input v-model="form.value" style="width: 370px;" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;"/>
+        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
