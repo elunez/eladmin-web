@@ -1,23 +1,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-editor-container">
-      <el-row :gutter="32">
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <radar-chart />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <pie-chart />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <bar-chart />
-          </div>
-        </el-col>
-      </el-row>
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
         <heat-map />
       </el-row>
@@ -89,11 +72,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import RadarChart from '@/components/Echarts/RadarChart'
-import PieChart from '@/components/Echarts/PieChart'
-import BarChart from '@/components/Echarts/BarChart'
-import { count } from '@/api/visits'
 import HeatMap from '@/components/Echarts/HeatMap'
 import Gauge from '@/components/Echarts/Gauge'
 import Rich from '@/components/Echarts/Rich'
@@ -106,34 +85,21 @@ import Line3D from '@/components/Echarts/Line3D'
 import Category from '@/components/Echarts/Category'
 import Point from '@/components/Echarts/Point'
 
-/**
- * 记录访问，只有页面刷新或者第一次加载才会记录
- */
-count().then(res => {
-})
-
 export default {
-  name: 'Dashboard',
+  name: 'Echarts',
   components: {
     Point,
     Category,
     Graph,
     HeatMap,
     RadarChart,
-    PieChart,
     Sunburst,
     Gauge,
     Rich,
     ThemeRiver,
     Sankey,
     Line3D,
-    Scatter,
-    BarChart
-  },
-  computed: {
-    ...mapGetters([
-      'roles'
-    ])
+    Scatter
   }
 }
 </script>
