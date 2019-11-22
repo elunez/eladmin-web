@@ -48,7 +48,7 @@
 <script>
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
-import { generator } from '@/api/generator'
+import { generator } from '@/api/generator/generator'
 export default {
   name: 'GeneratorIndex',
   mixins: [initData],

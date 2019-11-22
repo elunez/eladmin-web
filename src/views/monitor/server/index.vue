@@ -122,7 +122,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/server'
+import { del } from '@/api/monitor/server'
 import eForm from './form'
 export default {
   name: 'ServerMonitor',

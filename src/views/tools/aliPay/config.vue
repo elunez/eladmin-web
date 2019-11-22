@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { get, update } from '@/api/alipay'
+import { get, update } from '@/api/tools/alipay'
 export default {
   name: 'Config',
   data() {

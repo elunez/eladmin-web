@@ -51,7 +51,7 @@
 <script>
 import initData from '@/mixins/initData'
 import { parseTime } from '@/utils/index'
-import { getErrDetail } from '@/api/log'
+import { getErrDetail } from '@/api/monitor/log'
 import Search from './search'
 export default {
   name: 'ErrorLog',

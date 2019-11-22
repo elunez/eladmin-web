@@ -125,7 +125,7 @@
 
 <script>
 import initData from '@/mixins/initData'
-import { del, download, sync, delAll, downloadQiNiu } from '@/api/qiniu'
+import { del, download, sync, delAll, downloadQiNiu } from '@/api/tools/qiniu'
 import { parseTime, downloadFile } from '@/utils/index'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'

@@ -32,7 +32,7 @@ import LineChart from './dashboard/LineChart'
 import RadarChart from '@/components/Echarts/RadarChart'
 import PieChart from '@/components/Echarts/PieChart'
 import BarChart from '@/components/Echarts/BarChart'
-import { count } from '@/api/visits'
+import { count } from '@/api/monitor/visits'
 
 /**
  * 记录访问，只有页面刷新或者第一次加载才会记录

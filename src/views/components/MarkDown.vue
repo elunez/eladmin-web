@@ -12,7 +12,7 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import { del } from '@/api/picture'
+import { del } from '@/api/tools/picture'
 export default {
   name: 'Markdown',
   data() {

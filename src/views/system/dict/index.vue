@@ -92,7 +92,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, downloadDict } from '@/api/dict'
+import { del, downloadDict } from '@/api/system/dict'
 import dictDetail from '../dictDetail/index'
 import { downloadFile } from '@/utils/index'
 import eForm from './form'

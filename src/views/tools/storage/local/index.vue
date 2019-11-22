@@ -140,7 +140,7 @@
 import { mapGetters } from 'vuex'
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, delAll, downloadStorage } from '@/api/localStorage'
+import { del, delAll, downloadStorage } from '@/api/tools/localStorage'
 import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {

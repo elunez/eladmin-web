@@ -22,7 +22,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import { send } from '@/api/email'
+import { send } from '@/api/tools/email'
 import { validEmail } from '@/utils/validate'
 import E from 'wangeditor'
 export default {

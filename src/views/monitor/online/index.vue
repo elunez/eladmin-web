@@ -60,7 +60,7 @@
 <script>
 import initData from '@/mixins/initData'
 import { parseTime, downloadFile } from '@/utils/index'
-import { del, downloadOnline } from '@/api/online'
+import { del, downloadOnline } from '@/api/monitor/online'
 export default {
   name: 'OnlineUser',
   mixins: [initData],

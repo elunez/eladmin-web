@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 
-// 获取所有的菜单树
 export function getMenusTree() {
   return request({
     url: 'api/menus/tree',
@@ -38,11 +37,4 @@ export function edit(data) {
   })
 }
 
-export function downloadMenu(params) {
-  return request({
-    url: 'api/menus/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del, getMenusTree }

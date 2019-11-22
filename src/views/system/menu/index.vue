@@ -3,9 +3,9 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable size="small" placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+      <el-input v-model="query.blurry" clearable size="small" placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
-        v-model="query.date"
+        v-model="query.createTime"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
@@ -17,31 +17,97 @@
       />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div v-permission="['admin','menu:add']" style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          @click="add"
-        >新增</el-button>
-      </div>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-plus"
+        @click="showAddFormDialog"
+      >新增</el-button>
       <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download"
-        >导出</el-button>
-      </div>
+      <el-button
+        :loading="downloadLoading"
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-download"
+        @click="downloadMethod"
+      >导出</el-button>
     </div>
-    <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" />
+    <!--表单渲染-->
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="580px">
+      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
+        <el-form-item label="菜单类型" prop="type">
+          <el-radio-group v-model="form.type" size="mini" style="width: 178px">
+            <el-radio-button label="0">目录</el-radio-button>
+            <el-radio-button label="1">菜单</el-radio-button>
+            <el-radio-button label="2">按钮</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '2'" label="菜单图标" prop="icon">
+          <el-popover
+            placement="bottom-start"
+            width="450"
+            trigger="click"
+            @show="$refs['iconSelect'].reset()"
+          >
+            <IconSelect ref="iconSelect" @selected="selected" />
+            <el-input slot="reference" v-model="form.icon" style="width: 450px;" placeholder="点击选择图标" readonly>
+              <svg-icon v-if="form.icon" slot="prefix" :icon-class="form.icon" class="el-input__icon" style="height: 32px;width: 16px;" />
+              <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+            </el-input>
+          </el-popover>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '2'" label="外链菜单" prop="iframe">
+          <el-radio-group v-model="form.iframe" size="mini">
+            <el-radio-button label="true">是</el-radio-button>
+            <el-radio-button label="false">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() === '1'" label="菜单缓存" prop="cache">
+          <el-radio-group v-model="form.cache" size="mini">
+            <el-radio-button label="true">是</el-radio-button>
+            <el-radio-button label="false">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '2'" label="菜单可见" prop="hidden">
+          <el-radio-group v-model="form.hidden" size="mini">
+            <el-radio-button label="false">是</el-radio-button>
+            <el-radio-button label="true">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '2'" label="菜单标题" prop="name">
+          <el-input v-model="form.name" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题" />
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() === '2'" label="按钮名称" prop="name">
+          <el-input v-model="form.name" placeholder="按钮名称" style="width: 178px;" />
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
+          <el-input v-model="form.permission" :disabled="form.iframe === 'true'" placeholder="权限标识" style="width: 178px;" />
+        </el-form-item>
+        <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
+          <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;" />
+        </el-form-item>
+        <el-form-item label="菜单排序" prop="sort">
+          <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 178px;" />
+        </el-form-item>
+        <el-form-item v-show="form.iframe === 'false' && form.type.toString() === '1'" label="组件名称" prop="componentName">
+          <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段" />
+        </el-form-item>
+        <el-form-item v-show="form.iframe === 'false' && form.type.toString() === '1'" label="组件路径" prop="component">
+          <el-input v-model="form.component" style="width: 178px;" placeholder="组件路径" />
+        </el-form-item>
+        <el-form-item label="上级类目" prop="pid">
+          <treeselect v-model="form.pid" :options="menus" style="width: 450px;" placeholder="选择上级类目" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="cancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+      </div>
+    </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" row-key="id" size="small">
+    <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" size="small">
       <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
@@ -82,7 +148,7 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','menu:edit','menu:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','menu:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
+          <el-button v-permission="['admin','menu:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
             v-permission="['admin','menu:del']"
@@ -92,7 +158,7 @@
             <p>确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
@@ -103,18 +169,29 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
-import initData from '@/mixins/initData'
-import { del, downloadMenu } from '@/api/menu'
-import { parseTime, downloadFile } from '@/utils/index'
-import eForm from './form'
+import crud from '@/mixins/crud'
+import crudMenu from '@/api/system/menu'
+import Treeselect from '@riophae/vue-treeselect'
+import IconSelect from '@/components/IconSelect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   name: 'Menu',
-  components: { eForm },
-  mixins: [initData],
+  components: { Treeselect, IconSelect },
+  mixins: [crud],
   data() {
     return {
-      delLoading: false, expand: false
+      title: '菜单',
+      crudMethod: { ...crudMenu },
+      menus: [],
+      form: { name: null, sort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null },
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        path: [
+          { required: true, message: '请输入地址', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -123,68 +200,35 @@ export default {
     })
   },
   methods: {
-    parseTime,
-    checkPermission,
     beforeInit() {
       this.url = 'api/menus'
-      const sort = 'id,desc'
-      const query = this.query
-      const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['blurry'] = value }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
     },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
+    // 打开新增弹窗前做的操作
+    beforeShowAddForm() {
+      this.getMenus()
     },
-    add() {
-      this.isAdd = true
-      this.$refs.form.getMenus()
-      this.$refs.form.dialog = true
+    // 打开新增弹窗前做的操作
+    beforeShowEditForm() {
+      this.getMenus()
     },
-    edit(data) {
-      this.isAdd = false
-      const _this = this.$refs.form
-      _this.getMenus()
-      _this.form = { id: data.id, component: data.component, componentName: data.componentName, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon, cache: data.cache, hidden: data.hidden, type: data.type, permission: data.permission }
-      _this.dialog = true
+    selected(name) {
+      this.form.icon = name
     },
-    changExpand() {
-      this.expand = !this.expand
-      this.init()
-    },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadMenu(this.params).then(result => {
-        downloadFile(result, '菜单列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
+    getMenus() {
+      this.crudMethod.getMenusTree().then(res => {
+        this.menus = []
+        const menu = { id: 0, label: '顶级类目', children: [] }
+        menu.children = res
+        this.menus.push(menu)
       })
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>

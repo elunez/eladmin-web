@@ -45,14 +45,6 @@ export function edit(data) {
   })
 }
 
-export function editPermission(data) {
-  return request({
-    url: 'api/roles/permission',
-    method: 'put',
-    data
-  })
-}
-
 export function editMenu(data) {
   return request({
     url: 'api/roles/menu',
@@ -61,11 +53,4 @@ export function editMenu(data) {
   })
 }
 
-export function downloadRole(params) {
-  return request({
-    url: 'api/roles/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del, get, editMenu }

@@ -64,7 +64,7 @@
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
-import { del, delAll, downloadRedis } from '@/api/redis'
+import { del, delAll, downloadRedis } from '@/api/monitor/redis'
 import { downloadFile } from '@/utils/index'
 export default {
   name: 'Redis',

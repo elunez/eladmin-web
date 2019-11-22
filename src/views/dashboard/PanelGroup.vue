@@ -49,7 +49,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { get } from '@/api/visits'
+import { get } from '@/api/monitor/visits'
 export default {
   components: {
     CountTo

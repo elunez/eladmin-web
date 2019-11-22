@@ -48,7 +48,7 @@
           >导出</el-button>
         </div>
         <!--表单渲染-->
-        <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="hideFormDialog" :title="getFormTitle()" append-to-body width="570px">
+        <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="570px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" />
@@ -88,7 +88,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="text" @click="hideFormDialog">取消</el-button>
+            <el-button type="text" @click="cancel">取消</el-button>
             <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
           </div>
         </el-dialog>
@@ -152,11 +152,11 @@
 
 <script>
 import crud from '@/mixins/crud'
-import crudUser from '@/api/user'
+import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
-import { getDepts } from '@/api/dept'
-import { getAll, getLevel } from '@/api/role'
-import { getAllJob } from '@/api/job'
+import { getDepts } from '@/api/system/dept'
+import { getAll, getLevel } from '@/api/system/role'
+import { getAllJob } from '@/api/system/job'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {

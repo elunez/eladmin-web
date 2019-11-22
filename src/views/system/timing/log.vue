@@ -75,7 +75,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { downloadLogs } from '@/api/timing'
+import { downloadLogs } from '@/api/system/timing'
 import { parseTime, downloadFile } from '@/utils/index'
 export default {
   mixins: [initData],

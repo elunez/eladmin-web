@@ -39,11 +39,8 @@
       >导出</el-button>
     </div>
     <!--表单渲染-->
-    <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="hideFormDialog" :visible.sync="dialog" :title="getFormTitle()" width="500px">
+    <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="getFormTitle()" width="500px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-        <el-form-item v-show="false" label="ID" prop="id">
-          <el-input v-model="form.id" style="width: 370px;" />
-        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" style="width: 370px;" />
         </el-form-item>
@@ -58,7 +55,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="hideFormDialog">取消</el-button>
+        <el-button type="text" @click="cancel">取消</el-button>
         <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
       </div>
     </el-dialog>
@@ -124,8 +121,8 @@
 
 <script>
 import crud from '@/mixins/crud'
-import crudJob from '@/api/job'
-import { getDepts } from '@/api/dept'
+import crudJob from '@/api/system/job'
+import { getDepts } from '@/api/system/dept'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
@@ -145,14 +142,7 @@ export default {
         { key: 'true', display_name: '正常' },
         { key: 'false', display_name: '禁用' }
       ],
-      form: {
-        id: '',
-        name: '',
-        sort: 999,
-        enabled: 'true',
-        createTime: '',
-        dept: { id: null }
-      },
+      form: { id: null, name: null, sort: 999, enabled: 'true', dept: { id: null }},
       depts: [],
       rules: {
         name: [

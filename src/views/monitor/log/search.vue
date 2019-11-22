@@ -29,7 +29,7 @@
 
 <script>
 import { downloadFile } from '@/utils/index'
-import { downloadLog } from '@/api/log'
+import { downloadLog } from '@/api/monitor/log'
 export default {
   props: {
     query: {

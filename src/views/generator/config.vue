@@ -174,9 +174,9 @@
 
 <script>
 import initData from '@/mixins/initData'
-import { update, get } from '@/api/genConfig'
-import { save } from '@/api/generator'
-import { getDicts } from '@/api/dict'
+import { update, get } from '@/api/generator/genConfig'
+import { save } from '@/api/generator/generator'
+import { getDicts } from '@/api/system/dict'
 export default {
   name: 'GeneratorConfig',
   components: {},

@@ -31,11 +31,4 @@ export function edit(data) {
   })
 }
 
-export function downloadDept(params) {
-  return request({
-    url: 'api/dept/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del, getDepts }

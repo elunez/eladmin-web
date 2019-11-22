@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { add, edit } from '@/api/dict'
+import { add, edit } from '@/api/system/dict'
 export default {
   props: {
     isAdd: {

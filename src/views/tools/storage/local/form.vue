@@ -31,7 +31,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import { edit } from '@/api/localStorage'
+import { edit } from '@/api/tools/localStorage'
 export default {
   props: {
     isAdd: {

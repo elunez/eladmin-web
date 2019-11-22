@@ -35,6 +35,8 @@ export default {
       dialog: false,
       // Form 表单
       form: {},
+      // 重置表单
+      resetForm: {},
       // 弹窗的标题
       title: '',
       // 方法
@@ -179,6 +181,7 @@ export default {
      */
     showAddFormDialog() {
       this.isAdd = true
+      this.resetForm = JSON.parse(JSON.stringify(this.form))
       this.beforeShowAddForm()
       this.dialog = true
     },
@@ -193,6 +196,7 @@ export default {
     showEditFormDialog(data = '') {
       this.isAdd = false
       if (data) {
+        this.resetForm = JSON.parse(JSON.stringify(this.form))
         this.form = JSON.parse(JSON.stringify(data))
       }
       this.beforeShowEditForm(data)
@@ -203,10 +207,10 @@ export default {
      */
     addMethod() {
       this.crudMethod.add(this.form).then(() => {
-        this.hideFormDialog()
         this.addSuccessNotify()
         this.loading = false
         this.afterAddMethod()
+        this.cancel()
         this.init()
       }).catch(() => {
         this.loading = false
@@ -215,17 +219,16 @@ export default {
     /**
      * 新增后可以调用该方法
      */
-    afterAddMethod() {
-    },
+    afterAddMethod() { },
     /**
      * 通用的编辑方法
      */
     editMethod() {
       this.crudMethod.edit(this.form).then(() => {
-        this.hideFormDialog()
         this.editSuccessNotify()
         this.loading = false
         this.afterEditMethod()
+        this.cancel()
         this.init()
       }).catch(() => {
         this.loading = false
@@ -234,8 +237,7 @@ export default {
     /**
      * 编辑后可以调用该方法
      */
-    afterEditMethod() {
-    },
+    afterEditMethod() {},
     /**
      * 提交前可以调用该方法
      */
@@ -249,21 +251,26 @@ export default {
       if (!this.beforeSubmitMethod()) {
         return
       }
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          if (this.isAdd) {
-            this.addMethod()
-          } else this.editMethod()
-        }
-      })
+      if (this.$refs['form']) {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            if (this.isAdd) {
+              this.addMethod()
+            } else this.editMethod()
+          }
+        })
+      }
     },
     /**
      * 隐藏弹窗
      */
-    hideFormDialog() {
+    cancel() {
       this.dialog = false
-      this.$refs['form'].resetFields()
+      if (this.$refs['form']) {
+        this.$refs['form'].clearValidate()
+        this.form = this.resetForm
+      }
     },
     /**
      * 获取弹窗的标题
@@ -278,7 +285,7 @@ export default {
       this.beforeInit()
       this.downloadLoading = true
       download(this.url + '/download', this.params).then(result => {
-        this.downloadFile(result, this.title, 'xlsx')
+        this.downloadFile(result, this.title + '数据', 'xlsx')
         this.downloadLoading = false
       }).catch(() => {
         this.downloadLoading = false

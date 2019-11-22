@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { add, edit } from '@/api/server'
+import { add, edit } from '@/api/monitor/server'
 export default {
   props: {
     isAdd: {

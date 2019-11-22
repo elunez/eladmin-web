@@ -136,7 +136,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, updateIsPause, execution, add, edit, downloadJobs } from '@/api/timing'
+import { del, updateIsPause, execution, add, edit, downloadJobs } from '@/api/system/timing'
 import { parseTime, downloadFile } from '@/utils/index'
 import Log from './log'
 export default {

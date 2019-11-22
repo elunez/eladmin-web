@@ -123,7 +123,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import initData from '@/mixins/initData'
 import { parseTime, downloadFile } from '@/utils/index'
 import { mapGetters } from 'vuex'
-import { del, delAll, downloadPicture } from '@/api/picture'
+import { del, delAll, downloadPicture } from '@/api/tools/picture'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Pictures',

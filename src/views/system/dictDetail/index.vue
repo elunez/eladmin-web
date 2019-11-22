@@ -55,7 +55,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/dictDetail'
+import { del } from '@/api/system/dictDetail'
 import eForm from './form'
 export default {
   components: { eForm },
