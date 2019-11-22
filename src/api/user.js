@@ -8,15 +8,6 @@ export function add(data) {
   })
 }
 
-export function downloadUser(params) {
-  return request({
-    url: 'api/users/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
-
 export function del(id) {
   return request({
     url: 'api/users/' + id,
@@ -51,3 +42,6 @@ export function updateEmail(code, data) {
     data
   })
 }
+
+export default { add, edit, del }
+

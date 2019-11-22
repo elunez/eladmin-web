@@ -36,19 +36,4 @@ export function edit(data) {
   })
 }
 
-export function downloadJob(params) {
-  return request({
-    url: 'api/job/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
-
-export default {
-  add,
-  edit,
-  del,
-  getAllJob,
-  downloadJob
-}
+export default { add, edit, del }

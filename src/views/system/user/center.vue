@@ -36,6 +36,7 @@
           </div>
         </el-card>
       </el-col>
+      <!-- 用户日志 -->
       <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
@@ -143,6 +144,7 @@ export default {
         duration: 2500
       })
     },
+    // 刷新日志
     refresh() {
       this.ico = 'el-icon-loading'
       this.init()

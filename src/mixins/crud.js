@@ -8,7 +8,7 @@ export default {
       // 表格数据
       data: [],
       // 排序规则，默认 id 降序， 支持多字段排序 ['id,desc', 'createTime,asc']
-      sort: ['id,desc', 'createTime,asc'],
+      sort: ['id,desc'],
       // 页码
       page: 0,
       // 每页数据条数
