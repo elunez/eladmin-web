@@ -44,3 +44,11 @@ export function downloadJob(params) {
     responseType: 'blob'
   })
 }
+
+export default {
+  add,
+  edit,
+  del,
+  getAllJob,
+  downloadJob
+}

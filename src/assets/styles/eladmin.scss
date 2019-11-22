@@ -3,7 +3,7 @@
   .filter-item {
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: 10px;
+    margin: 0 2px 10px 0;
     input {
       height: 30.5px;
       line-height: 30.5px;
@@ -32,7 +32,7 @@
 
 .logo-con{
   height: 60px;
-  padding: 13px 0px 0px;
+  padding: 13px 0 0;
   img{
     height: 32px;
     width: 135px;
@@ -58,7 +58,7 @@
   background: none repeat scroll 0 0 white;
   border-top: 1px solid #e7eaec;
   overflow: hidden;
-  padding: 10px 6px 0px 6px;
+  padding: 10px 6px 0 6px;
   height: 33px;
   font-size: 0.7rem !important;
   color: #7a8b9a;
@@ -77,7 +77,7 @@
   width: 368px;
 }
 .my-blockquote{
-  margin: 0px 0px 10px;
+  margin: 0 0 10px;
   padding: 15px;
   line-height: 22px;
   border-left: 5px solid #00437B;

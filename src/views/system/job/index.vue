@@ -3,9 +3,9 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable size="small" placeholder="输入岗位名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+      <el-input v-model="query.name" clearable size="small" placeholder="输入岗位名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
-        v-model="query.date"
+        v-model="query.createTime"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
@@ -19,30 +19,49 @@
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
-      <!-- 新增 -->
-      <div v-permission="['admin','job:add']" style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          @click="add"
-        >新增</el-button>
-      </div>
-      <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download"
-        >导出</el-button>
-      </div>
+      <!-- 新增按钮 -->
+      <el-button
+        v-permission="['admin','job:add']"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-plus"
+        @click="showAddFormDialog"
+      >新增</el-button>
+      <!-- 导出按钮 -->
+      <el-button
+        :loading="downloadLoading"
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-download"
+        @click="downloadMethod"
+      >导出</el-button>
     </div>
-    <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dict.job_status" />
+    <!--表单渲染-->
+    <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="hideFormDialog" :visible.sync="dialog" :title="getFormTitle()" width="500px">
+      <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
+        <el-form-item v-show="false" label="ID" prop="id">
+          <el-input v-model="form.id" style="width: 370px;" />
+        </el-form-item>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name" style="width: 370px;" />
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;" />
+        </el-form-item>
+        <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
+          <el-radio v-for="item in dict.job_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
+        </el-form-item>
+        <el-form-item label="部门" prop="dept.id">
+          <treeselect v-model="form.dept.id" :options="depts" style="width: 370px" placeholder="选择部门" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="hideFormDialog">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+      </div>
+    </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column prop="name" label="名称" />
@@ -71,9 +90,10 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
+      <!--   编辑与删除   -->
       <el-table-column v-if="checkPermission(['admin','job:edit','job:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','job:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
+          <el-button v-permission="['admin','job:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
             v-permission="['admin','job:del']"
@@ -83,7 +103,7 @@
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
@@ -103,24 +123,45 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
-import { del, edit, downloadJob } from '@/api/job'
-import { parseTime, downloadFile } from '@/utils/index'
-import eForm from './form'
+import crud from '@/mixins/crud'
+import crudJob from '@/api/job'
+import { getDepts } from '@/api/dept'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   name: 'Job',
-  components: { eForm },
-  mixins: [initData],
-  // 设置数据字典
+  components: { Treeselect },
+  mixins: [crud],
+  // 数据字典
   dicts: ['job_status'],
   data() {
     return {
-      delLoading: false,
+      crudMethod: {
+        ...crudJob
+      },
+      sort: ['sort,asc', 'id,desc'],
+      title: '岗位',
       enabledTypeOptions: [
         { key: 'true', display_name: '正常' },
         { key: 'false', display_name: '禁用' }
-      ]
+      ],
+      form: {
+        id: '',
+        name: '',
+        sort: 999,
+        enabled: 'true',
+        createTime: '',
+        dept: { id: null }
+      },
+      depts: [],
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
+        ]
+      }
     }
   },
   created() {
@@ -129,60 +170,23 @@ export default {
     })
   },
   methods: {
-    parseTime,
-    checkPermission,
     beforeInit() {
       this.url = 'api/job'
-      const sort = 'sort,asc'
-      this.params = { page: this.page, size: this.size, sort: sort }
-      const query = this.query
-      const value = query.value
-      const enabled = query.enabled
-      if (value) { this.params['name'] = value }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
-      if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
+    beforeShowAddForm() {
+      this.getDepts()
     },
-    add() {
-      this.isAdd = true
-      this.$refs.form.getDepts()
-      this.$refs.form.dialog = true
+    beforeShowEditForm(data) {
+      this.getDepts()
+      this.form.enabled = data.enabled.toString()
     },
-    edit(data) {
-      this.isAdd = false
-      const _this = this.$refs.form
-      _this.getDepts()
-      _this.form = {
-        id: data.id,
-        name: data.name,
-        sort: data.sort,
-        enabled: data.enabled.toString(),
-        createTime: data.createTime,
-        dept: { id: data.dept.id }
+    beforeSubmitMethod() {
+      if (!this.form.dept.id) {
+        this.notify('所属部门不能为空', 'warning')
+        return false
       }
-      _this.deptId = data.dept.id
-      _this.dialog = true
+      return true
     },
     // 改变状态
     changeEnabled(data, val) {
@@ -191,12 +195,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        edit(data).then(res => {
-          this.$notify({
-            title: this.dict.label.job_status[val] + '成功',
-            type: 'success',
-            duration: 2500
-          })
+        this.crudMethod.edit(data).then(() => {
+          this.notify(this.dict.label.job_status[val] + '成功', 'success')
         }).catch(err => {
           data.enabled = !data.enabled
           console.log(err.response.data.message)
@@ -205,20 +205,18 @@ export default {
         data.enabled = !data.enabled
       })
     },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadJob(this.params).then(result => {
-        downloadFile(result, '岗位列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
+    // 获取部门数据
+    getDepts() {
+      getDepts({ enabled: true }).then(res => {
+        this.depts = res.content
       })
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .el-input-number .el-input__inner {
+    text-align: left;
+  }
 </style>
