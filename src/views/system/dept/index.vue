@@ -130,6 +130,7 @@ export default {
     })
   },
   methods: {
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/dept'
       return true
@@ -138,11 +139,12 @@ export default {
     beforeShowAddForm() {
       this.getDepts()
     },
-    // 打开新增弹窗前做的操作
+    // 打开编辑弹窗前做的操作
     beforeShowEditForm(data) {
       this.getDepts()
       this.form.enabled = data.enabled.toString()
     },
+    // 提交前先做下验证
     beforeSubmitMethod() {
       if (!this.form.pid) {
         this.$message({
@@ -170,6 +172,7 @@ export default {
         data.enabled = !data.enabled
       })
     },
+    // 获取所有部门
     getDepts() {
       this.crudMethod.getDepts({ enabled: true }).then(res => {
         this.depts = res.content

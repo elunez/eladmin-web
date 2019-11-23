@@ -37,10 +37,8 @@ export default {
       form: {},
       // 重置表单
       resetForm: {},
-      // 弹窗的标题
-      title: '',
-      // 方法
-      method: ''
+      // 标题
+      title: ''
     }
   },
   methods: {
@@ -159,6 +157,7 @@ export default {
       this.delLoading = true
       this.crudMethod.del(id).then(() => {
         this.delLoading = false
+        console.log(this.$refs[id])
         this.$refs[id].doClose()
         this.dleChangePage()
         this.delSuccessNotify()

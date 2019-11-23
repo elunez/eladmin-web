@@ -6,12 +6,3 @@ export function del(key) {
     method: 'delete'
   })
 }
-
-export function downloadOnline(params) {
-  return request({
-    url: 'auth/online/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}

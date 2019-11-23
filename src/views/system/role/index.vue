@@ -190,6 +190,7 @@ export default {
     })
   },
   methods: {
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.showButton = false
       this.url = 'api/roles'
@@ -227,11 +228,13 @@ export default {
       }
       return true
     },
+    // 获取所有菜单
     getMenus() {
       getMenusTree().then(res => {
         this.menus = res
       })
     },
+    // 触发单选
     handleCurrentChange(val) {
       if (val) {
         const _this = this
@@ -249,6 +252,7 @@ export default {
         })
       }
     },
+    // 保存菜单
     saveMenu() {
       this.menuLoading = true
       const role = { id: this.currentId, menus: [] }
@@ -271,6 +275,7 @@ export default {
         console.log(err.response.data.message)
       })
     },
+    // 改变数据
     update() {
       // 无刷新更新 表格数据
       this.crudMethod.get(this.currentId).then(res => {
@@ -282,11 +287,13 @@ export default {
         }
       })
     },
+    // 获取部门数据
     getDepts() {
       getDepts({ enabled: true }).then(res => {
         this.depts = res.content
       })
     },
+    // 如果数据权限为自定义则获取部门数据
     changeScope() {
       if (this.form.dataScope === '自定义') {
         this.getDepts()

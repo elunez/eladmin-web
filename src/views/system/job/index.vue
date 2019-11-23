@@ -160,17 +160,21 @@ export default {
     })
   },
   methods: {
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/job'
       return true
     },
+    // 打开新增弹窗前做的操作
     beforeShowAddForm() {
       this.getDepts()
     },
+    // 打开编辑弹窗前做的操作
     beforeShowEditForm(data) {
       this.getDepts()
       this.form.enabled = data.enabled.toString()
     },
+    // 提交前的验证
     beforeSubmitMethod() {
       if (!this.form.dept.id) {
         this.notify('所属部门不能为空', 'warning')

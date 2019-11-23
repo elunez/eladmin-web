@@ -83,7 +83,7 @@
           <el-input v-model="form.name" placeholder="按钮名称" style="width: 178px;" />
         </el-form-item>
         <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
-          <el-input v-model="form.permission" :disabled="form.iframe === 'true'" placeholder="权限标识" style="width: 178px;" />
+          <el-input v-model="form.permission" :disabled="form.iframe" placeholder="权限标识" style="width: 178px;" />
         </el-form-item>
         <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
           <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;" />
@@ -91,10 +91,10 @@
         <el-form-item label="菜单排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 178px;" />
         </el-form-item>
-        <el-form-item v-show="form.iframe === 'false' && form.type.toString() === '1'" label="组件名称" prop="componentName">
+        <el-form-item v-show="!form.iframe && form.type.toString() === '1'" label="组件名称" prop="componentName">
           <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段" />
         </el-form-item>
-        <el-form-item v-show="form.iframe === 'false' && form.type.toString() === '1'" label="组件路径" prop="component">
+        <el-form-item v-show="!form.iframe && form.type.toString() === '1'" label="组件路径" prop="component">
           <el-input v-model="form.component" style="width: 178px;" placeholder="组件路径" />
         </el-form-item>
         <el-form-item label="上级类目" prop="pid">
@@ -200,6 +200,7 @@ export default {
     })
   },
   methods: {
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/menus'
       return true
@@ -212,9 +213,11 @@ export default {
     beforeShowEditForm() {
       this.getMenus()
     },
+    // 选中图标
     selected(name) {
       this.form.icon = name
     },
+    // 获取所有菜单
     getMenus() {
       this.crudMethod.getMenusTree().then(res => {
         this.menus = []

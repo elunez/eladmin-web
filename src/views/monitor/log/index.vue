@@ -46,32 +46,22 @@
 </template>
 
 <script>
-import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
+import crud from '@/mixins/crud'
 import Search from './search'
 export default {
   name: 'Log',
   components: { Search },
-  mixins: [initData],
+  mixins: [crud],
   created() {
     this.$nextTick(() => {
       this.init()
     })
   },
+  // 获取数据前设置好接口地址
   methods: {
-    parseTime,
     beforeInit() {
       this.url = 'api/logs'
-      const sort = 'id,desc'
-      const query = this.query
-      const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['blurry'] = value }
       this.params['logType'] = 'INFO'
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
     }
   }

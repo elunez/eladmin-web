@@ -1,19 +1,17 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <el-input v-model="query.value" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+      <el-input v-model="query.filter" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download"
-        >导出</el-button>
-      </div>
+      <el-button
+        :loading="downloadLoading"
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-download"
+        @click="downloadMethod"
+      >导出</el-button>
     </div>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
@@ -38,7 +36,7 @@
             <p>确定踢出该用户吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row.key)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.key, scope.$index)">确定</el-button>
             </div>
             <el-button slot="reference" size="mini" type="text">踢出</el-button>
           </el-popover>
@@ -58,15 +56,15 @@
 </template>
 
 <script>
-import initData from '@/mixins/initData'
-import { parseTime, downloadFile } from '@/utils/index'
-import { del, downloadOnline } from '@/api/monitor/online'
+import crud from '@/mixins/crud'
+import { del } from '@/api/monitor/online'
 export default {
   name: 'OnlineUser',
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
-      delLoading: false
+      title: '在线用户',
+      crudMethod: { del }
     }
   },
   created() {
@@ -75,39 +73,23 @@ export default {
     })
   },
   methods: {
-    parseTime,
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'auth/online'
-      this.params = { page: this.page, size: this.size }
-      if (this.query.value) { this.params['filter'] = this.query.value }
       return true
     },
-    subDelete(index, key) {
+    // 踢出用户
+    delMethod(key, index) {
       this.delLoading = true
-      del(key).then(res => {
+      this.crudMethod.del(key).then(() => {
         this.delLoading = false
         this.$refs[index].doClose()
         this.dleChangePage()
+        this.notify('踢出成功', 'success')
         this.init()
-        this.$notify({
-          title: '踢出成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
+      }).catch(() => {
         this.delLoading = false
         this.$refs[index].doClose()
-        console.log(err.response.data.message)
-      })
-    },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadOnline(this.params).then(result => {
-        downloadFile(result, '在线用户列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
       })
     }
   }

@@ -30,11 +30,4 @@ export function edit(data) {
   })
 }
 
-export function downloadDict(params) {
-  return request({
-    url: 'api/dict/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del }
