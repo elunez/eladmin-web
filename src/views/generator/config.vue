@@ -12,30 +12,31 @@
               size="mini"
               style="float: right; padding: 6px 9px"
               type="primary"
-              @click="saveColumnConfig">保存</el-button>
+              @click="saveColumnConfig"
+            >保存</el-button>
           </div>
           <el-form size="small" label-width="90px">
             <el-table v-loading="loading" :data="data" :max-height="tableHeight" size="small" style="width: 100%;margin-bottom: 15px">
-              <el-table-column prop="columnName" label="字段名称"/>
-              <el-table-column prop="columnType" label="字段类型"/>
+              <el-table-column prop="columnName" label="字段名称" />
+              <el-table-column prop="columnType" label="字段类型" />
               <el-table-column prop="remark" label="字段描述">
                 <template slot-scope="scope">
-                  <el-input v-model="data[scope.$index].remark" size="mini" class="edit-input"/>
+                  <el-input v-model="data[scope.$index].remark" size="mini" class="edit-input" />
                 </template>
               </el-table-column>
               <el-table-column align="center" label="必填" width="70px">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="data[scope.$index].notNull"/>
+                  <el-checkbox v-model="data[scope.$index].notNull" />
                 </template>
               </el-table-column>
               <el-table-column align="center" label="列表" width="70px">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="data[scope.$index].listShow"/>
+                  <el-checkbox v-model="data[scope.$index].listShow" />
                 </template>
               </el-table-column>
               <el-table-column align="center" label="表单" width="70px">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="data[scope.$index].formShow"/>
+                  <el-checkbox v-model="data[scope.$index].formShow" />
                 </template>
               </el-table-column>
               <el-table-column label="表单类型">
@@ -43,19 +44,24 @@
                   <el-select v-model="data[scope.$index].formType" filterable class="edit-input" clearable size="mini" placeholder="请选择">
                     <el-option
                       label="文本框"
-                      value="Input"/>
+                      value="Input"
+                    />
                     <el-option
                       label="文本域"
-                      value="Textarea"/>
+                      value="Textarea"
+                    />
                     <el-option
                       label="单选框"
-                      value="Radio"/>
+                      value="Radio"
+                    />
                     <el-option
                       label="下拉框"
-                      value="Select"/>
+                      value="Select"
+                    />
                     <el-option
                       label="日期框"
-                      value="Date"/>
+                      value="Date"
+                    />
                   </el-select>
                 </template>
               </el-table-column>
@@ -64,22 +70,28 @@
                   <el-select v-model="data[scope.$index].queryType" filterable class="edit-input" clearable size="mini" placeholder="请选择">
                     <el-option
                       label="="
-                      value="="/>
+                      value="="
+                    />
                     <el-option
                       label="!="
-                      value="!="/>
+                      value="!="
+                    />
                     <el-option
                       label=">="
-                      value=">="/>
+                      value=">="
+                    />
                     <el-option
                       label="<="
-                      value="<="/>
+                      value="<="
+                    />
                     <el-option
                       label="Like"
-                      value="Like"/>
+                      value="Like"
+                    />
                     <el-option
                       label="DateRange"
-                      value="DateRange"/>
+                      value="DateRange"
+                    />
                   </el-select>
                 </template>
               </el-table-column>
@@ -88,17 +100,19 @@
                   <el-select v-model="data[scope.$index].dateAnnotation" filterable class="edit-input" clearable size="mini" placeholder="请选择">
                     <el-option
                       label="自动创建时间"
-                      value="CreationTimestamp"/>
+                      value="CreationTimestamp"
+                    />
                     <el-option
                       label="自动更新时间"
-                      value="UpdateTimestamp"/>
+                      value="UpdateTimestamp"
+                    />
                   </el-select>
                 </template>
               </el-table-column>
               <el-table-column label="关联字典">
                 <template slot-scope="scope">
                   <el-select v-model="data[scope.$index].dictName" filterable class="edit-input" clearable size="mini" placeholder="请选择">
-                    <el-option v-for="item in dicts" :key="item.id" :label="item.remark === '' ? item.name : item.remark" :value="item.name"/>
+                    <el-option v-for="item in dicts" :key="item.id" :label="item.remark === '' ? item.name : item.remark" :value="item.name" />
                   </el-select>
                 </template>
               </el-table-column>
@@ -116,27 +130,28 @@
               size="mini"
               style="float: right; padding: 6px 9px"
               type="primary"
-              @click="doSubmit">保存</el-button>
+              @click="doSubmit"
+            >保存</el-button>
           </div>
           <el-form ref="form" :model="form" :rules="rules" size="small" label-width="78px">
             <el-form-item label="作者名称" prop="author">
-              <el-input v-model="form.author" style="width: 40%"/>
+              <el-input v-model="form.author" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">类上面的作者名称</span>
             </el-form-item>
             <el-form-item label="模块名称" prop="moduleName">
-              <el-input v-model="form.moduleName" style="width: 40%"/>
+              <el-input v-model="form.moduleName" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">模块的名称，请选择项目中已存在的模块</span>
             </el-form-item>
             <el-form-item label="至于包下" prop="pack">
-              <el-input v-model="form.pack" style="width: 40%"/>
+              <el-input v-model="form.pack" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">项目包的名称，生成的代码放到哪个包里面</span>
             </el-form-item>
             <el-form-item label="前端路径" prop="path">
-              <el-input v-model="form.path" style="width: 40%"/>
+              <el-input v-model="form.path" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">输入views文件夹下的目录，不存在即创建</span>
             </el-form-item>
             <el-form-item label="去表前缀" prop="prefix">
-              <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%"/>
+              <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">默认不去除表前缀，可自定义</span>
             </el-form-item>
             <!--            <el-form-item label="Api路径">-->
@@ -159,9 +174,9 @@
 
 <script>
 import initData from '@/mixins/initData'
-import { update, get } from '@/api/genConfig'
-import { save } from '@/api/generator'
-import { getDicts } from '@/api/dict'
+import { update, get } from '@/api/generator/genConfig'
+import { save } from '@/api/generator/generator'
+import { getDicts } from '@/api/system/dict'
 export default {
   name: 'GeneratorConfig',
   components: {},

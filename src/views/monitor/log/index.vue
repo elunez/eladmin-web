@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Search :query="query"/>
+    <Search :query="query" />
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column type="expand">
@@ -15,11 +15,11 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="requestIp" label="IP"/>
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column prop="browser" label="浏览器"/>
+      <el-table-column prop="username" label="用户名" />
+      <el-table-column prop="requestIp" label="IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
+      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="browser" label="浏览器" />
       <el-table-column prop="time" label="请求耗时" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
@@ -40,37 +40,28 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 
 <script>
-import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
+import crud from '@/mixins/crud'
 import Search from './search'
 export default {
   name: 'Log',
   components: { Search },
-  mixins: [initData],
+  mixins: [crud],
   created() {
     this.$nextTick(() => {
       this.init()
     })
   },
+  // 获取数据前设置好接口地址
   methods: {
-    parseTime,
     beforeInit() {
       this.url = 'api/logs'
-      const sort = 'id,desc'
-      const query = this.query
-      const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['blurry'] = value }
       this.params['logType'] = 'INFO'
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
     }
   }

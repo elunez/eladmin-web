@@ -1,10 +1,10 @@
 <template>
   <el-tabs v-model="activeName" style="padding-left: 5px;">
     <el-tab-pane label="参数配置" name="first">
-      <Config/>
+      <Config />
     </el-tab-pane>
     <el-tab-pane label="支付测试" name="second">
-      <ToPay/>
+      <ToPay />
     </el-tab-pane>
     <el-tab-pane label="使用说明" name="third">
       <div>
@@ -33,7 +33,6 @@ if (/(Android)/i.test(navigator.userAgent)){     // 判断是否为Android手机
 <script>
 import Config from './config'
 import ToPay from './toPay'
-import '@/styles/description.scss'
 export default {
   name: 'AliPay',
   components: { Config, ToPay },

@@ -1,60 +1,102 @@
 <template>
   <div class="app-container">
-    <!--form 组件-->
-    <eForm ref="form" :is-add="isAdd" :dicts="dict.user_status"/>
     <el-row :gutter="20">
-      <!--部门数据-->
+      <!--侧边部门数据-->
       <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
         <div class="head-container">
-          <el-input v-model="deptName" clearable placeholder="输入部门名称搜索" prefix-icon="el-icon-search" style="width: 100%;" class="filter-item" @input="getDeptDatas"/>
+          <el-input v-model="deptName" clearable size="small" placeholder="输入部门名称搜索" prefix-icon="el-icon-search" class="filter-item" @input="getDeptDatas" />
         </div>
-        <el-tree :data="depts" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick"/>
+        <el-tree :data="deptDatas" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick" />
       </el-col>
       <!--用户数据-->
       <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+          <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
           <el-date-picker
-            v-model="query.date"
+            v-model="query.createTime"
             :default-time="['00:00:00','23:59:59']"
             type="daterange"
             range-separator=":"
-            class="el-range-editor--small filter-item"
-            style="height: 30.5px;width: 220px"
+            class="el-range-editor--small date-item"
+            style="width: 220px;height: 30.5px"
             value-format="yyyy-MM-dd HH:mm:ss"
             start-placeholder="开始日期"
-            end-placeholder="结束日期"/>
-          <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
-            <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
+            end-placeholder="结束日期"
+          />
+          <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
+            <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
           <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
           <!-- 新增 -->
-          <div v-permission="['admin','user:add']" style="display: inline-block;margin: 0px 2px;">
-            <el-button
-              class="filter-item"
-              size="mini"
-              type="primary"
-              icon="el-icon-plus"
-              @click="add">新增</el-button>
-          </div>
+          <el-button
+            class="filter-item"
+            size="mini"
+            type="primary"
+            icon="el-icon-plus"
+            @click="showAddFormDialog"
+          >新增</el-button>
           <!-- 导出 -->
-          <div style="display: inline-block;">
-            <el-button
-              :loading="downloadLoading"
-              size="mini"
-              class="filter-item"
-              type="warning"
-              icon="el-icon-download"
-              @click="download">导出</el-button>
-          </div>
+          <el-button
+            :loading="downloadLoading"
+            size="mini"
+            class="filter-item"
+            type="warning"
+            icon="el-icon-download"
+            @click="downloadMethod"
+          >导出</el-button>
         </div>
+        <!--表单渲染-->
+        <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="570px">
+          <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="form.username" />
+            </el-form-item>
+            <el-form-item label="状态" prop="enabled">
+              <el-radio v-for="item in dict.user_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
+            </el-form-item>
+            <el-form-item label="电话" prop="phone">
+              <el-input v-model.number="form.phone" />
+            </el-form-item>
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" />
+            </el-form-item>
+            <el-form-item label="部门" prop="dept.id">
+              <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
+            </el-form-item>
+            <el-form-item label="岗位" prop="job.id">
+              <el-select v-model="form.job.id" style="width: 178px" placeholder="请先选择部门">
+                <el-option
+                  v-for="(item, index) in jobs"
+                  :key="item.name + index"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item style="margin-bottom: 0px;" label="角色" prop="roles">
+              <el-select v-model="form.roles" style="width: 450px;" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in roles"
+                  :key="item.name"
+                  :disabled="level !== 1 && item.level <= level"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="text" @click="cancel">取消</el-button>
+            <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+          </div>
+        </el-dialog>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-          <el-table-column prop="username" label="用户名"/>
-          <el-table-column prop="phone" label="电话"/>
-          <el-table-column :show-overflow-tooltip="true" prop="email" label="邮箱"/>
+          <el-table-column prop="username" label="用户名" />
+          <el-table-column prop="phone" label="电话" />
+          <el-table-column :show-overflow-tooltip="true" prop="email" label="邮箱" />
           <el-table-column label="部门 / 岗位">
             <template slot-scope="scope">
               <div>{{ scope.row.dept.name }} / {{ scope.row.job.name }}</div>
@@ -66,7 +108,8 @@
                 v-model="scope.row.enabled"
                 active-color="#409EFF"
                 inactive-color="#F56C6C"
-                @change="changeEnabled(scope.row, scope.row.enabled,)"/>
+                @change="changeEnabled(scope.row, scope.row.enabled,)"
+              />
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
@@ -76,18 +119,19 @@
           </el-table-column>
           <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="125" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-button v-permission="['admin','user:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+              <el-button v-permission="['admin','user:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
               <el-popover
-                v-permission="['admin','user:del']"
                 :ref="scope.row.id"
+                v-permission="['admin','user:del']"
                 placement="top"
-                width="180">
+                width="180"
+              >
                 <p>确定删除本条数据吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-                  <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+                  <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
                 </div>
-                <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+                <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
               </el-popover>
             </template>
           </el-table-column>
@@ -99,42 +143,73 @@
           style="margin-top: 8px;"
           layout="total, prev, pager, next, sizes"
           @size-change="sizeChange"
-          @current-change="pageChange"/>
+          @current-change="pageChange"
+        />
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
-import { del, downloadUser, edit } from '@/api/user'
-import { getDepts } from '@/api/dept'
-import { parseTime, downloadFile } from '@/utils/index'
-import eForm from './form'
+import crud from '@/mixins/crud'
+import crudUser from '@/api/system/user'
+import { isvalidPhone } from '@/utils/validate'
+import { getDepts } from '@/api/system/dept'
+import { getAll, getLevel } from '@/api/system/role'
+import { getAllJob } from '@/api/system/job'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   name: 'User',
-  components: { eForm },
-  mixins: [initData],
-  // 设置数据字典
+  components: { Treeselect },
+  mixins: [crud],
+  // 数据字典
   dicts: ['user_status'],
   data() {
+    // 自定义验证
+    const validPhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入电话号码'))
+      } else if (!isvalidPhone(value)) {
+        callback(new Error('请输入正确的11位手机号码'))
+      } else {
+        callback()
+      }
+    }
     return {
-      height: document.documentElement.clientHeight - 180 + 'px;', isAdd: false,
-      delLoading: false, deptName: '', depts: [], deptId: null,
-      defaultProps: {
-        children: 'children',
-        label: 'name'
+      crudMethod: {
+        ...crudUser
       },
+      title: '用户',
+      height: document.documentElement.clientHeight - 180 + 'px;',
+      deptName: '', depts: [], deptDatas: [], jobs: [], level: 3, roles: [],
+      defaultProps: { children: 'children', label: 'name' },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
-      ]
+      ],
+      form: { username: null, email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, trigger: 'blur', validator: validPhone }
+        ],
+        enabled: [
+          { required: true, message: '状态不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
-    this.getDeptDatas()
     this.$nextTick(() => {
+      this.getDeptDatas()
       this.init()
     })
   },
@@ -145,102 +220,81 @@ export default {
     }
   },
   methods: {
-    parseTime,
-    checkPermission,
     beforeInit() {
       this.url = 'api/users'
-      const sort = 'id,desc'
-      const query = this.query
-      const blurry = query.blurry
-      const enabled = query.enabled
-      this.params = { page: this.page, size: this.size, sort: sort, deptId: this.deptId }
-      if (blurry) { this.params['blurry'] = blurry }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
-      if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
       return true
     },
-    // 导出
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadUser(this.params).then(result => {
-        downloadFile(result, '用户列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
-      })
+    // 打开新增弹窗前做的操作
+    beforeShowAddForm() {
+      this.getDepts()
+      this.getRoles()
+      this.getRoleLevel()
     },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
+    // 打开编辑弹窗前做的操作
+    beforeShowEditForm(data) {
+      this.getDepts()
+      this.getRoles()
+      this.getRoleLevel()
+      this.getJobs(this.form.dept.id)
+      this.form.enabled = data.enabled.toString()
+      const roles = []
+      data.roles.forEach(function(role, index) {
+        roles.push(role.id)
+      })
+      this.form.roles = roles
+    },
+    // 提交前做的操作
+    beforeSubmitMethod() {
+      if (!this.form.dept.id) {
+        this.$message({
+          message: '部门不能为空',
+          type: 'warning'
         })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
+        return false
+      } else if (!this.form.job.id) {
+        this.$message({
+          message: '岗位不能为空',
+          type: 'warning'
+        })
+        return false
+      } else if (this.form.roles.length === 0) {
+        this.$message({
+          message: '角色不能为空',
+          type: 'warning'
+        })
+        return false
+      }
+      const roles = []
+      this.form.roles.forEach(function(data, index) {
+        const role = { id: data }
+        roles.push(role)
       })
+      this.form.roles = roles
+      return true
     },
+    // 获取左侧部门数据
     getDeptDatas() {
       const sort = 'id,desc'
       const params = { sort: sort }
       if (this.deptName) { params['name'] = this.deptName }
       getDepts(params).then(res => {
+        this.deptDatas = res.content
+      })
+    },
+    // 获取弹窗内部门数据
+    getDepts() {
+      getDepts({ enabled: true }).then(res => {
         this.depts = res.content
       })
     },
+    // 切换部门
     handleNodeClick(data) {
       if (data.pid === 0) {
-        this.deptId = null
+        this.query.deptId = null
       } else {
-        this.deptId = data.id
+        this.query.deptId = data.id
       }
       this.init()
-    },
-    add() {
-      this.isAdd = true
-      this.$refs.form.getDepts()
-      this.$refs.form.getRoles()
-      this.$refs.form.getRoleLevel()
-      this.$refs.form.dialog = true
-    },
-    // 数据转换
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'createTime' || j === 'lastPasswordResetTime') {
-          return parseTime(v[j])
-        } else if (j === 'enabled') {
-          return parseTime(v[j]) ? '启用' : '禁用'
-        } else {
-          return v[j]
-        }
-      }))
-    },
-    edit(data) {
-      this.isAdd = false
-      const _this = this.$refs.form
-      _this.getRoles()
-      _this.getDepts()
-      _this.getRoleLevel()
-      _this.roleIds = []
-      _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roles: [], dept: { id: data.dept.id }, job: { id: data.job.id }}
-      data.roles.forEach(function(data, index) {
-        _this.roleIds.push(data.id)
-      })
-      _this.deptId = data.dept.id
-      _this.jobId = data.job.id
-      _this.getJobs(_this.deptId)
-      _this.dialog = true
     },
     // 改变状态
     changeEnabled(data, val) {
@@ -249,19 +303,36 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        edit(data).then(res => {
-          this.$notify({
-            title: this.dict.label.user_status[val] + '成功',
-            type: 'success',
-            duration: 2500
-          })
-        }).catch(err => {
+        this.crudMethod.edit(data).then(res => {
+          this.notify(this.dict.label.user_status[val] + '成功', 'success')
+        }).catch(() => {
           data.enabled = !data.enabled
-          console.log(err.response.data.message)
         })
       }).catch(() => {
         data.enabled = !data.enabled
       })
+    },
+    // 获取弹窗内角色数据
+    getRoles() {
+      getAll().then(res => {
+        this.roles = res
+      }).catch(() => {})
+    },
+    // 获取弹窗内岗位数据
+    getJobs(id) {
+      getAllJob(id).then(res => {
+        this.jobs = res.content
+      }).catch(() => {})
+    },
+    // 点击部门搜索对应的岗位
+    selectFun(node, instanceId) {
+      this.getJobs(node.id)
+    },
+    // 获取权限级别
+    getRoleLevel() {
+      getLevel().then(res => {
+        this.level = res.level
+      }).catch(() => {})
     }
   }
 }

@@ -4,7 +4,7 @@
       Markdown 基于
       <a href="https://github.com/hinesboy/mavonEditor" target="_blank">mavonEditor</a>
     </p>
-    <mavon-editor ref="md" :style="'height:' + height" @imgAdd="imgAdd" @imgDel="imgDel"/>
+    <mavon-editor ref="md" :style="'height:' + height" @imgAdd="imgAdd" @imgDel="imgDel" />
   </div>
 </template>
 
@@ -12,7 +12,7 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import { del } from '@/api/picture'
+import { del } from '@/api/tools/picture'
 export default {
   name: 'Markdown',
   data() {
