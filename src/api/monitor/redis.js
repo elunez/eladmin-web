@@ -34,11 +34,4 @@ export function edit(data) {
   })
 }
 
-export function downloadRedis(params) {
-  return request({
-    url: 'api/redis/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { del, delAll }

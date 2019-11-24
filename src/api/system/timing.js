@@ -37,20 +37,4 @@ export function execution(id) {
   })
 }
 
-export function downloadJobs(params) {
-  return request({
-    url: 'api/jobs/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
-
-export function downloadLogs(params) {
-  return request({
-    url: 'api/jobs/download/log',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { del, updateIsPause, execution, add, edit }
