@@ -3,9 +3,9 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入搜索内容" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-      <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
-        <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
+      <el-input v-model="query.value" clearable size="small" placeholder="输入搜索内容" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+      <el-select v-model="query.type" clearable size="small" placeholder="类型" class="filter-item" style="width: 130px">
+        <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
@@ -16,7 +16,8 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
-          @click="add">新增
+          @click="add"
+        >新增
         </el-button>
       </div>
       <!-- 刷新 -->
@@ -26,29 +27,31 @@
           class="filter-item"
           type="warning"
           icon="el-icon-refresh"
-          @click="refresh">刷新
+          @click="refresh"
+        >刷新
         </el-button>
       </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
+    <eForm ref="form" :is-add="isAdd" />
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column label="状态" width="50px">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.state === '1' ? 'success' : 'info'"
-            disable-transitions>
-            <i v-if="scope.row.state === '1'" class="el-icon-success"/>
-            <i v-if="scope.row.state === '0'" class="el-icon-error"/>
+            disable-transitions
+          >
+            <i v-if="scope.row.state === '1'" class="el-icon-success" />
+            <i v-if="scope.row.state === '0'" class="el-icon-error" />
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称"/>
-      <el-table-column prop="ip" label="IP地址"/>
-      <el-table-column prop="port" label="访问端口" width="80px" align="center"/>
-      <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center"/>
-      <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center"/>
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="ip" label="IP地址" />
+      <el-table-column prop="port" label="访问端口" width="80px" align="center" />
+      <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
+      <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center" />
       <el-table-column label="物理内存" align="center">
         <template slot-scope="scope">
           <el-row>
@@ -56,7 +59,7 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-progress :percentage="percentNumber(scope.row.memUsed,scope.row.memTotal)" :status="percentStatus(scope.row.memUsed,scope.row.memTotal)" :show-text="false"/>
+              <el-progress :percentage="percentNumber(scope.row.memUsed,scope.row.memTotal)" :status="percentStatus(scope.row.memUsed,scope.row.memTotal)" :show-text="false" />
             </el-col>
           </el-row>
         </template>
@@ -68,7 +71,7 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-progress :percentage="percentNumber(scope.row.diskUsed,scope.row.diskTotal)" :status="percentStatus(scope.row.diskUsed,scope.row.diskTotal)" :show-text="false"/>
+              <el-progress :percentage="percentNumber(scope.row.diskUsed,scope.row.diskTotal)" :status="percentStatus(scope.row.diskUsed,scope.row.diskTotal)" :show-text="false" />
             </el-col>
           </el-row>
         </template>
@@ -80,25 +83,26 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-progress :percentage="percentNumber(scope.row.swapUsed,scope.row.swapTotal)" :status="percentStatus(scope.row.swapUsed,scope.row.swapTotal)" :show-text="false"/>
+              <el-progress :percentage="percentNumber(scope.row.swapUsed,scope.row.swapTotal)" :status="percentStatus(scope.row.swapUsed,scope.row.swapTotal)" :show-text="false" />
             </el-col>
           </el-row>
         </template>
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','server:edit','server:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','server:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','server:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-popover
-            v-permission="['admin','server:del']"
             :ref="scope.row.id"
+            v-permission="['admin','server:del']"
             placement="top"
-            width="180">
+            width="180"
+          >
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>
@@ -110,14 +114,15 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/server'
+import { del } from '@/api/monitor/server'
 import eForm from './form'
 export default {
   name: 'ServerMonitor',

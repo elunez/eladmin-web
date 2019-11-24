@@ -14,7 +14,8 @@
                 :on-error="handleError"
                 :headers="headers"
                 :action="updateAvatarApi"
-                class="avatar-uploader">
+                class="avatar-uploader"
+              >
                 <img :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" title="点击上传头像" class="avatar">
               </el-upload>
             </div>
@@ -35,18 +36,19 @@
           </div>
         </el-card>
       </el-col>
+      <!-- 用户日志 -->
       <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>操作日志</span>
-            <div style="display:inline-block;float: right;cursor: pointer" @click="refresh"><i :class="ico"/></div>
+            <div style="display:inline-block;float: right;cursor: pointer" @click="refresh"><i :class="ico" /></div>
           </div>
           <div>
             <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-              <el-table-column prop="description" label="行为"/>
-              <el-table-column prop="requestIp" label="IP"/>
-              <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源"/>
-              <el-table-column prop="browser" label="浏览器"/>
+              <el-table-column prop="description" label="行为" />
+              <el-table-column prop="requestIp" label="IP" />
+              <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
+              <el-table-column prop="browser" label="浏览器" />
               <el-table-column prop="time" label="请求耗时" align="center">
                 <template slot-scope="scope">
                   <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
@@ -67,13 +69,14 @@
               style="margin-top: 8px;"
               layout="total, prev, pager, next, sizes"
               @size-change="sizeChange"
-              @current-change="pageChange"/>
+              @current-change="pageChange"
+            />
           </div>
         </el-card>
       </el-col>
     </el-row>
-    <updateEmail ref="email" :email="user.email"/>
-    <updatePass ref="pass"/>
+    <updateEmail ref="email" :email="user.email" />
+    <updatePass ref="pass" />
   </div>
 </template>
 
@@ -86,7 +89,7 @@ import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { parseTime } from '@/utils/index'
 import initData from '@/mixins/initData'
-import Avatar from '@/assets/avatar/avatar.png'
+import Avatar from '@/assets/images/avatar.png'
 export default {
   name: 'Center',
   components: { updatePass, updateEmail },
@@ -141,6 +144,7 @@ export default {
         duration: 2500
       })
     },
+    // 刷新日志
     refresh() {
       this.ico = 'el-icon-loading'
       this.init()

@@ -3,91 +3,90 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.jobName" clearable size="small" placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
-        v-model="query.date"
+        v-model="query.createTime"
+        :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
+        class="el-range-editor--small date-item"
+        style="width: 220px;height: 30.5px"
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div v-permission="['admin','timing:add']" style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          @click="dialog = true;isAdd = true">新增</el-button>
-      </div>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-plus"
+        @click="showAddFormDialog"
+      >新增</el-button>
       <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download">导出</el-button>
-      </div>
+      <el-button
+        :loading="downloadLoading"
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-download"
+        @click="downloadMethod"
+      >导出</el-button>
       <!-- 任务日志 -->
-      <div style="display: inline-block;">
-        <el-button
-          class="filter-item"
-          size="mini"
-          type="info"
-          icon="el-icon-tickets"
-          @click="doLog">日志</el-button>
-        <Log ref="log"/>
-      </div>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="info"
+        icon="el-icon-tickets"
+        @click="doLog"
+      >日志</el-button>
+      <Log ref="log" />
     </div>
     <!--Form表单-->
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增任务' : '编辑任务'" append-to-body width="600px">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="600px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="任务名称" prop="jobName">
-          <el-input v-model="form.jobName" style="width: 460px;"/>
+          <el-input v-model="form.jobName" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="Bean名称" prop="beanName">
-          <el-input v-model="form.beanName" style="width: 460px;"/>
+          <el-input v-model="form.beanName" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="执行方法" prop="methodName">
-          <el-input v-model="form.methodName" style="width: 460px;"/>
+          <el-input v-model="form.methodName" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="参数内容">
-          <el-input v-model="form.params" style="width: 460px;"/>
+          <el-input v-model="form.params" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="Cron表达式" prop="cronExpression">
-          <el-input v-model="form.cronExpression" style="width: 460px;"/>
+          <el-input v-model="form.cronExpression" style="width: 460px;" />
         </el-form-item>
         <el-form-item label="任务状态">
-          <el-radio v-model="form.isPause" label="false">启用</el-radio>
-          <el-radio v-model="form.isPause" label="true" >暂停</el-radio>
+          <el-radio v-model="form.isPause" :label="false">启用</el-radio>
+          <el-radio v-model="form.isPause" :label="true">暂停</el-radio>
         </el-form-item>
         <el-form-item label="任务描述">
-          <el-input v-model="form.remark" style="width: 460px;" rows="2" type="textarea"/>
+          <el-input v-model="form.remark" style="width: 460px;" rows="2" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="cancel">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
+        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
       </div>
     </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称"/>
-      <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法"/>
-      <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数"/>
-      <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式"/>
+      <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />
+      <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数" />
+      <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式" />
       <el-table-column :show-overflow-tooltip="true" prop="isPause" width="90px" label="状态">
         <template slot-scope="scope">
           <el-tag :type="scope.row.isPause ? 'warning' : 'success'">{{ scope.row.isPause ? '已暂停' : '运行中' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
+      <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
       <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -95,20 +94,21 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','timing:edit','timing:del'])" label="操作" width="180px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','timing:edit']" size="mini" style="margin-right: 3px;" type="text" @click="edit(scope.row)">编辑</el-button>
+          <el-button v-permission="['admin','timing:edit']" size="mini" style="margin-right: 3px;" type="text" @click="showEditFormDialog(scope.row)">编辑</el-button>
           <el-button v-permission="['admin','timing:edit']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
           <el-button v-permission="['admin',,'timing:edit']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
             {{ scope.row.isPause ? '恢复' : '暂停' }}
           </el-button>
           <el-popover
-            v-permission="['admin','timing:del']"
             :ref="scope.row.id"
+            v-permission="['admin','timing:del']"
             placement="top"
-            width="200">
+            width="200"
+          >
             <p>确定停止并删除该任务吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
             </div>
             <el-button slot="reference" type="text" size="mini">删除</el-button>
           </el-popover>
@@ -122,25 +122,24 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
-import { del, updateIsPause, execution, add, edit, downloadJobs } from '@/api/timing'
-import { parseTime, downloadFile } from '@/utils/index'
+import crud from '@/mixins/crud'
+import crudJob from '@/api/system/timing'
 import Log from './log'
 export default {
   name: 'Timing',
   components: { Log },
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
-      delLoading: false, isAdd: false,
-      loading: false, dialog: false,
-      form: { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' }, permissionIds: [],
+      title: '定时任务',
+      crudMethod: { ...crudJob },
+      form: { jobName: null, beanName: null, methodName: null, params: null, cronExpression: null, isPause: false, remark: null },
       rules: {
         jobName: [
           { required: true, message: '请输入任务名称', trigger: 'blur' }
@@ -163,23 +162,14 @@ export default {
     })
   },
   methods: {
-    parseTime,
-    checkPermission,
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/jobs'
-      const sort = 'id,desc'
-      const query = this.query
-      const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['jobName'] = value }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
     },
+    // 执行
     execute(id) {
-      execution(id).then(res => {
+      this.crudMethod.execution(id).then(res => {
         this.$notify({
           title: '执行成功',
           type: 'success',
@@ -189,8 +179,9 @@ export default {
         console.log(err.response.data.message)
       })
     },
+    // 改变状态
     updateStatus(id, status) {
-      updateIsPause(id).then(res => {
+      this.crudMethod.updateIsPause(id).then(res => {
         this.init()
         this.$notify({
           title: status + '成功',
@@ -201,96 +192,10 @@ export default {
         console.log(err.response.data.message)
       })
     },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
-    },
-    toQuery() {
-      this.page = 0
-      this.init()
-    },
+    // 显示日志
     doLog() {
       this.$refs.log.dialog = true
       this.$refs.log.doInit()
-    },
-    cancel() {
-      this.resetForm()
-    },
-    doSubmit() {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          if (this.isAdd) {
-            this.doAdd()
-          } else this.doEdit()
-        } else {
-          return false
-        }
-      })
-    },
-    doAdd() {
-      add(this.form).then(res => {
-        this.resetForm()
-        this.$notify({
-          title: '添加成功',
-          type: 'success',
-          duration: 2500
-        })
-        this.loading = false
-        this.init()
-      }).catch(err => {
-        this.loading = false
-        console.log(err.response.data.message)
-      })
-    },
-    doEdit() {
-      edit(this.form).then(res => {
-        this.resetForm()
-        this.$notify({
-          title: '修改成功',
-          type: 'success',
-          duration: 2500
-        })
-        this.loading = false
-        this.init()
-      }).catch(err => {
-        this.loading = false
-        console.log(err.response.data.message)
-      })
-    },
-    resetForm() {
-      this.dialog = false
-      this.$refs['form'].resetFields()
-      this.form = { jobName: '', beanName: '', methodName: '', params: '', cronExpression: '', isPause: 'false', remark: '' }
-    },
-    edit(data) {
-      this.isAdd = false
-      this.form = { id: data.id, jobName: data.jobName, beanName: data.beanName, methodName: data.methodName, params: data.params, cronExpression: data.cronExpression, isPause: data.isPause.toString(), remark: data.remark }
-      this.dialog = true
-    },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadJobs(this.params).then(result => {
-        downloadFile(result, '任务列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
-      })
     }
   }
 }

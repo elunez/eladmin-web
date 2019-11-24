@@ -1,17 +1,17 @@
 <template>
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="isAdd ? '新增' : '编辑'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="名称" >
-        <el-input v-model="form.name" style="width: 370px;"/>
+      <el-form-item label="名称">
+        <el-input v-model="form.name" style="width: 370px;" />
       </el-form-item>
-      <el-form-item label="IP地址" >
-        <el-input v-model="form.ip" style="width: 370px;"/>
+      <el-form-item label="IP地址">
+        <el-input v-model="form.ip" style="width: 370px;" />
       </el-form-item>
-      <el-form-item label="访问端口" >
-        <el-input-number v-model="form.port"/>
+      <el-form-item label="访问端口">
+        <el-input-number v-model="form.port" />
       </el-form-item>
-      <el-form-item label="排序" >
-        <el-input-number v-model="form.sort"/>
+      <el-form-item label="排序">
+        <el-input-number v-model="form.sort" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { add, edit } from '@/api/server'
+import { add, edit } from '@/api/monitor/server'
 export default {
   props: {
     isAdd: {

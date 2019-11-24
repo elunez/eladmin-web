@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div ref="editor" class="text"/>
+    <div ref="editor" class="text" />
     <div style="margin: 12px 5px;font-size: 16px;font-weight: bold;color: #696969">HTML渲染如下：</div>
-    <div class="editor-content" v-html="editorContent"/>
+    <div class="editor-content" v-html="editorContent" />
   </div>
 </template>
 
