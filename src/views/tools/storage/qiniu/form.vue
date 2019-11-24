@@ -1,5 +1,4 @@
 <template>
-  <!--上传图片-->
   <el-dialog :visible.sync="dialog" :close-on-click-modal="false" title="七牛云配置" append-to-body width="580px">
     <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="110px">
       <el-form-item label="Access Key" prop="accessKey">

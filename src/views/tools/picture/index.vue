@@ -5,7 +5,7 @@
       <!--搜索-->
       <el-input v-model="query.filename" clearable size="small" placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
-        v-model="query.date"
+        v-model="query.createTime"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
@@ -17,27 +17,24 @@
       />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 上传 -->
-      <div style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          v-permission="['admin','pictures:add']"
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-upload"
-          @click="dialog = true"
-        >上传图片</el-button>
-      </div>
-      <div v-permission="['admin','pictures:del']" style="display: inline-block;">
-        <el-button
-          :loading="delAllLoading"
-          :disabled="data.length === 0 || $refs.table.selection.length === 0"
-          class="filter-item"
-          size="mini"
-          type="danger"
-          icon="el-icon-delete"
-          @click="open"
-        >删除</el-button>
-      </div>
+      <el-button
+        v-permission="['admin','pictures:add']"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-upload"
+        @click="dialog = true"
+      >上传图片</el-button>
+      <el-button
+        v-permission="['admin','pictures:del']"
+        :loading="delAllLoading"
+        :disabled="data.length === 0 || $refs.table.selection.length === 0"
+        class="filter-item"
+        size="mini"
+        type="danger"
+        icon="el-icon-delete"
+        @click="beforeDelAllMethod"
+      >删除</el-button>
       <!-- 导出 -->
       <div style="display: inline-block;">
         <el-button
@@ -46,7 +43,7 @@
           class="filter-item"
           type="warning"
           icon="el-icon-download"
-          @click="download"
+          @click="downloadMethod"
         >导出</el-button>
       </div>
     </div>
@@ -77,8 +74,14 @@
       <el-table-column prop="filename" label="文件名" />
       <el-table-column prop="username" label="上传者" />
       <el-table-column ref="table" :show-overflow-tooltip="true" prop="url" label="缩略图">
-        <template slot-scope="scope">
-          <a :href="scope.row.url" style="color: #42b983" target="_blank"><img :src="scope.row.url" alt="点击打开" class="el-avatar"></a>
+        <template slot-scope="{row}">
+          <el-image
+            :src="row.url"
+            :preview-src-list="[row.url]"
+            fit="contain"
+            lazy
+            class="el-avatar"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="size" label="文件大小" />
@@ -99,7 +102,7 @@
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
@@ -119,23 +122,20 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
-import initData from '@/mixins/initData'
-import { parseTime, downloadFile } from '@/utils/index'
+import crud from '@/mixins/crud'
 import { mapGetters } from 'vuex'
-import { del, delAll, downloadPicture } from '@/api/tools/picture'
+import crudPic from '@/api/tools/picture'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Pictures',
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
-      delLoading: false,
-      delAllLoading: false,
+      title: '图片',
+      crudMethod: { ...crudPic },
       headers: {
         'Authorization': 'Bearer ' + getToken()
       },
-      dialog: false,
       dialogImageUrl: '',
       dialogVisible: false,
       fileList: [],
@@ -153,68 +153,9 @@ export default {
     })
   },
   methods: {
-    parseTime,
-    checkPermission,
     beforeInit() {
       this.url = 'api/pictures'
-      const sort = 'id,desc'
-      const query = this.query
-      const filename = query.filename
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (filename) { this.params[filename] = filename }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
-    },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
-    },
-    doDelete() {
-      this.delAllLoading = true
-      const data = this.$refs.table.selection
-      const ids = []
-      for (let i = 0; i < data.length; i++) {
-        ids.push(data[i].id)
-      }
-      delAll(ids).then(res => {
-        this.delAllLoading = false
-        this.init()
-        this.dleChangePage(ids.length)
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delAllLoading = false
-        console.log(err.response.data.message)
-      })
-    },
-    open() {
-      this.$confirm('你确定删除选中的数据吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.doDelete()
-      })
     },
     handleSuccess(response, file, fileList) {
       const uid = file.uid
@@ -224,7 +165,7 @@ export default {
     handleBeforeRemove(file, fileList) {
       for (let i = 0; i < this.pictures.length; i++) {
         if (this.pictures[i].uid === file.uid) {
-          del(this.pictures[i].id).then(res => {})
+          this.crudMethod.del(this.pictures[i].id).then(res => {})
           return true
         }
       }
@@ -248,16 +189,6 @@ export default {
         title: msg.message,
         type: 'error',
         duration: 2500
-      })
-    },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadPicture(this.params).then(result => {
-        downloadFile(result, '图片列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
       })
     }
   }

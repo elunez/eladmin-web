@@ -3,9 +3,9 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+      <el-input v-model="query.blurry" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-date-picker
-        v-model="query.date"
+        v-model="query.createTime"
         :default-time="['00:00:00','23:59:59']"
         type="daterange"
         range-separator=":"
@@ -17,45 +17,65 @@
       />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          v-permission="['admin','storage:add']"
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-upload"
-          @click="add"
-        >文件上传
-        </el-button>
-      </div>
+      <el-button
+        v-permission="['admin','storage:add']"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-upload"
+        @click="showAddFormDialog"
+      >文件上传
+      </el-button>
       <!-- 多选删除 -->
-      <div style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          v-permission="['admin','storage:del']"
-          :loading="delAllLoading"
-          :disabled="data.length === 0 || $refs.table.selection.length === 0"
-          class="filter-item"
-          size="mini"
-          type="danger"
-          icon="el-icon-delete"
-          @click="open"
-        >删除
-        </el-button>
-      </div>
+      <el-button
+        v-permission="['admin','storage:del']"
+        :loading="delAllLoading"
+        :disabled="data.length === 0 || $refs.table.selection.length === 0"
+        class="filter-item"
+        size="mini"
+        type="danger"
+        icon="el-icon-delete"
+        @click="beforeDelAllMethod"
+      >删除
+      </el-button>
       <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download"
-        >导出</el-button>
-      </div>
+      <el-button
+        :loading="downloadLoading"
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-download"
+        @click="downloadMethod"
+      >导出</el-button>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" />
+    <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="getFormTitle()" width="500px">
+      <el-form ref="form" :model="form" size="small" label-width="80px">
+        <el-form-item label="文件名">
+          <el-input v-model="form.name" style="width: 370px;" />
+        </el-form-item>
+        <!--   上传文件   -->
+        <el-form-item v-if="isAdd" label="上传">
+          <el-upload
+            ref="upload"
+            :limit="1"
+            :before-upload="beforeUpload"
+            :auto-upload="false"
+            :headers="headers"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+            :action="fileUploadApi + '?name=' + form.name"
+          >
+            <div class="eladmin-upload"><i class="el-icon-upload" /> 添加文件</div>
+            <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过100M</div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="cancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+      </div>
+    </el-dialog>
     <!--表格渲染-->
     <el-table ref="table" v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column type="selection" width="55" />
@@ -106,7 +126,7 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','storage:edit','storage:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','storage:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
+          <el-button v-permission="['admin','storage:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
             v-permission="['admin','storage:del']"
@@ -116,7 +136,7 @@
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定
               </el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
@@ -138,28 +158,24 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
-import { del, delAll, downloadStorage } from '@/api/tools/localStorage'
-import { parseTime, downloadFile } from '@/utils/index'
-import eForm from './form'
+import { getToken } from '@/utils/auth'
+import crud from '@/mixins/crud'
+import crudFile from '@/api/tools/localStorage'
 export default {
-  components: { eForm },
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
-      delLoading: false, delAllLoading: false,
-      queryTypeOptions: [
-        { key: 'name', display_name: '文件名' },
-        { key: 'suffix', display_name: '后缀' },
-        { key: 'type', display_name: '类型' },
-        { key: 'operate', display_name: '操作人' }
-      ]
+      title: '文件',
+      crudMethod: { ...crudFile },
+      delAllLoading: false,
+      headers: { 'Authorization': 'Bearer ' + getToken() },
+      form: { id: null, name: null }
     }
   },
   computed: {
     ...mapGetters([
-      'baseApi'
+      'baseApi',
+      'fileUploadApi'
     ])
   },
   created() {
@@ -168,91 +184,39 @@ export default {
     })
   },
   methods: {
-    parseTime,
-    checkPermission,
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/localStorage'
-      const sort = 'id,desc'
-      this.params = { page: this.page, size: this.size, sort: sort }
-      const query = this.query
-      const value = query.value
-      if (value) { this.params['blurry'] = value }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
     },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
+    // 上传文件
+    addMethod() {
+      this.$refs.upload.submit()
     },
-    add() {
-      this.isAdd = true
-      this.$refs.form.dialog = true
-    },
-    edit(data) {
-      this.isAdd = false
-      const _this = this.$refs.form
-      _this.form = {
-        id: data.id,
-        name: data.name
+    beforeUpload(file) {
+      let isLt2M = true
+      isLt2M = file.size / 1024 / 1024 < 100
+      if (!isLt2M) {
+        this.$message.error('上传文件大小不能超过 100MB!')
       }
-      _this.dialog = true
+      this.loading = false
+      return isLt2M
     },
-    doDelete() {
-      this.delAllLoading = true
-      const data = this.$refs.table.selection
-      const ids = []
-      for (let i = 0; i < data.length; i++) {
-        ids.push(data[i].id)
-      }
-      delAll(ids).then(res => {
-        this.delAllLoading = false
-        this.dleChangePage(ids.length)
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delAllLoading = false
-        console.log(err.response.data.message)
-      })
+    handleSuccess(response, file, fileList) {
+      this.dialog = false
+      this.cancel()
+      this.$refs.upload.clearFiles()
+      this.init()
     },
-    open() {
-      this.$confirm('你确定删除选中的数据吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.doDelete()
+    // 监听上传失败
+    handleError(e, file, fileList) {
+      const msg = JSON.parse(e.message)
+      this.$notify({
+        title: msg.message,
+        type: 'error',
+        duration: 2500
       })
-    },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadStorage(this.params).then(result => {
-        downloadFile(result, '文件列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
-      })
+      this.loading = false
     }
   }
 }

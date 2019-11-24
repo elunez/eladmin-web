@@ -15,11 +15,4 @@ export function delAll(ids) {
   })
 }
 
-export function downloadPicture(params) {
-  return request({
-    url: 'api/pictures/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { del, delAll }

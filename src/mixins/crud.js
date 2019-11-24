@@ -31,6 +31,7 @@ export default {
       loading: true,
       // 删除 Loading 属性
       delLoading: false,
+      delAllLoading: false,
       // 弹窗属性
       dialog: false,
       // Form 表单
@@ -169,6 +170,41 @@ export default {
       })
     },
     afterDelMethod() {
+    },
+    /**
+     * 多选删除提示
+     */
+    beforeDelAllMethod() {
+      this.$confirm('你确定删除选中的数据吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delAllMethod()
+      })
+    },
+    /**
+     * 多选删除
+     */
+    delAllMethod() {
+      this.delAllLoading = true
+      const data = this.$refs.table.selection
+      const ids = []
+      for (let i = 0; i < data.length; i++) {
+        ids.push(data[i].id)
+      }
+      this.crudMethod.delAll(ids).then(() => {
+        this.delAllLoading = false
+        this.dleChangePage(ids.length)
+        this.init()
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(() => {
+        this.delAllLoading = false
+      })
     },
     /**
      * 显示新增弹窗前可以调用该方法

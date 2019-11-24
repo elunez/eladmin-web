@@ -44,11 +44,4 @@ export function delAll(ids) {
   })
 }
 
-export function downloadQiNiu(params) {
-  return request({
-    url: 'api/qiNiuContent/download/list',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { del, download, sync, delAll }

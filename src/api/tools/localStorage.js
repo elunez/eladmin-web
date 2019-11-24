@@ -31,11 +31,4 @@ export function edit(data) {
   })
 }
 
-export function downloadStorage(params) {
-  return request({
-    url: 'api/localStorage/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del, delAll }
