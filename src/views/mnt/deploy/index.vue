@@ -92,10 +92,10 @@
       </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
+    <eForm ref="form" :is-add="isAdd" />
     <!--    系统还原组件-->
-    <fForm ref="sysRestore" :app-name="appName" :key="times"/>
-    <dForm ref="deploy"/>
+    <fForm ref="sysRestore" :key="times" :app-name="appName" />
+    <dForm ref="deploy" />
     <!--表格渲染-->
     <el-table
       v-loading="loading"
@@ -106,8 +106,8 @@
       style="width: 100%"
       @current-change="handleCurrentChange"
     >
-      <el-table-column :formatter="formatterAppId" prop="appId" label="应用名称"/>
-      <el-table-column prop="ip" label="服务器列表"/>
+      <el-table-column :formatter="formatterAppId" prop="appId" label="应用名称" />
+      <el-table-column prop="ip" label="服务器列表" />
       <el-table-column
         v-if="checkPermission(['admin','deploy:edit','deploy:del'])"
         label="操作"
@@ -123,8 +123,8 @@
             @click="edit(scope.row)"
           />
           <el-popover
-            v-permission="['admin','deploy:del']"
             :ref="scope.row.id"
+            v-permission="['admin','deploy:del']"
             placement="top"
             width="180"
           >
@@ -139,7 +139,7 @@
               >确定
               </el-button>
             </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>

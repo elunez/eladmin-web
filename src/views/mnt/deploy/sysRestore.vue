@@ -36,13 +36,13 @@
       >
         <el-table-column width="30px">
           <template slot-scope="scope">
-            <el-radio v-model="radio" :label="scope.$index"/>
+            <el-radio v-model="radio" :label="scope.$index" />
           </template>
         </el-table-column>
-        <el-table-column prop="appName" label="应用名称"/>
-        <el-table-column prop="ip" label="部署IP"/>
-        <el-table-column prop="deployDate" label="部署时间"/>
-        <el-table-column prop="deployUser" label="部署人员"/>
+        <el-table-column prop="appName" label="应用名称" />
+        <el-table-column prop="ip" label="部署IP" />
+        <el-table-column prop="deployDate" label="部署时间" />
+        <el-table-column prop="deployUser" label="部署人员" />
       </el-table>
     </el-form>
     <div slot="footer" class="dialog-footer">

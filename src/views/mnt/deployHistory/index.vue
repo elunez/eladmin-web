@@ -49,8 +49,8 @@
       >
         <template slot-scope="scope">
           <el-popover
-            v-permission="['admin','deployHistory:del']"
             :ref="scope.row.id"
+            v-permission="['admin','deployHistory:del']"
             placement="top"
             width="180"
           >

@@ -67,8 +67,8 @@
             @click="edit(scope.row)"
           />
           <el-popover
-            v-permission="['admin','database:del']"
             :ref="scope.row.id"
+            v-permission="['admin','database:del']"
             placement="top"
             width="180"
           >
