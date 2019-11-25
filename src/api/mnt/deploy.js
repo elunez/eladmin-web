@@ -72,3 +72,5 @@ export function serverStatus(data) {
     data
   })
 }
+
+export default { add, edit, del, stopServer, serverStatus, startServer, getServers, getApps }

@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-export function queryApps(data) {
-  return request({
-    url: 'api/app',
-    method: 'get',
-    data
-  })
-}
-
 export function add(data) {
   return request({
     url: 'api/app',
@@ -30,3 +22,5 @@ export function edit(data) {
     data
   })
 }
+
+export default { add, edit, del }

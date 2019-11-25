@@ -158,7 +158,6 @@ export default {
       this.delLoading = true
       this.crudMethod.del(id).then(() => {
         this.delLoading = false
-        console.log(this.$refs[id])
         this.$refs[id].doClose()
         this.dleChangePage()
         this.delSuccessNotify()

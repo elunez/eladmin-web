@@ -3,37 +3,49 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable size="small" placeholder="输入搜索内容" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
-      <el-select v-model="query.type" clearable size="small" placeholder="类型" class="filter-item" style="width: 130px">
-        <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-      </el-select>
+      <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者服务地址" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          v-permission="['admin','server:add']"
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          @click="add"
-        >新增
-        </el-button>
-      </div>
+      <el-button
+        v-permission="['admin','server:add']"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-plus"
+        @click="showAddFormDialog"
+      >新增
+      </el-button>
       <!-- 刷新 -->
-      <div style="display: inline-block;">
-        <el-button
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-refresh"
-          @click="refresh"
-        >刷新
-        </el-button>
-      </div>
+      <el-button
+        size="mini"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-refresh"
+        @click="toQuery"
+      >刷新
+      </el-button>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd" />
+    <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="getFormTitle()" width="500px">
+      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name" style="width: 370px;" />
+        </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="form.address" style="width: 370px;" />
+        </el-form-item>
+        <el-form-item label="端口" prop="port">
+          <el-input-number v-model.number="form.port" />
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number v-model.number="form.sort" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="cancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+      </div>
+    </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column label="状态" width="50px">
@@ -48,8 +60,8 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="名称" />
-      <el-table-column prop="ip" label="IP地址" />
-      <el-table-column prop="port" label="访问端口" width="80px" align="center" />
+      <el-table-column prop="address" label="地址" />
+      <el-table-column prop="port" label="端口" width="80px" align="center" />
       <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
       <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center" />
       <el-table-column label="物理内存" align="center">
@@ -90,7 +102,7 @@
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','server:edit','server:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','server:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
+          <el-button v-permission="['admin','server:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
             v-permission="['admin','server:del']"
@@ -100,7 +112,7 @@
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
@@ -120,21 +132,42 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
-import { del } from '@/api/monitor/server'
-import eForm from './form'
+import crud from '@/mixins/crud'
+import crudServer from '@/api/monitor/server'
 export default {
   name: 'ServerMonitor',
-  components: { eForm },
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
-      delLoading: false,
-      queryTypeOptions: [
-        { key: 'name', display_name: '名称' },
-        { key: 'ip', display_name: 'IP地址' }
-      ]
+      title: '监控',
+      crudMethod: { ...crudServer },
+      form: {
+        id: null,
+        name: null,
+        ip: null,
+        port: 8777,
+        state: null,
+        cpuRate: null,
+        cpuCore: null,
+        memTotal: null,
+        memUsed: null,
+        diskTotal: null,
+        diskUsed: null,
+        swapTotal: null,
+        swapUsed: null,
+        sort: 999
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入IP', trigger: 'blur' }
+        ],
+        port: [
+          { required: true, message: '请输入访问端口', trigger: 'blur', type: 'number' }
+        ]
+      }
     }
   },
   created() {
@@ -143,64 +176,11 @@ export default {
     })
   },
   methods: {
-    checkPermission,
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/server'
-      const sort = 'sort,asc'
-      this.params = { page: this.page, size: this.size, sort: sort }
-      const query = this.query
-      const type = query.type
-      const value = query.value
-      if (type && value) {
-        this.params[type] = value
-      }
+      this.sort = 'sort,asc'
       return true
-    },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
-    },
-    add() {
-      this.isAdd = true
-      this.$refs.form.dialog = true
-    },
-    edit(data) {
-      this.isAdd = false
-      const _this = this.$refs.form
-      _this.form = {
-        id: data.id,
-        name: data.name,
-        ip: data.ip,
-        port: data.port,
-        state: data.state,
-        cpuRate: data.cpuRate,
-        cpuCore: data.cpuCore,
-        memTotal: data.memTotal,
-        memUsed: data.memUsed,
-        diskTotal: data.diskTotal,
-        diskUsed: data.diskUsed,
-        swapTotal: data.swapTotal,
-        swapUsed: data.swapUsed,
-        sort: data.sort
-      }
-      _this.dialog = true
-    },
-    refresh() {
-      this.init()
     },
     formatCpuRate(row, column) {
       const value = row.cpuRate

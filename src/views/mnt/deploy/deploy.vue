@@ -1,11 +1,5 @@
 <template>
-  <el-dialog
-    :append-to-body="true"
-    :close-on-click-modal="false"
-    :visible.sync="dialog"
-    title="应用部署"
-    width="400px"
-  >
+  <el-dialog :append-to-body="true" :close-on-click-modal="false" :visible.sync="dialog" title="应用部署" width="400px">
     <el-form ref="form" :model="form" :rules="rules" size="small">
       <el-upload
         :action="deployUploadApi"
@@ -31,7 +25,7 @@
 </template>
 
 <script>
-import { add, edit, getApps, getServers } from '@/api/deploy'
+import { add, edit, getApps, getServers } from '@/api/mnt/deploy'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 
@@ -61,9 +55,6 @@ export default {
   },
   created() {
     this.initWebSocket()
-  },
-  destroyed: function() {
-    this.webSocketClose()
   },
   mounted() {
     this.initSelect()
@@ -144,9 +135,7 @@ export default {
       })
     },
     handleSuccess(response, file, fileList) {
-      const uid = file.uid
-      const id = response.id
-      console.log(uid, id)
+      this.cancel()
     },
     // 监听上传失败
     handleError(e, file, fileList) {
@@ -160,17 +149,8 @@ export default {
     initWebSocket() {
       const wsUri = process.env.VUE_APP_WS_API + '/webSocket/deploy'
       this.websock = new WebSocket(wsUri)
-      this.websock.onopen = this.webSocketOnOpen
       this.websock.onerror = this.webSocketOnError
       this.websock.onmessage = this.webSocketOnMessage
-      this.websock.onclose = this.webSocketClose
-    },
-    webSocketOnOpen() {
-      this.$notify({
-        title: 'WebSocket连接成功',
-        type: 'success',
-        duration: 2500
-      })
     },
     webSocketOnError(e) {
       this.$notify({
@@ -201,13 +181,6 @@ export default {
     },
     webSocketSend(agentData) {
       this.websock.send(agentData)
-    },
-    webSocketClose(e) {
-      this.$notify({
-        title: 'WebSocket已经关闭',
-        type: 'info',
-        duration: 1000
-      })
     }
   }
 }
