@@ -89,8 +89,8 @@
                       value="Like"
                     />
                     <el-option
-                      label="DateRange"
-                      value="DateRange"
+                      label="BetWeen"
+                      value="BetWeen"
                     />
                   </el-select>
                 </template>
@@ -146,6 +146,10 @@
               <el-input v-model="form.pack" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">项目包的名称，生成的代码放到哪个包里面</span>
             </el-form-item>
+            <el-form-item label="接口名称" prop="apiAlias">
+              <el-input v-model="form.apiAlias" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">接口的名称，用于控制器与接口文档中</span>
+            </el-form-item>
             <el-form-item label="前端路径" prop="path">
               <el-input v-model="form.path" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">输入views文件夹下的目录，不存在即创建</span>
@@ -173,18 +177,18 @@
 </template>
 
 <script>
-import initData from '@/mixins/initData'
+import crud from '@/mixins/crud'
 import { update, get } from '@/api/generator/genConfig'
 import { save } from '@/api/generator/generator'
 import { getDicts } from '@/api/system/dict'
 export default {
   name: 'GeneratorConfig',
   components: {},
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
       activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [],
-      form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
+      form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '', apiAlias: null },
       rules: {
         author: [
           { required: true, message: '作者不能为空', trigger: 'blur' }
@@ -196,7 +200,10 @@ export default {
           { required: true, message: '包路径不能为空', trigger: 'blur' }
         ],
         path: [
-          { required: true, message: '前端代码生成路径不能为空', trigger: 'blur' }
+          { required: true, message: '前端路径不能为空', trigger: 'blur' }
+        ],
+        apiAlias: [
+          { required: true, message: '接口名称不能为空', trigger: 'blur' }
         ],
         cover: [
           { required: true, message: '不能为空', trigger: 'blur' }

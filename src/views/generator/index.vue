@@ -46,36 +46,13 @@
 </template>
 
 <script>
-import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
+import crud from '@/mixins/crud'
 import { generator } from '@/api/generator/generator'
 export default {
   name: 'GeneratorIndex',
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
-      loading: false, dialog: false,
-      form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
-      rules: {
-        author: [
-          { required: true, message: '作者不能为空', trigger: 'blur' }
-        ],
-        pack: [
-          { required: true, message: '包路径不能为空', trigger: 'blur' }
-        ],
-        moduleName: [
-          { required: true, message: '包路径不能为空', trigger: 'blur' }
-        ],
-        path: [
-          { required: true, message: '前端代码生成路径不能为空', trigger: 'blur' }
-        ],
-        apiPath: [
-          { required: true, message: '前端Api文件生成路径不能为空', trigger: 'blur' }
-        ],
-        cover: [
-          { required: true, message: '不能为空', trigger: 'blur' }
-        ]
-      }
     }
   },
   created() {
@@ -84,13 +61,8 @@ export default {
     })
   },
   methods: {
-    parseTime,
     beforeInit() {
       this.url = 'api/generator/tables'
-      const query = this.query
-      const name = query.name
-      this.params = { page: this.page, size: this.size }
-      if (name) { this.params['name'] = name }
       return true
     },
     toGen(tableName) {

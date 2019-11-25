@@ -73,6 +73,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "chalk": "2.4.2",
     "chokidar": "2.1.5",
     "connect": "3.6.6",

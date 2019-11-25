@@ -88,12 +88,12 @@ import updateEmail from './center/updateEmail'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { parseTime } from '@/utils/index'
-import initData from '@/mixins/initData'
+import crud from '@/mixins/crud'
 import Avatar from '@/assets/images/avatar.png'
 export default {
   name: 'Center',
   components: { updatePass, updateEmail },
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
       Avatar: Avatar,
@@ -123,8 +123,6 @@ export default {
     },
     beforeInit() {
       this.url = 'api/logs/user'
-      const sort = 'id,desc'
-      this.params = { page: this.page, size: this.size, sort: sort }
       return true
     },
     handleSuccess(response, file, fileList) {

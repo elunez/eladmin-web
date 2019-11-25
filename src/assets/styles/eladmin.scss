@@ -9,10 +9,15 @@
       line-height: 30.5px;
     }
   }
+  .el-select__caret.el-input__icon.el-icon-arrow-up{
+    line-height: 30.5px;
+  }
   .date-item {
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 10px;
+    height: 30.5px;
+    width: 223px;
   }
 }
 .el-avatar {
