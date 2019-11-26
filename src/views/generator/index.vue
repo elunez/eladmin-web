@@ -23,7 +23,11 @@
       </el-table-column>
       <el-table-column label="操作" width="140px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" style="margin-right: 2px" type="text">预览</el-button>
+          <el-button size="mini" style="margin-right: 2px" type="text">
+            <router-link :to="'/sys-tools/generator/preview/' + scope.row.tableName">
+              预览
+            </router-link>
+          </el-button>
           <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text">
             <router-link :to="'/sys-tools/generator/config/' + scope.row.tableName">
               编辑
