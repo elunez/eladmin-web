@@ -55,9 +55,7 @@
       </el-table-column>
     </el-table>
     <el-dialog :visible.sync="errorDialog" append-to-body title="异常详情" width="85%">
-      <pre>
-        {{ errorInfo }}
-      </pre>
+      <pre v-highlightjs="errorInfo"><code class="java" /></pre>
     </el-dialog>
     <!--分页组件-->
     <el-pagination
@@ -106,3 +104,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .java.hljs{
+    color: #444;
+    background: #ffffff !important;
+  }
+  /deep/ .el-dialog__body{
+    padding: 0 20px 10px 20px !important;
+  }
+</style>

@@ -75,7 +75,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item style="margin-bottom: 0px;" label="角色" prop="roles">
+            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
               <el-select v-model="form.roles" style="width: 450px;" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roles"
