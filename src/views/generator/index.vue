@@ -21,13 +21,14 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="140px" align="center" fixed="right">
+      <el-table-column label="操作" width="160px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" style="margin-right: 2px" type="text">
             <router-link :to="'/sys-tools/generator/preview/' + scope.row.tableName">
               预览
             </router-link>
           </el-button>
+          <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text" @click="toDownload(scope.row.tableName)">下载</el-button>
           <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text">
             <router-link :to="'/sys-tools/generator/config/' + scope.row.tableName">
               编辑
@@ -77,6 +78,12 @@ export default {
           type: 'success',
           duration: 2500
         })
+      })
+    },
+    toDownload(tableName) {
+      // 打包下载
+      generator(tableName, 2).then(data => {
+        this.downloadFile(data, tableName, 'zip')
       })
     }
   }
