@@ -36,7 +36,7 @@
     "@riophae/vue-treeselect": "0.1.0",
     "axios": "0.18.1",
     "clipboard": "2.0.4",
-    "codemirror": "^5.38.0",
+    "codemirror": "^5.49.2",
     "connect": "3.6.6",
     "echarts": "4.2.1",
     "echarts-gl": "^1.1.1",
@@ -59,7 +59,8 @@
     "vue-splitpane": "1.0.4",
     "vuex": "3.1.0",
     "wangeditor": ">=3.0.0",
-    "xlsx": "^0.11.16"
+    "xlsx": "^0.11.16",
+    "vue-highlightjs": "^1.3.3"
   },
   "devDependencies": {
     "@babel/core": "7.0.0",

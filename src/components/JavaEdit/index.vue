@@ -9,7 +9,7 @@ import CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
 // 替换主题这里需修改名称
 import 'codemirror/theme/idea.css'
-import 'codemirror/mode/yaml/yaml'
+import 'codemirror/mode/clike/clike'
 export default {
   props: {
     value: {
@@ -39,21 +39,18 @@ export default {
   },
   mounted() {
     this.editor = CodeMirror.fromTextArea(this.$refs.textarea, {
-      mode: 'text/x-yaml',
+      mode: 'text/x-java',
       lineNumbers: true,
       lint: true,
       lineWrapping: true,
       tabSize: 2,
       cursorHeight: 0.9,
       // 替换主题这里需修改名称
-      theme: 'idea'
+      theme: 'idea',
+      readOnly: true
     })
     this.editor.setSize('auto', this.height)
     this.editor.setValue(this.value)
-    this.editor.on('change', cm => {
-      this.$emit('changed', cm.getValue())
-      this.$emit('input', cm.getValue())
-    })
   },
   methods: {
     getValue() {
@@ -69,7 +66,7 @@ export default {
     margin-bottom: 10px;
   }
   .json-editor >>> .CodeMirror {
-    font-size: 13px;
+    font-size: 14px;
     overflow-y:auto;
     font-weight:normal
   }

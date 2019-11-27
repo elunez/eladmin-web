@@ -31,10 +31,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialog" title="异常详情" append-to-body top="0" width="85%">
-      <pre>
-        {{ errorInfo }}
-      </pre>
+    <el-dialog :visible.sync="dialog" title="异常详情" append-to-body top="30px" width="85%">
+      <pre v-highlightjs="errorInfo"><code class="java" /></pre>
     </el-dialog>
     <!--分页组件-->
     <el-pagination
@@ -84,7 +82,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .demo-table-expand {
     font-size: 0;
   }
@@ -100,5 +98,13 @@ export default {
   .demo-table-expand .el-form-item__content {
     font-size: 12px;
 
+  }
+  /deep/ .el-dialog__body{
+    padding: 0 20px 10px 20px !important;
+  }
+  .java.hljs{
+    color: #444;
+    background: #ffffff !important;
+    height: 630px !important;
   }
 </style>

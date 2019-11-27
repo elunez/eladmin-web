@@ -52,9 +52,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  /deep/ .el-scrollbar__wrap{
-    margin-right: -22px !important;
-  }
-</style>

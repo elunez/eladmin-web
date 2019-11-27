@@ -60,13 +60,13 @@
               <el-input v-model.number="form.phone" />
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" />
+              <el-input v-model="form.email" style="width: 191px" />
             </el-form-item>
             <el-form-item label="部门" prop="dept.id">
               <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
             </el-form-item>
             <el-form-item label="岗位" prop="job.id">
-              <el-select v-model="form.job.id" style="width: 178px" placeholder="请先选择部门">
+              <el-select v-model="form.job.id" placeholder="请先选择部门">
                 <el-option
                   v-for="(item, index) in jobs"
                   :key="item.name + index"
@@ -75,7 +75,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item style="margin-bottom: 0px;" label="角色" prop="roles">
+            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
               <el-select v-model="form.roles" style="width: 450px;" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roles"
