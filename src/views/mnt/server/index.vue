@@ -24,7 +24,8 @@
         type="primary"
         icon="el-icon-plus"
         @click="showAddFormDialog"
-      >新增</el-button>
+      >新增
+      </el-button>
     </div>
     <!--表单组件-->
     <el-dialog :append-to-body="true" :close-on-click-modal="false" :visible.sync="dialog" :title="getFormTitle()" width="470px">
@@ -42,7 +43,8 @@
           <el-input v-model="form.account" style="width: 370px" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" type="password" style="width: 370px" />
+          <el-input v-model="form.password" type="password" style="width: 200px" />
+          <el-button :loading="loading" type="success" style="align: right;" @click="testConnectServer">测试连接</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -94,7 +96,7 @@
 
 <script>
 import crud from '@/mixins/crud'
-import crudServer from '@/api/mnt/serverDeploy'
+import { crudServer, testConnect } from '@/api/mnt/serverDeploy'
 import { validateIP } from '@/utils/validate'
 export default {
   mixins: [crud],
@@ -134,6 +136,23 @@ export default {
     async beforeInit() {
       this.url = 'api/serverDeploy'
       return true
+    },
+    testConnectServer() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          testConnect(this.form).then((res) => {
+            this.loading = false
+            this.$notify({
+              title: res ? '连接成功' : '连接失败',
+              type: res ? 'success' : 'error',
+              duration: 2500
+            })
+          }).catch(() => {
+            this.loading = false
+          })
+        }
+      })
     }
   }
 }

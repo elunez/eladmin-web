@@ -23,4 +23,12 @@ export function edit(data) {
   })
 }
 
+export function testConnect(data) {
+  return request({
+    url: 'api/serverDeploy/testConnect',
+    method: 'post',
+    data
+  })
+}
+
 export default { add, edit, del }
