@@ -1,23 +1,23 @@
 <template>
   <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="100px">
     <el-form-item label="发件人邮箱" prop="fromUser">
-      <el-input v-model="form.fromUser" style="width: 40%"/>
+      <el-input v-model="form.fromUser" style="width: 40%" />
       <span style="color: #C0C0C0;margin-left: 10px;">Sender mailbox</span>
     </el-form-item>
     <el-form-item label="发件用户名" prop="user">
-      <el-input v-model="form.user" style="width: 40%;"/>
+      <el-input v-model="form.user" style="width: 40%;" />
       <span style="color: #C0C0C0;margin-left: 10px;">Sender usernamex</span>
     </el-form-item>
     <el-form-item label="邮箱密码" prop="pass">
-      <el-input v-model="form.pass" type="password" style="width: 40%;"/>
+      <el-input v-model="form.pass" type="password" style="width: 40%;" />
       <span style="color: #C0C0C0;margin-left: 10px;">email Password</span>
     </el-form-item>
     <el-form-item label="SMTP地址" prop="host">
-      <el-input v-model="form.host" style="width: 40%;"/>
+      <el-input v-model="form.host" style="width: 40%;" />
       <span style="color: #C0C0C0;margin-left: 10px;">SMTP address</span>
     </el-form-item>
     <el-form-item label="SMTP端口" prop="port">
-      <el-input v-model="form.port" style="width: 40%;"/>
+      <el-input v-model="form.port" style="width: 40%;" />
       <span style="color: #C0C0C0;margin-left: 10px;">SMTP port</span>
     </el-form-item>
     <el-form-item label="">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { get, update } from '@/api/email'
+import { get, update } from '@/api/tools/email'
 export default {
   name: 'Config',
   data() {

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Search :query="query"/>
+    <Search :query="query" />
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column type="expand">
@@ -15,11 +15,11 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="requestIp" label="IP"/>
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column prop="browser" label="浏览器"/>
+      <el-table-column prop="username" label="用户名" />
+      <el-table-column prop="requestIp" label="IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
+      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="browser" label="浏览器" />
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -31,10 +31,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialog" title="异常详情" append-to-body top="0" width="85%">
-      <pre>
-        {{ errorInfo }}
-      </pre>
+    <el-dialog :visible.sync="dialog" title="异常详情" append-to-body top="30px" width="85%">
+      <pre v-highlightjs="errorInfo"><code class="java" /></pre>
     </el-dialog>
     <!--分页组件-->
     <el-pagination
@@ -43,19 +41,19 @@
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
-      @current-change="pageChange"/>
+      @current-change="pageChange"
+    />
   </div>
 </template>
 
 <script>
-import initData from '@/mixins/initData'
-import { parseTime } from '@/utils/index'
-import { getErrDetail } from '@/api/log'
+import crud from '@/mixins/crud'
+import { getErrDetail } from '@/api/monitor/log'
 import Search from './search'
 export default {
   name: 'ErrorLog',
   components: { Search },
-  mixins: [initData],
+  mixins: [crud],
   data() {
     return {
       errorInfo: '', dialog: false
@@ -67,21 +65,13 @@ export default {
     })
   },
   methods: {
-    parseTime,
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/logs/error'
-      const sort = 'id,desc'
-      const query = this.query
-      const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['blurry'] = value }
       this.params['logType'] = 'ERROR'
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
       return true
     },
+    // 获取异常详情
     info(id) {
       this.dialog = true
       getErrDetail(id).then(res => {
@@ -92,7 +82,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .demo-table-expand {
     font-size: 0;
   }
@@ -108,5 +98,13 @@ export default {
   .demo-table-expand .el-form-item__content {
     font-size: 12px;
 
+  }
+  /deep/ .el-dialog__body{
+    padding: 0 20px 10px 20px !important;
+  }
+  .java.hljs{
+    color: #444;
+    background: #ffffff !important;
+    height: 630px !important;
   }
 </style>
