@@ -129,7 +129,7 @@ export default {
       title: '文件',
       crudMethod: { ...crudQiNiu },
       icon: 'el-icon-refresh',
-      url: '', headers: { 'Authorization': 'Bearer ' + getToken() }, dialog: false,
+      url: '', headers: { 'Authorization': getToken() }, dialog: false,
       dialogImageUrl: '', dialogVisible: false, fileList: [], files: [], newWin: null
     }
   },

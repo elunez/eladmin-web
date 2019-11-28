@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       headers: {
-        'Authorization': 'Bearer ' + getToken()
+        'Authorization': getToken()
       },
       editorContent:
         `<h3 style="text-align: center;">欢迎使用 wangEditor 富文本编辑器!</h3>
