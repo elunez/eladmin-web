@@ -14,7 +14,9 @@ export function parseTime(time, cFormat) {
   }
   const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
   let date
-  if (typeof time === 'object') {
+  if (typeof time === 'undefined' || time === null || time === 'null') {
+    return ''
+  } else if (typeof time === 'object') {
     date = time
   } else {
     if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) {
@@ -384,4 +386,3 @@ export function downloadFile(obj, name, suffix) {
   link.click()
   document.body.removeChild(link)
 }
-
