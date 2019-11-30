@@ -53,20 +53,20 @@
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" />
             </el-form-item>
-            <el-form-item label="状态" prop="enabled">
-              <el-radio v-for="item in dict.user_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
-            </el-form-item>
             <el-form-item label="电话" prop="phone">
               <el-input v-model.number="form.phone" />
             </el-form-item>
+            <el-form-item label="昵称" prop="nickName">
+              <el-input v-model="form.nickName" />
+            </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" style="width: 191px" />
+              <el-input v-model="form.email" />
             </el-form-item>
             <el-form-item label="部门" prop="dept.id">
               <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
             </el-form-item>
             <el-form-item label="岗位" prop="job.id">
-              <el-select v-model="form.job.id" placeholder="请先选择部门">
+              <el-select v-model="form.job.id" style="width: 178px" placeholder="请先选择部门">
                 <el-option
                   v-for="(item, index) in jobs"
                   :key="item.name + index"
@@ -75,8 +75,19 @@
                 />
               </el-select>
             </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="form.sex" style="width: 178px">
+                <el-radio label="男">男</el-radio>
+                <el-radio label="女">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.enabled">
+                <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
-              <el-select v-model="form.roles" style="width: 450px;" multiple placeholder="请选择">
+              <el-select v-model="form.roles" style="width: 437px" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.name"
@@ -94,10 +105,12 @@
         </el-dialog>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-          <el-table-column prop="username" label="用户名" />
-          <el-table-column prop="phone" label="电话" />
-          <el-table-column :show-overflow-tooltip="true" prop="email" label="邮箱" />
-          <el-table-column label="部门 / 岗位">
+          <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
+          <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
+          <el-table-column prop="sex" label="性别" />
+          <el-table-column :show-overflow-tooltip="true" prop="phone" width="120" label="电话" />
+          <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
+          <el-table-column :show-overflow-tooltip="true" width="120" label="部门 / 岗位">
             <template slot-scope="scope">
               <div>{{ scope.row.dept.name }} / {{ scope.row.job.name }}</div>
             </template>
@@ -112,7 +125,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="150" label="创建日期">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -188,10 +201,14 @@ export default {
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
       ],
-      form: { username: null, email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null },
+      form: { username: null, nickName: null, sex: '男', email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        nickName: [
+          { required: true, message: '请输入用户昵称', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         email: [
@@ -200,9 +217,6 @@ export default {
         ],
         phone: [
           { required: true, trigger: 'blur', validator: validPhone }
-        ],
-        enabled: [
-          { required: true, message: '状态不能为空', trigger: 'blur' }
         ]
       }
     }

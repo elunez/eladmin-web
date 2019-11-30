@@ -23,6 +23,14 @@ export function edit(data) {
   })
 }
 
+export function editUser(data) {
+  return request({
+    url: 'api/users/center',
+    method: 'put',
+    data
+  })
+}
+
 export function updatePass(user) {
   const data = {
     oldPass: user.oldPass,
