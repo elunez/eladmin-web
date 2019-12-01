@@ -64,6 +64,11 @@
       </el-row>
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
         <div class="chart-wrapper">
+          <word-cloud />
+        </div>
+      </el-row>
+      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+        <div class="chart-wrapper">
           <category />
         </div>
       </el-row>
@@ -84,6 +89,7 @@ import Scatter from '@/components/Echarts/Scatter'
 import Line3D from '@/components/Echarts/Line3D'
 import Category from '@/components/Echarts/Category'
 import Point from '@/components/Echarts/Point'
+import WordCloud from '@/components/Echarts/WordCloud'
 
 export default {
   name: 'Echarts',
@@ -99,7 +105,8 @@ export default {
     ThemeRiver,
     Sankey,
     Line3D,
-    Scatter
+    Scatter,
+    WordCloud
   }
 }
 </script>
