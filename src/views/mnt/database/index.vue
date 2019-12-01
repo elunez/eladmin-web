@@ -22,7 +22,7 @@
           <el-input v-model="form.name" style="width: 370px" />
         </el-form-item>
         <el-form-item label="连接地址" prop="jdbcUrl">
-          <el-input v-model="form.jdbcUrl" style="width: 370px" />
+          <el-input v-model="form.jdbcUrl" style="width: 300px" /><el-button :loading="loading" type="info" @click="testConnectDatabase">测试</el-button>
         </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" style="width: 370px" />
@@ -74,13 +74,14 @@
 
 <script>
 import crud from '@/mixins/crud'
-import crudDataBase from '@/api//mnt/database'
+import crudDatabase from '@/api/mnt/database'
+import { testDbConnect } from '@/api/mnt/connect'
 export default {
   mixins: [crud],
   data() {
     return {
       title: '数据库',
-      crudMethod: { ...crudDataBase },
+      crudMethod: { ...crudDatabase },
       form: { id: null, name: null, jdbcUrl: null, userName: null, pwd: null },
       rules: {
         name: [
@@ -107,6 +108,23 @@ export default {
     beforeInit() {
       this.url = 'api/database'
       return true
+    },
+    testConnectDatabase() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          testDbConnect(this.form).then((res) => {
+            this.loading = false
+            this.$notify({
+              title: res ? '连接成功' : '连接失败',
+              type: res ? 'success' : 'error',
+              duration: 2500
+            })
+          }).catch(() => {
+            this.loading = false
+          })
+        }
+      })
     }
   }
 }

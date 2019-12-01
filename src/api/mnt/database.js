@@ -23,4 +23,12 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+export function testDbConnection(data) {
+  return request({
+    url: 'api/database/testConnect',
+    method: 'post',
+    data
+  })
+}
+
+export default { add, edit, del, testDbConnection }
