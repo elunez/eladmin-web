@@ -347,6 +347,13 @@ export default {
       getLevel().then(res => {
         this.level = res.level
       }).catch(() => {})
+    },
+    addSuccessNotify() {
+      this.$notify({
+        title: '新增成功，默认密码：123456',
+        type: 'success',
+        duration: 2500
+      })
     }
   }
 }

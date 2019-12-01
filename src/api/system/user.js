@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { encrypt } from '@/utils/rsaEncrypt'
 
 export function add(data) {
   return request({
@@ -33,8 +34,8 @@ export function editUser(data) {
 
 export function updatePass(user) {
   const data = {
-    oldPass: user.oldPass,
-    newPass: user.newPass
+    oldPass: encrypt(user.oldPass),
+    newPass: encrypt(user.newPass)
   }
   return request({
     url: 'api/users/updatePass/',
@@ -43,9 +44,13 @@ export function updatePass(user) {
   })
 }
 
-export function updateEmail(code, data) {
+export function updateEmail(form) {
+  const data = {
+    password: encrypt(form.pass),
+    email: form.email
+  }
   return request({
-    url: 'api/users/updateEmail/' + code,
+    url: 'api/users/updateEmail/' + form.code,
     method: 'post',
     data
   })
