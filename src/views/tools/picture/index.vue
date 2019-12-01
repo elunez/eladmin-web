@@ -134,7 +134,7 @@ export default {
       title: '图片',
       crudMethod: { ...crudPic },
       headers: {
-        'Authorization': 'Bearer ' + getToken()
+        'Authorization': getToken()
       },
       dialogImageUrl: '',
       dialogVisible: false,
