@@ -38,9 +38,9 @@
     </el-dialog>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%">
-      <el-table-column prop="name" label="数据库名称" />
+      <el-table-column prop="name" label="数据库名称" width="180" />
       <el-table-column prop="jdbcUrl" label="连接地址" />
-      <el-table-column prop="userName" label="用户名" />
+      <el-table-column prop="userName" label="用户名" width="100" />
       <el-table-column v-if="checkPermission(['admin','database:edit','database:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <el-button v-permission="['admin','database:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
