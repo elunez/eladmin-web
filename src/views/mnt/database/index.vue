@@ -37,7 +37,7 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%">
+    <el-table v-loading="loading" :data="data" style="width: 100%">
       <el-table-column prop="name" label="数据库名称" />
       <el-table-column prop="jdbcUrl" label="连接地址" />
       <el-table-column prop="userName" label="用户名" />

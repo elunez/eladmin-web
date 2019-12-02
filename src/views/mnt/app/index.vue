@@ -66,7 +66,7 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" highlight-current-row size="small" style="width: 100%" @current-change="handleCurrentChange">
+    <el-table v-loading="loading" :data="data" highlight-current-row style="width: 100%" @current-change="handleCurrentChange">
       <el-table-column prop="name" label="应用名称" />
       <el-table-column prop="port" label="端口号" />
       <el-table-column prop="uploadPath" label="上传目录" />

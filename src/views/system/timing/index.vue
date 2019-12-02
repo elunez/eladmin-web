@@ -75,7 +75,7 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" :data="data" style="width: 100%;">
       <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
       <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
       <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />

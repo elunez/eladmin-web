@@ -14,7 +14,7 @@
       >导出</el-button>
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" :data="data" style="width: 100%;">
       <el-table-column prop="userName" label="用户名" />
       <el-table-column prop="nickName" label="用户昵称" />
       <el-table-column prop="job" label="岗位" />

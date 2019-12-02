@@ -6,7 +6,7 @@
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" :data="data" style="width: 100%;">
       <el-table-column label="序号" width="85" align="center">
         <template slot-scope="scope">
           <div>{{ scope.$index + 1 }}</div>

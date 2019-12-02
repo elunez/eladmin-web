@@ -63,7 +63,7 @@
             </el-tab-pane>
             <!--    操作日志    -->
             <el-tab-pane label="操作日志" name="second">
-              <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+              <el-table v-loading="loading" :data="data" style="width: 100%;">
                 <el-table-column prop="description" label="行为" />
                 <el-table-column prop="requestIp" label="IP" />
                 <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />

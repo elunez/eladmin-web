@@ -69,7 +69,7 @@
         </div>
       </el-dialog>
       <!--表格渲染-->
-      <el-table ref="table" v-loading="loading" :data="data" size="small" style="width: 100%;">
+      <el-table ref="table" v-loading="loading" :data="data" style="width: 100%;">
         <el-table-column type="selection" width="55" />
         <el-table-column :show-overflow-tooltip="true" label="文件名">
           <template slot-scope="scope">
