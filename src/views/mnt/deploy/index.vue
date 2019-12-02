@@ -178,6 +178,7 @@ export default {
   methods: {
     beforeInit() {
       this.url = 'api/deploy'
+      this.selectIndex = ''
       return true
     },
     // 打开新增弹窗前做的操作
@@ -204,7 +205,7 @@ export default {
       return true
     },
     deploy() {
-      if (this.selectIndex === '') {
+      if (!this.selectIndex) {
         this.$message.error('请先选择服务')
       } else {
         this.$refs.deploy.dialog = true
@@ -212,7 +213,7 @@ export default {
       }
     },
     sysRestore() {
-      if (this.selectIndex === '') {
+      if (!this.selectIndex) {
         this.$message.error('请先选择服务')
       } else {
         this.$refs.sysRestore.dialog = true
@@ -227,7 +228,7 @@ export default {
       this.deployId = !row ? null : row.id
     },
     startServer() {
-      if (this.selectIndex === '') {
+      if (!this.selectIndex) {
         this.$message.error('请先选择服务')
       } else {
         this.crudMethod.startServer(JSON.stringify(this.currentRow))
@@ -239,7 +240,7 @@ export default {
       }
     },
     stopServer() {
-      if (this.selectIndex === '') {
+      if (!this.selectIndex) {
         this.$message.error('请先选择服务')
       } else {
         this.crudMethod.stopServer(JSON.stringify(this.currentRow))
@@ -251,7 +252,7 @@ export default {
       }
     },
     serverStatus() {
-      if (this.selectIndex === '') {
+      if (!this.selectIndex) {
         this.$message.error('请先选择服务')
       } else {
         this.crudMethod.serverStatus(JSON.stringify(this.currentRow))

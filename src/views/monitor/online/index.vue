@@ -16,6 +16,7 @@
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column prop="userName" label="用户名" />
+      <el-table-column prop="nickName" label="用户昵称" />
       <el-table-column prop="job" label="岗位" />
       <el-table-column prop="ip" label="登录IP" />
       <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点" />
