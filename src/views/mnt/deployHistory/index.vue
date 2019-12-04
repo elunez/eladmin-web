@@ -7,7 +7,7 @@
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%">
+    <el-table v-loading="loading" :data="data" style="width: 100%">
       <el-table-column prop="appName" label="应用名称" />
       <el-table-column prop="ip" label="部署IP" />
       <el-table-column prop="deployDate" label="部署时间" />

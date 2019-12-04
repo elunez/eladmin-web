@@ -75,7 +75,7 @@
           <div slot="header" class="clearfix">
             <span class="role-span">角色列表</span>
           </div>
-          <el-table v-loading="loading" :data="data" highlight-current-row size="small" style="width: 100%;" @current-change="handleCurrentChange">
+          <el-table v-loading="loading" :data="data" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="dataScope" label="数据权限" />
             <el-table-column prop="permission" label="角色权限" />
