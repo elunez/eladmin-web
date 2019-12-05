@@ -1,5 +1,11 @@
-import { initData, download } from '@/api/data'
-import { parseTime, downloadFile } from '@/utils/index'
+import {
+  initData,
+  download
+} from '@/api/data'
+import {
+  parseTime,
+  downloadFile
+} from '@/utils/index'
 import checkPermission from '@/utils/permission'
 
 export default {
@@ -168,8 +174,7 @@ export default {
         this.$refs[id].doClose()
       })
     },
-    afterDelMethod() {
-    },
+    afterDelMethod() {},
     /**
      * 多选删除提示
      */
@@ -208,8 +213,7 @@ export default {
     /**
      * 显示新增弹窗前可以调用该方法
      */
-    beforeShowAddForm() {
-    },
+    beforeShowAddForm() {},
     /**
      * 显示新增弹窗
      */
@@ -222,8 +226,7 @@ export default {
     /**
      * 显示编辑弹窗前可以调用该方法
      */
-    beforeShowEditForm(data) {
-    },
+    beforeShowEditForm(data) {},
     /**
      * 显示编辑弹窗
      */
@@ -248,12 +251,17 @@ export default {
         this.init()
       }).catch(() => {
         this.loading = false
+        this.afterAddErrorMethod()
       })
     },
     /**
      * 新增后可以调用该方法
      */
-    afterAddMethod() { },
+    afterAddMethod() {},
+    /**
+     * 新增失败后调用该方法
+     */
+    afterAddErrorMethod() {},
     /**
      * 通用的编辑方法
      */

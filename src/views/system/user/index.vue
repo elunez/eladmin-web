@@ -4,16 +4,38 @@
       <!--侧边部门数据-->
       <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
         <div class="head-container">
-          <el-input v-model="deptName" clearable size="small" placeholder="输入部门名称搜索" prefix-icon="el-icon-search" class="filter-item" @input="getDeptDatas" />
+          <el-input
+            v-model="deptName"
+            clearable
+            size="small"
+            placeholder="输入部门名称搜索"
+            prefix-icon="el-icon-search"
+            class="filter-item"
+            @input="getDeptDatas"
+          />
         </div>
-        <el-tree :data="deptDatas" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick" />
+        <el-tree
+          :data="deptDatas"
+          :props="defaultProps"
+          :expand-on-click-node="false"
+          default-expand-all
+          @node-click="handleNodeClick"
+        />
       </el-col>
       <!--用户数据-->
       <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+          <el-input
+            v-model="query.blurry"
+            clearable
+            size="small"
+            placeholder="输入名称或者邮箱搜索"
+            style="width: 200px;"
+            class="filter-item"
+            @keyup.enter.native="toQuery"
+          />
           <el-date-picker
             v-model="query.createTime"
             :default-time="['00:00:00','23:59:59']"
@@ -25,10 +47,29 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           />
-          <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
-            <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          <el-select
+            v-model="query.enabled"
+            clearable
+            size="small"
+            placeholder="状态"
+            class="filter-item"
+            style="width: 90px"
+            @change="toQuery"
+          >
+            <el-option
+              v-for="item in enabledTypeOptions"
+              :key="item.key"
+              :label="item.display_name"
+              :value="item.key"
+            />
           </el-select>
-          <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+          <el-button
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-search"
+            @click="toQuery"
+          >搜索</el-button>
           <!-- 新增 -->
           <el-button
             class="filter-item"
@@ -48,8 +89,22 @@
           >导出</el-button>
         </div>
         <!--表单渲染-->
-        <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="570px">
-          <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
+        <el-dialog
+          :visible.sync="dialog"
+          :close-on-click-modal="false"
+          :before-close="cancel"
+          :title="getFormTitle()"
+          append-to-body
+          width="570px"
+        >
+          <el-form
+            ref="form"
+            :inline="true"
+            :model="form"
+            :rules="rules"
+            size="small"
+            label-width="66px"
+          >
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" />
             </el-form-item>
@@ -63,7 +118,13 @@
               <el-input v-model="form.email" />
             </el-form-item>
             <el-form-item label="部门" prop="dept.id">
-              <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
+              <treeselect
+                v-model="form.dept.id"
+                :options="depts"
+                style="width: 178px"
+                placeholder="选择部门"
+                @select="selectFun"
+              />
             </el-form-item>
             <el-form-item label="岗位" prop="job.id">
               <el-select v-model="form.job.id" style="width: 178px" placeholder="请先选择部门">
@@ -83,11 +144,22 @@
             </el-form-item>
             <el-form-item label="状态">
               <el-radio-group v-model="form.enabled">
-                <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
+                <el-radio
+                  v-for="item in dict.user_status"
+                  :key="item.id"
+                  :label="item.value"
+                >{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
-              <el-select v-model="form.roles" style="width: 437px" multiple placeholder="请选择">
+              <el-select
+                v-model="form.roles"
+                style="width: 437px"
+                multiple
+                placeholder="请选择"
+                @remove-tag="deleteTag"
+                @change="changeRole"
+              >
                 <el-option
                   v-for="item in roles"
                   :key="item.name"
@@ -130,9 +202,21 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="125" align="center" fixed="right">
+          <el-table-column
+            v-if="checkPermission(['admin','user:edit','user:del'])"
+            label="操作"
+            width="125"
+            align="center"
+            fixed="right"
+          >
             <template slot-scope="scope">
-              <el-button v-permission="['admin','user:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+              <el-button
+                v-permission="['admin','user:edit']"
+                size="mini"
+                type="primary"
+                icon="el-icon-edit"
+                @click="showEditFormDialog(scope.row)"
+              />
               <el-popover
                 :ref="scope.row.id"
                 v-permission="['admin','user:del']"
@@ -142,7 +226,12 @@
                 <p>确定删除本条数据吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-                  <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
+                  <el-button
+                    :loading="delLoading"
+                    type="primary"
+                    size="mini"
+                    @click="delMethod(scope.row.id)"
+                  >确定</el-button>
                 </div>
                 <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
               </el-popover>
@@ -172,6 +261,7 @@ import { getAll, getLevel } from '@/api/system/role'
 import { getAllJob } from '@/api/system/job'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+let userRoles = []
 export default {
   name: 'User',
   components: { Treeselect },
@@ -234,6 +324,28 @@ export default {
     }
   },
   methods: {
+    changeRole(value) {
+      userRoles = []
+      value.forEach(function(data, index) {
+        const role = { id: data }
+        userRoles.push(role)
+      })
+    },
+    afterAddErrorMethod() {
+      // 恢复select
+      const initRoles = []
+      userRoles.forEach(function(role, index) {
+        initRoles.push(role.id)
+      })
+      this.form.roles = initRoles
+    },
+    deleteTag(value) {
+      userRoles.forEach(function(data, index) {
+        if (data.id === value) {
+          userRoles.splice(index, value)
+        }
+      })
+    },
     beforeInit() {
       this.url = 'api/users'
       return true
@@ -246,6 +358,7 @@ export default {
     },
     // 打开编辑弹窗前做的操作
     beforeShowEditForm(data) {
+      userRoles = []
       this.getDepts()
       this.getRoles()
       this.getRoleLevel()
@@ -254,6 +367,9 @@ export default {
       const roles = []
       data.roles.forEach(function(role, index) {
         roles.push(role.id)
+        // 初始化编辑时候的角色
+        const rol = { id: role.id }
+        userRoles.push(rol)
       })
       this.form.roles = roles
     },
@@ -278,12 +394,7 @@ export default {
         })
         return false
       }
-      const roles = []
-      this.form.roles.forEach(function(data, index) {
-        const role = { id: data }
-        roles.push(role)
-      })
-      this.form.roles = roles
+      this.form.roles = userRoles
       return true
     },
     // 获取左侧部门数据
@@ -330,13 +441,13 @@ export default {
     getRoles() {
       getAll().then(res => {
         this.roles = res
-      }).catch(() => {})
+      }).catch(() => { })
     },
     // 获取弹窗内岗位数据
     getJobs(id) {
       getAllJob(id).then(res => {
         this.jobs = res.content
-      }).catch(() => {})
+      }).catch(() => { })
     },
     // 点击部门搜索对应的岗位
     selectFun(node, instanceId) {
@@ -346,7 +457,7 @@ export default {
     getRoleLevel() {
       getLevel().then(res => {
         this.level = res.level
-      }).catch(() => {})
+      }).catch(() => { })
     },
     addSuccessNotify() {
       this.$notify({
