@@ -48,6 +48,7 @@
 <script>
 import crud from '@/mixins/crud'
 import Search from './search'
+import { delAllInfo } from '@/api/monitor/log'
 export default {
   name: 'Log',
   components: { Search },
@@ -63,26 +64,51 @@ export default {
       this.url = 'api/logs'
       this.params['logType'] = 'INFO'
       return true
+    },
+    confirmDelAll() {
+      this.delAllLoading = true
+      delAllInfo().then(res => {
+        this.delAllLoading = false
+        this.$children.forEach(children => {
+          if (children.$refs.del_all) {
+            children.$refs.del_all.doClose()
+          }
+        })
+        this.dleChangePage()
+        this.init()
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(err => {
+        this.delAllLoading = false
+        this.$children.forEach(children => {
+          if (children.$refs.del_all) {
+            children.$refs.del_all.doClose()
+          }
+        })
+        console.log(err.response.data.message)
+      })
     }
   }
 }
 </script>
 
 <style>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 70px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
-  }
-  .demo-table-expand .el-form-item__content {
-    font-size: 12px;
-
-  }
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 70px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
+.demo-table-expand .el-form-item__content {
+  font-size: 12px;
+}
 </style>
