@@ -13,16 +13,28 @@
         type="primary"
         icon="el-icon-plus"
         @click="showAddFormDialog"
-      >新增</el-button>
+      >新增
+      </el-button>
+      <el-button
+        v-permission="['admin','database:add']"
+        class="filter-item"
+        size="mini"
+        type="warning"
+        icon="el-icon-upload"
+        @click="execute"
+      >执行脚本
+      </el-button>
     </div>
     <!--表单组件-->
+    <eForm ref="execute" :database-info="currentRow" />
     <el-dialog :append-to-body="true" :close-on-click-modal="false" :visible.sync="dialog" :title="getFormTitle()" width="530px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="数据库名称" prop="name">
           <el-input v-model="form.name" style="width: 370px" />
         </el-form-item>
         <el-form-item label="连接地址" prop="jdbcUrl">
-          <el-input v-model="form.jdbcUrl" style="width: 300px" /><el-button :loading="loading" type="info" @click="testConnectDatabase">测试</el-button>
+          <el-input v-model="form.jdbcUrl" style="width: 300px" />
+          <el-button :loading="loading" type="info" @click="testConnectDatabase">测试</el-button>
         </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" style="width: 370px" />
@@ -37,7 +49,7 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%">
+    <el-table v-loading="loading" :data="data" highlight-current-row stripe size="small" style="width: 100%" @current-change="handleCurrentChange">
       <el-table-column prop="name" label="数据库名称" width="180" />
       <el-table-column prop="jdbcUrl" label="连接地址" />
       <el-table-column prop="userName" label="用户名" width="100" />
@@ -76,12 +88,17 @@
 import crud from '@/mixins/crud'
 import crudDatabase from '@/api/mnt/database'
 import { testDbConnect } from '@/api/mnt/connect'
+import eForm from './execute'
 export default {
+  components: { eForm },
   mixins: [crud],
   data() {
     return {
       title: '数据库',
       crudMethod: { ...crudDatabase },
+      currentRow: {},
+      selectIndex: '',
+      databaseInfo: '',
       form: { id: null, name: null, jdbcUrl: null, userName: null, pwd: null },
       rules: {
         name: [
@@ -125,6 +142,17 @@ export default {
           })
         }
       })
+    },
+    execute() {
+      if (!this.selectIndex) {
+        this.$message.error('请先选择数据库')
+      } else {
+        this.$refs.execute.dialog = true
+      }
+    },
+    handleCurrentChange(row) {
+      this.currentRow = row
+      this.selectIndex = !row ? null : row.id
     }
   }
 }
