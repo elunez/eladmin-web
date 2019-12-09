@@ -48,7 +48,7 @@
 
 <script>
 import crud from '@/mixins/crud'
-import { getErrDetail } from '@/api/monitor/log'
+import { getErrDetail, delAllError } from '@/api/monitor/log'
 import Search from './search'
 export default {
   name: 'ErrorLog',
@@ -77,34 +77,59 @@ export default {
       getErrDetail(id).then(res => {
         this.errorInfo = res.exception
       })
+    },
+    confirmDelAll() {
+      this.delAllLoading = true
+      delAllError().then(res => {
+        this.delAllLoading = false
+        this.$children.forEach(children => {
+          if (children.$refs.del_all) {
+            children.$refs.del_all.doClose()
+          }
+        })
+        this.dleChangePage()
+        this.init()
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(err => {
+        this.delAllLoading = false
+        this.$children.forEach(children => {
+          if (children.$refs.del_all) {
+            children.$refs.del_all.doClose()
+          }
+        })
+        console.log(err.response.data.message)
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 70px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
-  }
-  .demo-table-expand .el-form-item__content {
-    font-size: 12px;
-
-  }
-  /deep/ .el-dialog__body{
-    padding: 0 20px 10px 20px !important;
-  }
-  .java.hljs{
-    color: #444;
-    background: #ffffff !important;
-    height: 630px !important;
-  }
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 70px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
+.demo-table-expand .el-form-item__content {
+  font-size: 12px;
+}
+/deep/ .el-dialog__body {
+  padding: 0 20px 10px 20px !important;
+}
+.java.hljs {
+  color: #444;
+  background: #ffffff !important;
+  height: 630px !important;
+}
 </style>

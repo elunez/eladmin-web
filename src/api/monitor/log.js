@@ -6,3 +6,17 @@ export function getErrDetail(id) {
     method: 'get'
   })
 }
+
+export function delAllError() {
+  return request({
+    url: 'api/logs/del/error',
+    method: 'delete'
+  })
+}
+
+export function delAllInfo() {
+  return request({
+    url: 'api/logs/del/info',
+    method: 'delete'
+  })
+}
