@@ -96,7 +96,8 @@
 
 <script>
 import crud from '@/mixins/crud'
-import { crudServer, testConnect } from '@/api/mnt/serverDeploy'
+import crudServer from '@/api/mnt/serverDeploy'
+import { testServerConnect } from '@/api/mnt/connect'
 import { validateIP } from '@/utils/validate'
 export default {
   mixins: [crud],
@@ -141,7 +142,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          testConnect(this.form).then((res) => {
+          testServerConnect(this.form).then((res) => {
             this.loading = false
             this.$notify({
               title: res ? '连接成功' : '连接失败',

@@ -1,5 +1,6 @@
 const getters = {
   deployUploadApi: state => state.api.deployUploadApi,
+  databaseUploadApi: state => state.api.databaseUploadApi,
   size: state => state.app.size,
   sidebar: state => state.app.sidebar,
   device: state => state.app.device,
