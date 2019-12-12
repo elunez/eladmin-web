@@ -178,6 +178,10 @@ function CRUD(options) {
       if (editStatus === CRUD.STATUS.PREPARED) {
         callVmHook(crud, CRUD.HOOK.afterEditCancel, crud.form)
       }
+      // 清除表单验证
+      if (crud.findVM('form').$refs['form']) {
+        crud.findVM('form').$refs['form'].clearValidate()
+      }
     },
     /**
      * 提交新增/编辑
