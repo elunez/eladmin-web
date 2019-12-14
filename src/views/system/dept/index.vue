@@ -135,8 +135,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.crudMethod.edit(data).then(res => {
-          this.notify(this.dict.label.dept_status[val] + '成功', 'success')
+        crudDept.edit(data).then(res => {
+          this.crud.notify(this.dict.label.dept_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(err => {
           data.enabled = !data.enabled
           console.log(err.response.data.message)
