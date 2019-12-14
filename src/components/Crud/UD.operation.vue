@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button v-permission="permission.edit" size="mini" type="primary" icon="el-icon-edit" @click="crud.toEdit(data)" />
-    <el-popover v-model="pop" v-permission="permission.del" placement="top" width="180" trigger="manual">
+    <el-popover v-model="pop" v-permission="permission.del" placement="top" width="180" trigger="manual" @show="onPopoverShow" @hide="onPopoverHide">
       <p>确定删除本条数据吗？</p>
       <div style="text-align: right; margin: 0">
         <el-button size="mini" type="text" @click="doCancel">取消</el-button>
@@ -42,6 +42,17 @@ export default {
       if (data === this.data) {
         this.pop = false
       }
+    },
+    onPopoverShow() {
+      setTimeout(() => {
+        document.addEventListener('click', this.handleDocumentClick)
+      }, 0)
+    },
+    onPopoverHide() {
+      document.removeEventListener('click', this.handleDocumentClick)
+    },
+    handleDocumentClick(event) {
+      this.pop = false
     }
   }
 }

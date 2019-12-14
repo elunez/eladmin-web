@@ -80,6 +80,7 @@ import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
+
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '部门', url: 'api/dept', crudMethod: { ...crudDept }})
 const defaultForm = { id: null, name: null, pid: 1, enabled: 'true' }
@@ -109,7 +110,7 @@ export default {
     }
   },
   methods: {
-    // 打开新增与编辑弹窗前做的操作
+    // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       form.enabled = `${form.enabled}`
       // 获取所有部门

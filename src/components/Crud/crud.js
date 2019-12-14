@@ -69,6 +69,12 @@ function CRUD(options) {
         return this.add > CRUD.STATUS.NORMAL ? `新增${crud.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${crud.title}` : crud.title
       }
     },
+    msg: {
+      submit: '提交成功',
+      add: '新增成功',
+      edit: '编辑成功',
+      del: '删除成功'
+    },
     page: {
       // 页码
       page: 0,
@@ -83,6 +89,21 @@ function CRUD(options) {
     downloadLoading: false
   }
   const methods = {
+    /**
+     * 通用的提示
+     */
+    submitSuccessNotify() {
+      crud.notify(crud.msg.submit, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    },
+    addSuccessNotify() {
+      crud.notify(crud.msg.add, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    },
+    editSuccessNotify() {
+      crud.notify(crud.msg.edit, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    },
+    delSuccessNotify() {
+      crud.notify(crud.msg.del, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    },
     // 搜索
     toQuery() {
       crud.page.page = 1
@@ -97,7 +118,7 @@ function CRUD(options) {
         crud.loading = true
         // 请求数据
         initData(crud.url, crud.getQueryParams()).then(data => {
-          crud.page.total = data.total
+          crud.page.total = data.totalElements
           crud.data = data.content
           crud.resetDataStatus()
           // time 毫秒后显示表格
@@ -218,10 +239,12 @@ function CRUD(options) {
       crud.crudMethod.add(crud.form).then(() => {
         crud.status.add = CRUD.STATUS.NORMAL
         crud.resetForm()
-        crud.notify('新增成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        crud.addSuccessNotify()
         callVmHook(crud, CRUD.HOOK.afterSubmit)
         crud.toQuery()
-      }).catch(() => {})
+      }).catch(() => {
+        callVmHook(crud, CRUD.HOOK.afterAddError)
+      })
     },
     /**
      * 执行编辑
@@ -234,10 +257,12 @@ function CRUD(options) {
         crud.status.edit = CRUD.STATUS.NORMAL
         crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
         crud.resetForm()
-        crud.notify('编辑成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        crud.editSuccessNotify()
         callVmHook(crud, CRUD.HOOK.afterSubmit)
         crud.refresh()
-      }).catch(() => {})
+      }).catch(() => {
+        callVmHook(crud, CRUD.HOOK.afterEditError)
+      })
     },
     /**
      * 执行删除
@@ -252,7 +277,7 @@ function CRUD(options) {
       return crud.crudMethod.del(data.id).then(() => {
         dataStatus.delete = CRUD.STATUS.NORMAL
         crud.dleChangePage(1)
-        crud.notify('删除成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        crud.delSuccessNotify()
         callVmHook(crud, CRUD.HOOK.afterDelete, data)
         crud.refresh()
       }).catch(() => {
@@ -638,7 +663,9 @@ CRUD.HOOK = {
   /** 提交 - 之前 */
   beforeSubmit: 'beforeCrudSubmitCU',
   /** 提交 - 之后 */
-  afterSubmit: 'afterCrudSubmitCU'
+  afterSubmit: 'afterCrudSubmitCU',
+  afterAddError: 'afterCrudAddError',
+  afterEditError: 'afterCrudEditError'
 }
 
 /**
