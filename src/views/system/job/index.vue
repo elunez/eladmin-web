@@ -36,7 +36,7 @@
       </el-table-column>
       <!--   编辑与删除   -->
       <el-table-column
-        v-permission="['ADMIN','USERJOB_ALL','USERJOB_EDIT','USERJOB_DELETE']"
+        v-permission="['admin','job:edit','job:del']"
         label="操作"
         width="130px"
         align="center"
@@ -85,7 +85,7 @@ export default {
       permission: {
         add: ['admin', 'job:add'],
         edit: ['admin', 'job:edit'],
-        delete: ['admin', 'job:delete']
+        del: ['admin', 'job:del']
       }
     }
   },

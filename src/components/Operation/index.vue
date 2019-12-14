@@ -1,8 +1,9 @@
+<!--增删改查-->
 <template>
   <div class="crud-opts">
     <span class="crud-opts-left">
       <el-button
-        v-permission="permission.add"
+        v-permission="parent.permission.add"
         class="filter-item"
         size="mini"
         type="primary"
@@ -12,7 +13,7 @@
         新增
       </el-button>
       <el-button
-        v-permission="permission.edit"
+        v-permission="parent.permission.edit"
         class="filter-item"
         size="mini"
         type="success"
@@ -24,23 +25,23 @@
       </el-button>
       <el-button
         slot="reference"
-        v-permission="permission.delete"
+        v-permission="parent.permission.del"
         class="filter-item"
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :disabled="crud.selections.length === 0"
+        :disabled="parent.selections.length === 0"
         @click="toDelete(crud.selections)"
       >
         删除
       </el-button>
       <el-button
-        :loading="crud.downloadLoading"
+        :loading="parent.downloadLoading"
         class="filter-item"
         size="mini"
         type="warning"
         icon="el-icon-download"
-        @click="crud.doExport"
+        @click="parent.doExport"
       >导出</el-button>
     </span>
     <el-button-group class="crud-opts-right">
@@ -72,7 +73,7 @@
           />
         </el-button>
         <el-checkbox
-          v-for="item in crud.props.tableColumns"
+          v-for="item in parent.tableColumns"
           :key="item.label"
           v-model="item.visible"
         >
@@ -83,11 +84,9 @@
   </div>
 </template>
 <script>
-import { crud } from '@crud/crud'
 export default {
-  mixins: [crud()],
   props: {
-    permission: {
+    parent: {
       type: Object,
       required: true
     }
@@ -97,7 +96,7 @@ export default {
     }
   },
   created() {
-    this.crud.updateProp('searchToggle', true)
+    this.parent.updateProp('searchToggle', true)
   },
   methods: {
     toDelete(datas) {

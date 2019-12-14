@@ -4,7 +4,6 @@ export default {
   inserted(el, binding, vnode) {
     const { value } = binding
     const roles = store.getters && store.getters.roles
-
     if (value && value instanceof Array && value.length > 0) {
       const permissionRoles = value
 
@@ -16,7 +15,7 @@ export default {
         el.parentNode && el.parentNode.removeChild(el)
       }
     } else {
-      throw new Error(`need roles! Like v-permission="['admin','editor']"`)
+      throw new Error(`使用方式： v-permission="['admin','editor']"`)
     }
   }
 }

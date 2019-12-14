@@ -121,6 +121,8 @@ function CRUD(options) {
       }
       crud.resetForm()
       crud.status.add = CRUD.STATUS.PREPARED
+      callVmHook(crud, CRUD.HOOK.afterToAdd, crud.form)
+      callVmHook(crud, CRUD.HOOK.afterToCU, crud.form)
     },
     /**
      * 启动编辑
@@ -133,6 +135,8 @@ function CRUD(options) {
       crud.resetForm(JSON.parse(JSON.stringify(data)))
       crud.status.edit = CRUD.STATUS.PREPARED
       crud.getDataStatus(data.id).edit = CRUD.STATUS.PREPARED
+      callVmHook(crud, CRUD.HOOK.afterToEdit, crud.form)
+      callVmHook(crud, CRUD.HOOK.afterToCU, crud.form)
     },
     /**
      * 启动删除
@@ -334,12 +338,18 @@ function CRUD(options) {
      */
     resetDataStatus() {
       const dataStatus = {}
-      crud.data.forEach(e => {
-        dataStatus[e.id] = {
-          delete: 0,
-          edit: 0
-        }
-      })
+      function resetStatus(datas) {
+        datas.forEach(e => {
+          dataStatus[e.id] = {
+            delete: 0,
+            edit: 0
+          }
+          if (e.children) {
+            resetStatus(e.children)
+          }
+        })
+      }
+      resetStatus(crud.data)
       crud.dataStatus = dataStatus
     },
     /**
@@ -350,7 +360,7 @@ function CRUD(options) {
       return crud.dataStatus[id]
     },
     findVM(type) {
-      return crud.vms.find(vm => vm.type === type).vm
+      return crud.vms.find(vm => vm && vm.type === type).vm
     },
     notify(title, type = CRUD.NOTIFICATION_TYPE.INFO) {
       crud.vms[0].vm.$notify({
@@ -396,7 +406,7 @@ function CRUD(options) {
      * @param {*} vm 组件实例
      */
     unregisterVM(vm) {
-      this.vms.splice(this.vms.findIndex(e => e.vm === vm), 1)
+      this.vms.splice(this.vms.findIndex(e => e && e.vm === vm), 1)
     }
   })
   // 冻结处理，需要扩展数据的话，使用crud.updateProp(name, value)，以crud.props.name形式访问，这个是响应式的，可以做数据绑定
@@ -414,10 +424,11 @@ function callVmHook(crud, hook) {
   for (let i = 2; i < arguments.length; ++i) {
     nargs.push(arguments[i])
   }
-  crud.vms.forEach(({
-    vm
-  }) => {
-    if (vm && vm[hook]) {
+  // 有些组件扮演了多个角色，调用钩子时，需要去重
+  const vmSet = new Set()
+  crud.vms.forEach(vm => vm && vmSet.add(vm.vm))
+  vmSet.forEach(vm => {
+    if (vm[hook]) {
       ret = vm[hook].apply(vm, nargs) !== false && ret
     }
   })
@@ -602,10 +613,16 @@ CRUD.HOOK = {
   afterDeleteCancel: 'afterCrudDeleteCancel',
   /** 新建 - 之前 */
   beforeToAdd: 'beforeCrudToAdd',
+  /** 新建 - 之后 */
+  afterToAdd: 'afterCrudToAdd',
   /** 编辑 - 之前 */
   beforeToEdit: 'beforeCrudToEdit',
+  /** 编辑 - 之后 */
+  afterToEdit: 'afterCrudToEdit',
   /** 开始 "新建/编辑" - 之前 */
   beforeToCU: 'beforeCrudToCU',
+  /** 开始 "新建/编辑" - 之后 */
+  afterToCU: 'afterCrudToCU',
   /** "新建/编辑" 验证 - 之前 */
   beforeValidateCU: 'beforeCrudValidateCU',
   /** "新建/编辑" 验证 - 之后 */
