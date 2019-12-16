@@ -53,4 +53,12 @@ export function editMenu(data) {
   })
 }
 
-export default { add, edit, del, get, editMenu }
+export function delAll(ids) {
+  return request({
+    url: 'api/roles/',
+    method: 'delete',
+    data: ids
+  })
+}
+
+export default { add, edit, del, get, editMenu, delAll }

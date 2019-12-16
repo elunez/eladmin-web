@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :append-to-body="true" :close-on-click-modal="false" :visible.sync="dialog" title="系统还原" width="800px">
+  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="系统还原" width="800px">
     <!--工具栏-->
     <div class="head-container">
       <el-date-picker

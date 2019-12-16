@@ -56,5 +56,13 @@ export function updateEmail(form) {
   })
 }
 
-export default { add, edit, del }
+export function delAll(ids) {
+  return request({
+    url: 'api/users/',
+    method: 'delete',
+    data: ids
+  })
+}
+
+export default { add, edit, del, delAll }
 

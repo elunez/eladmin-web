@@ -38,6 +38,13 @@ function CRUD(options) {
       edit: (form) => {},
       get: (id) => {}
     },
+    // 主页操作栏显示哪些按钮
+    optShow: {
+      add: true,
+      edit: true,
+      del: true,
+      download: true
+    },
     // 自定义一些扩展属性
     props: {},
     // 在主页准备
@@ -86,7 +93,9 @@ function CRUD(options) {
     // 整体loading
     loading: true,
     // 导出的 Loading
-    downloadLoading: false
+    downloadLoading: false,
+    // 删除的 Loading
+    delAllLoading: false
   }
   const methods = {
     /**
@@ -150,10 +159,10 @@ function CRUD(options) {
      * @param {*} data 数据项
      */
     toEdit(data) {
+      crud.resetForm(JSON.parse(JSON.stringify(data)))
       if (!(callVmHook(crud, CRUD.HOOK.beforeToEdit, crud.form) && callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form))) {
         return
       }
-      crud.resetForm(JSON.parse(JSON.stringify(data)))
       crud.status.edit = CRUD.STATUS.PREPARED
       crud.getDataStatus(data.id).edit = CRUD.STATUS.PREPARED
       callVmHook(crud, CRUD.HOOK.afterToEdit, crud.form)
@@ -280,8 +289,33 @@ function CRUD(options) {
         crud.delSuccessNotify()
         callVmHook(crud, CRUD.HOOK.afterDelete, data)
         crud.refresh()
+        crud.delAllLoading = false
       }).catch(() => {
+        crud.delAllLoading = false
         dataStatus.delete = CRUD.STATUS.PREPARED
+      })
+    },
+    /**
+     * 删除多条记录
+     * @param datas
+     * @returns {Promise<T>}
+     */
+    doDeletes(datas) {
+      const ids = []
+      datas.forEach(val => {
+        ids.push(val.id)
+      })
+      if (!callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
+        return
+      }
+      return crud.crudMethod.delAll(ids).then(() => {
+        crud.dleChangePage(1)
+        crud.delSuccessNotify()
+        callVmHook(crud, CRUD.HOOK.afterDelete, data)
+        crud.delAllLoading = false
+        crud.refresh()
+      }).catch(() => {
+        crud.delAllLoading = false
       })
     },
     /**
@@ -383,6 +417,56 @@ function CRUD(options) {
      */
     getDataStatus(id) {
       return crud.dataStatus[id]
+    },
+    /**
+     * 用于树形表格多选, 选中所有
+     * @param selection
+     */
+    selectAllChange(selection) {
+      // 如果选中的数目与请求到的数目相同就选中子节点，否则就清空选中
+      if (selection && selection.length === crud.data.length) {
+        selection.forEach(val => {
+          crud.selectChange(selection, val)
+        })
+      } else {
+        crud.findVM('presenter').$refs['table'].clearSelection()
+      }
+    },
+    /**
+     * 用于树形表格多选，单选的封装
+     * @param selection
+     * @param row
+     */
+    selectChange(selection, row) {
+      // 如果selection中存在row代表是选中，否则是取消选中
+      if (selection.find(val => { return val.id === row.id })) {
+        if (row.children) {
+          row.children.forEach(val => {
+            crud.findVM('presenter').$refs['table'].toggleRowSelection(val, true)
+            selection.push(val)
+            if (val.children) {
+              crud.selectChange(selection, val)
+            }
+          })
+        }
+      } else {
+        crud.toggleRowSelection(selection, row)
+      }
+    },
+    /**
+     * 切换选中状态
+     * @param selection
+     * @param data
+     */
+    toggleRowSelection(selection, data) {
+      if (data.children) {
+        data.children.forEach(val => {
+          crud.findVM('presenter').$refs['table'].toggleRowSelection(val, false)
+          if (val.children) {
+            crud.toggleRowSelection(selection, val)
+          }
+        })
+      }
     },
     findVM(type) {
       return crud.vms.find(vm => vm && vm.type === type).vm

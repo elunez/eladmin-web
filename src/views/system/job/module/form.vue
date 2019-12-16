@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :append-to-body="true"
+    append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"

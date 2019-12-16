@@ -43,7 +43,7 @@
       size="mini"
       class="filter-item"
       icon="el-icon-delete"
-    >清空数据</el-button>
+    >清空</el-button>
     <el-popover ref="del_all" placement="top" width="200" trigger="click">
       <p>确定删除所有数据吗？</p>
       <div style="text-align: right; margin: 0">

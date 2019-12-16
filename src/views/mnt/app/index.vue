@@ -36,7 +36,7 @@
       >复制新增</el-button>
     </div>
     <!--表单组件-->
-    <el-dialog :append-to-body="true" :close-on-click-modal="false" :visible.sync="dialog" :title="getFormTitle()" width="800px">
+    <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" :title="getFormTitle()" width="800px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="应用名称" prop="name">
           <el-input v-model="form.name" style="width: 670px" placeholder="部署后的文件或者目录名称，用于备份" />

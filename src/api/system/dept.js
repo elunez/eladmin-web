@@ -31,4 +31,12 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getDepts }
+export function delAll(ids) {
+  return request({
+    url: 'api/dept/',
+    method: 'delete',
+    data: ids
+  })
+}
+
+export default { add, edit, del, getDepts, delAll }

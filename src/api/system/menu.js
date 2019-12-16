@@ -37,4 +37,12 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getMenusTree }
+export function delAll(ids) {
+  return request({
+    url: 'api/menus/',
+    method: 'delete',
+    data: ids
+  })
+}
+
+export default { add, edit, del, getMenusTree, delAll }

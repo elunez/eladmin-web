@@ -1,7 +1,10 @@
 <template>
   <div class="crud-opts">
     <span class="crud-opts-left">
+      <!--左侧插槽-->
+      <slot name="left" />
       <el-button
+        v-if="crud.optShow.add"
         v-permission="permission.add"
         class="filter-item"
         size="mini"
@@ -12,6 +15,7 @@
         新增
       </el-button>
       <el-button
+        v-if="crud.optShow.edit"
         v-permission="permission.edit"
         class="filter-item"
         size="mini"
@@ -23,18 +27,21 @@
         修改
       </el-button>
       <el-button
+        v-if="crud.optShow.del"
         slot="reference"
         v-permission="permission.del"
         class="filter-item"
         type="danger"
         icon="el-icon-delete"
         size="mini"
+        :loading="crud.delAllLoading"
         :disabled="crud.selections.length === 0"
         @click="toDelete(crud.selections)"
       >
         删除
       </el-button>
       <el-button
+        v-if="crud.optShow.download"
         :loading="crud.downloadLoading"
         class="filter-item"
         size="mini"
@@ -42,6 +49,8 @@
         icon="el-icon-download"
         @click="crud.doExport"
       >导出</el-button>
+      <!--右侧-->
+      <slot name="right" />
     </span>
     <el-button-group class="crud-opts-right">
       <el-button
@@ -97,7 +106,7 @@ export default {
   props: {
     permission: {
       type: Object,
-      required: true
+      default: null
     }
   },
   data() {
@@ -116,6 +125,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.crud.delAllLoading = true
         if (datas.length === 1) {
           this.crud.doDelete(datas[0])
         } else {
