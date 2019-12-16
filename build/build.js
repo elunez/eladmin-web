@@ -1,4 +1,4 @@
-'use strict'
+//'use strict'
 require('./check-versions')()
 
 const ora = require('ora')

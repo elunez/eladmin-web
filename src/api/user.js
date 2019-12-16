@@ -1,5 +1,11 @@
 import request from '@/utils/request'
-
+// 获取所有的User
+export function getAllUser() {
+  return request({
+    url: 'api/users/all',
+    method: 'get'
+  })
+}
 export function add(data) {
   return request({
     url: 'api/users',

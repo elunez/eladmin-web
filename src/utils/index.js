@@ -20,7 +20,23 @@ export function parseTime(time) {
     return ''
   }
 }
-
+/*年月日*/
+export function parseTimeYMD(time) {
+  if (time) {
+    var date = new Date(time)
+    var year = date.getFullYear()
+    /* 在日期格式中，月份是从0开始的，因此要加0
+     * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+     * */
+    var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+    var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+    var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+    // 拼接
+    return year + '-' + month + '-' + day;
+  } else {
+    return ''
+  }
+}
 export function formatTime(time, option) {
   time = +time * 1000
   const d = new Date(time)
@@ -159,3 +175,102 @@ export function downloadFile(obj, name, suffix) {
   link.click()
   document.body.removeChild(link)
 }
+
+
+export  function deepClone(item){
+  const target = item.constructor === Array ? [] : {}; // 判断复制的目标是数组还是对象
+  for(let keys in item){ // 遍历目标
+    if(item.hasOwnProperty(keys)){
+      if(item[keys] && typeof item[keys] === 'object'){ // 如果值是对象，就递归一下
+        target[keys] = item[keys].constructor === Array ? [] : {};
+        target[keys] = deepClone(item[keys]);
+      }else{ // 如果不是，就直接赋值
+        target[keys] = item[keys];
+      }
+    }
+  }
+  return target;
+}
+export  function arrToString(arr){
+  if(arr.length){
+    var data =arr[0];
+    for(var i = 1;i<arr.length;i++){
+      data = data+','+arr[i];
+    }
+    return data;
+  }
+  return '';
+}
+
+export function dictValueFindLabel(dict,value) {
+   if(dict){
+      var label = '';
+      for(var i=0;i<dict.length;i++){
+         if(dict[i].value === value){
+            label = dict[i].label;
+         }
+      }
+      return label;
+   }
+}
+
+export function stringSplitHaveDict(val,dict) {
+  var data = '';
+  if(val.length){
+    var dataArr = val.split(',');
+    data = dictValueFindLabel(dict,dataArr[0])
+    for(var i = 1; i<dataArr.length;i++){
+      data = data+','+dictValueFindLabel(dict,dataArr[i]);
+    }
+  }
+  return data;
+}
+
+export const formatDate = (date, fmt = 'yyyy/MM/dd') => {
+  if (!date) date = new Date()
+  if (typeof date === 'string') {
+    date = new Date(date.replace(/(\d{4})[^\d]?(\d{2})[^\d]?(\d{2})[^\d]?/, '$1-$2-$3'))
+  }
+  var o = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds(),
+    'q+': Math.floor((date.getMonth() + 3) / 3),
+    'S': date.getMilliseconds()
+  }
+  var week = {
+    '0': '\u65e5',
+    '1': '\u4e00',
+    '2': '\u4e8c',
+    '3': '\u4e09',
+    '4': '\u56db',
+    '5': '\u4e94',
+    '6': '\u516d'
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+  if (/(E+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? '\u661f\u671f' : '\u5468') : '') + week[date.getDay() + ''])
+  }
+  for (const k in o) {
+    if (new RegExp('(' + k + ')').test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+    }
+  }
+  return fmt
+};
+
+export const yearMonthDate = (date, fmt = 'yyyy/MM/dd') => {
+  if (!date) date = new Date();
+  if (typeof date === 'string') {
+    date = new Date(date.replace(/(\d{4})[^\d]?(\d{2})[^\d]?(\d{2})[^\d]?/, '$1-$2-$3'))
+  }
+  var  month = date.getMonth() + 1;
+  var year=date.getFullYear();
+  month =(month<10 ? "0"+month:month);
+  var mydate = (year.toString()+"-"+month.toString());
+  return mydate
+};

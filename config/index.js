@@ -1,4 +1,4 @@
-'use strict'
+//'use strict'
 // Template version: 1.2.6
 const devEnv = require('./dev.env')
 // 获取接口地址

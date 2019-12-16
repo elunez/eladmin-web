@@ -1,9 +1,9 @@
 import { initData } from '@/api/data'
-
+import { Loading } from 'element-ui';
 export default {
   data() {
     return {
-      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 50, isAdd: false, downloadLoading: false
+      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 50, isAdd: false,operate:'', downloadLoading: false,loadingInstance:null
     }
   },
   methods: {
@@ -50,6 +50,14 @@ export default {
     toQuery() {
       this.page = 0
       this.init()
+    },
+    openFullScreen(name) {
+      this.loadingInstance = Loading.service({
+        lock: true,
+        text: '正在导出'+name+'Execl...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
     }
   }
 }

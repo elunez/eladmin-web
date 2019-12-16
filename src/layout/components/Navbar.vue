@@ -4,11 +4,11 @@
     <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <Github class="screenfull right-menu-item"/>
-        </el-tooltip>
-      </template>
+<!--      <template v-if="device!=='mobile'">-->
+<!--        <el-tooltip content="源码地址" effect="dark" placement="bottom">-->
+<!--          <Github class="screenfull right-menu-item"/>-->
+<!--        </el-tooltip>-->
+<!--      </template>-->
       <template v-if="device!=='mobile'">
         <el-tooltip content="全屏" effect="dark" placement="bottom">
           <screenfull class="screenfull right-menu-item"/>
@@ -20,11 +20,11 @@
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <a target="_blank" href="https://docs.auauz.net/">
-            <el-dropdown-item>
-              项目文档
-            </el-dropdown-item>
-          </a>
+<!--          <a target="_blank" href="https://docs.auauz.net/">-->
+<!--            <el-dropdown-item>-->
+<!--              项目文档-->
+<!--            </el-dropdown-item>-->
+<!--          </a>-->
           <span style="display:block;" @click="show = true">
             <el-dropdown-item>
               布局设置

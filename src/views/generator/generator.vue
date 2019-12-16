@@ -37,6 +37,11 @@
               </el-select>
             </template>
           </el-table-column>
+          <el-table-column prop="dictName" label="字典值">
+            <template slot-scope="scope">
+              <el-input v-model="data[scope.$index].dictName" class="edit-input"/>
+            </template>
+          </el-table-column>
           <el-table-column align="center" prop="columnShow" label="列表显示">
             <template slot-scope="scope">
               <el-tooltip :content="scope.row.columnShow === 'true' ?'显示':'不显示'" placement="top">

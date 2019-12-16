@@ -10,20 +10,26 @@ export default class Dict {
     if (names === undefined || name === null) {
       throw new Error('need Dict names')
     }
-    const ps = []
-    names.forEach(n => {
-      Vue.set(this.dict.dict, n, {})
-      Vue.set(this.dict.label, n, {})
-      Vue.set(this.dict, n, [])
-      ps.push(getDictDetail(n).then(data => {
-        this.dict[n].splice(0, 0, ...data.content)
-        data.content.forEach(d => {
-          Vue.set(this.dict.dict[n], d.value, d)
-          Vue.set(this.dict.label[n], d.value, d.label)
-        })
-      }))
-    })
-    await Promise.all(ps)
-    completeCallback()
+    if(names.length == 1 && names[0]==='ALL'){
+      getDictDetail('ALL').then(data=>{
+        Object.assign(this.dict,data);
+      })
+    }else {
+      const ps = [];
+      names.forEach(n => {
+        Vue.set(this.dict.dict, n, {})
+        Vue.set(this.dict.label, n, {})
+        Vue.set(this.dict, n, [])
+        ps.push(getDictDetail(n).then(data => {
+          this.dict[n].splice(0, 0, ...data.content)
+          data.content.forEach(d => {
+            Vue.set(this.dict.dict[n], d.value, d)
+            Vue.set(this.dict.label[n], d.value, d.label)
+          })
+        }))
+      })
+      await Promise.all(ps);
+      completeCallback()
+    }
   }
 }
