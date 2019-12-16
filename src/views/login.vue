@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" style="background-image:url(https://api.isoyu.com/bing_images.php)">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
         EL-ADMIN 后台管理系统
@@ -147,7 +147,6 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(	https://docs-1255840532.cos.ap-shanghai.myqcloud.com/3968.jpg );
     background-size: cover;
   }
   .title {
