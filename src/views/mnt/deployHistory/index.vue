@@ -2,17 +2,21 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <!-- 搜索 -->
-      <el-input v-model="query.blurry" clearable placeholder="输入搜索内容" style="width: 200px" class="filter-item" @keyup.enter.native="toQuery" />
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+        <el-input v-model="query.blurry" clearable placeholder="输入搜索内容" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <rrOperation :crud="crud" />
+      </div>
+      <crudOperation :permission="permission" />
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" style="width: 100%">
-      <el-table-column prop="appName" label="应用名称" />
-      <el-table-column prop="ip" label="部署IP" />
-      <el-table-column prop="deployDate" label="部署时间" />
-      <el-table-column prop="deployUser" label="部署人员" />
-      <el-table-column v-if="checkPermission(['admin','deployHistory:del'])" label="操作" width="100px" align="center">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%" @selection-change="crud.selectionChangeHandler">
+      <el-table-column type="selection" width="55" />
+      <el-table-column v-if="columns.visible('appName')" prop="appName" label="应用名称" />
+      <el-table-column v-if="columns.visible('ip')" prop="ip" label="部署IP" />
+      <el-table-column v-if="columns.visible('deployDate')" prop="deployDate" label="部署时间" />
+      <el-table-column v-if="columns.visible('deployUser')" prop="deployUser" label="部署人员" />
+      <el-table-column v-permission="['admin','deployHistory:del']" label="操作" width="100px" align="center">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"
@@ -31,38 +35,51 @@
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
+    <pagination />
   </div>
 </template>
 
 <script>
-import crud from '@/mixins/crud'
 import { del } from '@/api/mnt/deployHistory'
-
+import CRUD, { presenter, header } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import pagination from '@crud/Pagination'
+// crud交由presenter持有
+const defaultCrud = CRUD({ title: '部署历史', url: 'api/deployHistory', crudMethod: { del }})
 export default {
-  mixins: [crud],
+  name: 'DeployHistory',
+  components: { pagination, crudOperation, rrOperation },
+  mixins: [presenter(defaultCrud), header()],
   data() {
     return {
-      title: '部署历史',
-      crudMethod: { del }
+      delLoading: false,
+      permission: {
+        del: ['admin', 'deployHistory:del']
+      }
     }
   },
   created() {
-    this.$nextTick(() => {
-      this.init()
-    })
+    this.crud.optShow = {
+      add: false,
+      edit: false,
+      del: true,
+      download: true
+    }
   },
   methods: {
-    beforeInit() {
-      this.url = 'api/deployHistory'
-      return true
+    delMethod(id) {
+      this.delLoading = true
+      del(id).then(() => {
+        this.delLoading = false
+        this.$refs[id].doClose()
+        this.crud.dleChangePage(1)
+        this.crud.delSuccessNotify()
+        this.crud.toQuery()
+      }).catch(() => {
+        this.delLoading = false
+        this.$refs[id].doClose()
+      })
     }
   }
 }

@@ -77,6 +77,7 @@ export default {
     }
   },
   created() {
+    this.crud.msg.del = '强退成功！'
     this.crud.optShow = {
       add: false,
       edit: false,
@@ -96,8 +97,8 @@ export default {
       del(key).then(() => {
         this.delLoading = false
         this.$refs[index].doClose()
-        this.dleChangePage()
-        this.notify('踢出成功', 'success')
+        this.crud.dleChangePage(1)
+        this.crud.delSuccessNotify()
         this.crud.toQuery()
       }).catch(() => {
         this.delLoading = false

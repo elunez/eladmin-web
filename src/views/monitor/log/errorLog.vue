@@ -1,8 +1,23 @@
 <template>
   <div class="app-container">
-    <Search :query="query" />
+    <div class="head-container">
+      <Search />
+      <crudOperation>
+        <el-button
+          slot="left"
+          class="filter-item"
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :loading="crud.delAllLoading"
+          @click="confirmDelAll()"
+        >
+          清空
+        </el-button> v-if="columns.visible('username')"
+      </crudOperation>
+    </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" style="width: 100%;">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
@@ -15,17 +30,17 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="requestIp" label="IP" />
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
-      <el-table-column prop="description" label="描述" />
-      <el-table-column prop="browser" label="浏览器" />
-      <el-table-column prop="createTime" label="创建日期">
+      <el-table-column v-if="columns.visible('username')" prop="username" label="用户名" />
+      <el-table-column v-if="columns.visible('requestIp')" prop="requestIp" label="IP" />
+      <el-table-column v-if="columns.visible('address')" :show-overflow-tooltip="true" prop="address" label="IP来源" />
+      <el-table-column v-if="columns.visible('description')" prop="description" label="描述" />
+      <el-table-column v-if="columns.visible('browser')" prop="browser" label="浏览器" />
+      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="异常详情" width="100px">
+      <el-table-column label="异常详情" width="100px">
         <template slot-scope="scope">
           <el-button size="mini" type="text" @click="info(scope.row.id)">查看详情</el-button>
         </template>
@@ -35,42 +50,37 @@
       <pre v-highlightjs="errorInfo"><code class="java" /></pre>
     </el-dialog>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px;"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
+    <pagination />
   </div>
 </template>
 
 <script>
-import crud from '@/mixins/crud'
 import { getErrDetail, delAllError } from '@/api/monitor/log'
 import Search from './search'
+import CRUD, { presenter } from '@crud/crud'
+import crudOperation from '@crud/CRUD.operation'
+import pagination from '@crud/Pagination'
+
+// crud交由presenter持有
+const defaultCrud = CRUD({ title: '异常日志', url: 'api/logs/error' })
 export default {
   name: 'ErrorLog',
-  components: { Search },
-  mixins: [crud],
+  components: { Search, crudOperation, pagination },
+  mixins: [presenter(defaultCrud)],
   data() {
     return {
       errorInfo: '', dialog: false
     }
   },
   created() {
-    this.$nextTick(() => {
-      this.init()
-    })
+    this.crud.optShow = {
+      add: false,
+      edit: false,
+      del: false,
+      download: true
+    }
   },
   methods: {
-    // 获取数据前设置好接口地址
-    beforeInit() {
-      this.url = 'api/logs/error'
-      this.params['logType'] = 'ERROR'
-      return true
-    },
     // 获取异常详情
     info(id) {
       this.dialog = true
@@ -79,29 +89,22 @@ export default {
       })
     },
     confirmDelAll() {
-      this.delAllLoading = true
-      delAllError().then(res => {
-        this.delAllLoading = false
-        this.$children.forEach(children => {
-          if (children.$refs.del_all) {
-            children.$refs.del_all.doClose()
-          }
+      this.$confirm(`确认清空所有异常日志吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.crud.delAllLoading = true
+        delAllError().then(res => {
+          this.crud.delAllLoading = false
+          this.crud.dleChangePage(1)
+          this.crud.delSuccessNotify()
+          this.crud.toQuery()
+        }).catch(err => {
+          this.crud.delAllLoading = false
+          console.log(err.response.data.message)
         })
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delAllLoading = false
-        this.$children.forEach(children => {
-          if (children.$refs.del_all) {
-            children.$refs.del_all.doClose()
-          }
-        })
-        console.log(err.response.data.message)
+      }).catch(() => {
       })
     }
   }

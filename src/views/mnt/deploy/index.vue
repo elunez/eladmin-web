@@ -2,78 +2,79 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <!-- 搜索 -->
-      <el-input v-model="query.appName" clearable placeholder="输入应用名称查询" style="width: 200px" class="filter-item" @keyup.enter.native="toQuery" />
-      <el-date-picker
-        v-model="query.createTime"
-        :default-time="['00:00:00','23:59:59']"
-        type="daterange"
-        range-separator=":"
-        size="small"
-        class="date-item"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
-      <!-- 新增 -->
-      <el-button
-        v-permission="['admin','deploy:add']"
-        class="filter-item"
-        size="mini"
-        type="primary"
-        icon="el-icon-plus"
-        @click="showAddFormDialog"
-      >新增
-      </el-button>
-      <el-button
-        v-permission="['admin','deploy:add']"
-        class="filter-item"
-        size="mini"
-        type="primary"
-        icon="el-icon-upload"
-        @click="sysRestore"
-      >系统还原
-      </el-button>
-      <el-button
-        v-permission="['admin','deploy:add']"
-        class="filter-item"
-        size="mini"
-        type="primary"
-        icon="el-icon-upload"
-        @click="serverStatus"
-      >状态查询
-      </el-button>
-      <el-button
-        v-permission="['admin','deploy:add']"
-        class="filter-item"
-        size="mini"
-        type="success"
-        icon="el-icon-upload"
-        @click="startServer"
-      >启动
-      </el-button>
-      <el-button
-        v-permission="['admin','deploy:add']"
-        class="filter-item"
-        size="mini"
-        type="danger"
-        icon="el-icon-upload"
-        @click="stopServer"
-      >停止
-      </el-button>
-      <el-button
-        v-permission="['admin','deploy:add']"
-        class="filter-item"
-        size="mini"
-        type="warning"
-        icon="el-icon-upload"
-        @click="deploy"
-      >一键部署
-      </el-button>
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+        <el-input v-model="query.appName" clearable placeholder="输入应用名称查询" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-date-picker
+          v-model="query.createTime"
+          :default-time="['00:00:00','23:59:59']"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="date-item"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        />
+        <rrOperation :crud="crud" />
+      </div>
+      <crudOperation :permission="permission">
+        <template slot="right">
+          <el-button
+            v-permission="['admin','deploy:add']"
+            :disabled="!selectIndex"
+            class="filter-item"
+            size="mini"
+            type="primary"
+            icon="el-icon-upload"
+            @click="sysRestore"
+          >系统还原
+          </el-button>
+          <el-button
+            v-permission="['admin','deploy:add']"
+            :disabled="!selectIndex"
+            class="filter-item"
+            size="mini"
+            type="primary"
+            icon="el-icon-upload"
+            @click="serverStatus"
+          >状态查询
+          </el-button>
+          <el-button
+            v-permission="['admin','deploy:add']"
+            :disabled="!selectIndex"
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-upload"
+            @click="startServer"
+          >启动
+          </el-button>
+          <el-button
+            v-permission="['admin','deploy:add']"
+            :disabled="!selectIndex"
+            class="filter-item"
+            size="mini"
+            type="danger"
+            icon="el-icon-upload"
+            @click="stopServer"
+          >停止
+          </el-button>
+          <el-button
+            v-permission="['admin','deploy:add']"
+            :disabled="!selectIndex"
+            class="filter-item"
+            size="mini"
+            type="warning"
+            icon="el-icon-upload"
+            @click="deploy"
+          >一键部署
+          </el-button>
+        </template>
+      </crudOperation>
     </div>
     <!--表单组件-->
-    <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" :title="getFormTitle()" width="500px">
+    <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="应用" prop="app.id">
           <el-select v-model.number="form.app.id" placeholder="请选择" style="width: 370px">
@@ -87,78 +88,60 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="cancel">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--统还原组件-->
     <fForm ref="sysRestore" :key="times" :app-name="appName" />
     <dForm ref="deploy" />
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" highlight-current-row stripe style="width: 100%" @current-change="handleCurrentChange">
-      <el-table-column prop="app.name" label="应用名称" />
-      <el-table-column prop="servers" label="服务器列表" />
-      <el-table-column prop="createTime" label="创建日期">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
+      <el-table-column type="selection" width="55" />
+      <el-table-column v-if="columns.visible('app.name')" prop="app.name" label="应用名称" />
+      <el-table-column v-if="columns.visible('servers')" prop="servers" label="服务器列表" />
+      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['admin','deploy:edit','deploy:del'])" label="操作" width="150px" align="center">
+      <el-table-column v-permission="['admin','deploy:edit','deploy:del']" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','deploy:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
-          <el-popover
-            :ref="scope.row.id"
-            v-permission="['admin','deploy:del']"
-            placement="top"
-            width="180"
-          >
-            <p>确定删除本条数据吗？</p>
-            <div style="text-align: right;margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
-            </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
-          </el-popover>
+          <udOperation
+            :data="scope.row"
+            :permission="permission"
+          />
         </template>
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
+    <pagination />
   </div>
 </template>
 
 <script>
-import crud from '@/mixins/crud'
 import crudDeploy from '@/api/mnt/deploy'
 import dForm from './deploy'
 import fForm from './sysRestore'
+import CRUD, { presenter, header, form, crud } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
+// crud交由presenter持有
+const defaultCrud = CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+const defaultForm = { id: null, app: { id: null }, deploys: [] }
 export default {
-  components: { dForm, fForm },
-  mixins: [crud],
+  components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation },
+  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
   data() {
     return {
-      title: '部署',
-      crudMethod: { ...crudDeploy },
-      currentRow: {},
-      selectIndex: '',
-      appName: '',
-      urlHistory: '',
-      times: 0,
-      appId: '',
-      deployId: '',
-      apps: [],
-      servers: [],
-      form: {
-        id: null,
-        app: { id: null },
-        deploys: []
+      currentRow: {}, selectIndex: '', appName: '', urlHistory: '',
+      times: 0, appId: '', deployId: '', apps: [], servers: [],
+      permission: {
+        add: ['admin', 'deploy:add'],
+        edit: ['admin', 'deploy:edit'],
+        del: ['admin', 'deploy:del']
       },
       rules: {
         'app.id': [
@@ -170,32 +153,22 @@ export default {
       }
     }
   },
-  created() {
-    this.$nextTick(() => {
-      this.init()
-    })
-  },
   methods: {
-    beforeInit() {
-      this.url = 'api/deploy'
+    [CRUD.HOOK.beforeRefresh]() {
       this.selectIndex = ''
       return true
     },
-    // 打开新增弹窗前做的操作
-    beforeShowAddForm() {
-      this.initSelect()
-    },
-    // 打开编辑弹窗前做的操作
-    beforeShowEditForm(data) {
+    // 新增编辑前做的操作
+    [CRUD.HOOK.beforeToCU](crud, form) {
       this.initSelect()
       const deploys = []
-      data.deploys.forEach(function(deploy, index) {
+      form.deploys.forEach(function(deploy, index) {
         deploys.push(deploy.id)
       })
       this.form.deploys = deploys
     },
     // 提交前
-    beforeSubmitMethod() {
+    [CRUD.HOOK.beforeSubmit]() {
       const deploys = []
       this.form.deploys.forEach(function(data, index) {
         const deploy = { id: data }
@@ -205,19 +178,11 @@ export default {
       return true
     },
     deploy() {
-      if (!this.selectIndex) {
-        this.$message.error('请先选择服务')
-      } else {
-        this.$refs.deploy.dialog = true
-        this.$refs.deploy.deployInfo = this.currentRow
-      }
+      this.$refs.deploy.dialog = true
+      this.$refs.deploy.deployInfo = this.currentRow
     },
     sysRestore() {
-      if (!this.selectIndex) {
-        this.$message.error('请先选择服务')
-      } else {
-        this.$refs.sysRestore.dialog = true
-      }
+      this.$refs.sysRestore.dialog = true
     },
     handleCurrentChange(row) {
       this.currentRow = row
@@ -228,46 +193,34 @@ export default {
       this.deployId = !row ? null : row.id
     },
     startServer() {
-      if (!this.selectIndex) {
-        this.$message.error('请先选择服务')
-      } else {
-        this.crudMethod.startServer(JSON.stringify(this.currentRow))
-          .then(res => {
-          })
-          .catch(err => {
-            console.log('error:' + err.response.data.message)
-          })
-      }
+      crudDeploy.startServer(JSON.stringify(this.currentRow))
+        .then(res => {
+        })
+        .catch(err => {
+          console.log('error:' + err.response.data.message)
+        })
     },
     stopServer() {
-      if (!this.selectIndex) {
-        this.$message.error('请先选择服务')
-      } else {
-        this.crudMethod.stopServer(JSON.stringify(this.currentRow))
-          .then(res => {
-          })
-          .catch(err => {
-            console.log('error:' + err.response.data.message)
-          })
-      }
+      crudDeploy.stopServer(JSON.stringify(this.currentRow))
+        .then(res => {
+        })
+        .catch(err => {
+          console.log('error:' + err.response.data.message)
+        })
     },
     serverStatus() {
-      if (!this.selectIndex) {
-        this.$message.error('请先选择服务')
-      } else {
-        this.crudMethod.serverStatus(JSON.stringify(this.currentRow))
-          .then(res => {
-          })
-          .catch(err => {
-            console.log('error:' + err.response.data.message)
-          })
-      }
+      crudDeploy.serverStatus(JSON.stringify(this.currentRow))
+        .then(res => {
+        })
+        .catch(err => {
+          console.log('error:' + err.response.data.message)
+        })
     },
     initSelect() {
-      this.crudMethod.getApps().then(res => {
+      crudDeploy.getApps().then(res => {
         this.apps = res.content
       })
-      this.crudMethod.getServers().then(res => {
+      crudDeploy.getServers().then(res => {
         this.servers = res.content
       })
     }

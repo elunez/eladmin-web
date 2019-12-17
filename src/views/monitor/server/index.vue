@@ -2,31 +2,15 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <!-- 搜索 -->
-      <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者服务地址" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
-      <!-- 新增 -->
-      <el-button
-        v-permission="['admin','server:add']"
-        class="filter-item"
-        size="mini"
-        type="primary"
-        icon="el-icon-plus"
-        @click="showAddFormDialog"
-      >新增
-      </el-button>
-      <!-- 刷新 -->
-      <el-button
-        size="mini"
-        class="filter-item"
-        type="warning"
-        icon="el-icon-refresh"
-        @click="toQuery"
-      >刷新
-      </el-button>
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+        <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者服务地址" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <rrOperation :crud="crud" />
+      </div>
+      <crudOperation :permission="permission" />
     </div>
     <!--表单组件-->
-    <el-dialog append-to-body :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="getFormTitle()" width="500px">
+    <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
       <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" style="width: 370px;" />
@@ -42,13 +26,14 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="cancel">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="submitMethod">确认</el-button>
+        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" style="width: 100%;">
-      <el-table-column label="状态" width="50px">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+      <el-table-column type="selection" width="55" />
+      <el-table-column v-if="columns.visible('state')" prop="state" label="状态" width="50px">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.state === '1' ? 'success' : 'info'"
@@ -59,12 +44,12 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="address" label="地址" />
-      <el-table-column prop="port" label="端口" width="80px" align="center" />
-      <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
-      <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center" />
-      <el-table-column label="物理内存" align="center">
+      <el-table-column v-if="columns.visible('name')" prop="name" label="名称" />
+      <el-table-column v-if="columns.visible('address')" prop="address" label="地址" />
+      <el-table-column v-if="columns.visible('port')" prop="port" label="端口" width="80px" align="center" />
+      <el-table-column v-if="columns.visible('cpuRate')" :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
+      <el-table-column v-if="columns.visible('cpuCore')" prop="cpuCore" label="CPU内核数" width="100px" align="center" />
+      <el-table-column v-if="columns.visible('memTotal')" prop="memTotal" label="物理内存" align="center">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="24">{{ formatMem(scope.row) }}</el-col>
@@ -76,7 +61,7 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column :formatter="formatDisk" label="磁盘使用情况" align="center">
+      <el-table-column v-if="columns.visible('diskTotal')" prop="diskTotal" :formatter="formatDisk" label="磁盘使用情况" align="center">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="24">{{ formatDisk(scope.row) }}</el-col>
@@ -88,7 +73,7 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column label="交换空间" align="center">
+      <el-table-column v-if="columns.visible('swapTotal')" prop="swapTotal" label="交换空间" align="center">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="24">{{ formatSwap(scope.row) }}</el-col>
@@ -100,62 +85,41 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['admin','server:edit','server:del'])" label="操作" width="150px" align="center">
+      <el-table-column v-permission="['admin','server:edit','server:del']" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','server:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
-          <el-popover
-            :ref="scope.row.id"
-            v-permission="['admin','server:del']"
-            placement="top"
-            width="180"
-          >
-            <p>确定删除本条数据吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
-            </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
-          </el-popover>
-        </template>
+          <udOperation
+            :data="scope.row"
+            :permission="permission"
+          />
+        </template> v-if="columns.visible('name')"
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px;"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
+    <pagination />
   </div>
 </template>
 
 <script>
-import crud from '@/mixins/crud'
 import crudServer from '@/api/monitor/server'
+import CRUD, { presenter, header, form, crud } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
+
+// crud交由presenter持有
+const defaultCrud = CRUD({ title: '监控', url: 'api/server', sort: 'sort,asc', crudMethod: { ...crudServer }})
+const defaultForm = { id: null, name: null, ip: null, port: 8777, state: null, cpuRate: null, cpuCore: null, memTotal: null, memUsed: null, diskTotal: null, diskUsed: null, swapTotal: null, swapUsed: null, sort: 999 }
 export default {
   name: 'ServerMonitor',
-  mixins: [crud],
+  components: { pagination, crudOperation, rrOperation, udOperation },
+  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
   data() {
     return {
-      title: '监控',
-      crudMethod: { ...crudServer },
-      form: {
-        id: null,
-        name: null,
-        ip: null,
-        port: 8777,
-        state: null,
-        cpuRate: null,
-        cpuCore: null,
-        memTotal: null,
-        memUsed: null,
-        diskTotal: null,
-        diskUsed: null,
-        swapTotal: null,
-        swapUsed: null,
-        sort: 999
+      permission: {
+        add: ['admin', 'server:add'],
+        edit: ['admin', 'server:edit'],
+        del: ['admin', 'server:del']
       },
       rules: {
         name: [
@@ -170,18 +134,7 @@ export default {
       }
     }
   },
-  created() {
-    this.$nextTick(() => {
-      this.init()
-    })
-  },
   methods: {
-    // 获取数据前设置好接口地址
-    beforeInit() {
-      this.url = 'api/server'
-      this.sort = 'sort,asc'
-      return true
-    },
     formatCpuRate(row, column) {
       const value = row.cpuRate
       if (!value) {

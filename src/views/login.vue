@@ -1,5 +1,5 @@
 <template>
-  <div class="login" style="background-image:url(https://api.isoyu.com/bing_images.php)">
+  <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
         EL-ADMIN 后台管理系统
@@ -19,7 +19,7 @@
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
-          <img :src="codeUrl" @click="getCode">
+          <img :src="codeUrl" alt="验证码" @click="getCode">
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
@@ -147,6 +147,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
+    background-image:url(https://api.isoyu.com/bing_images.php);
     background-size: cover;
   }
   .title {
