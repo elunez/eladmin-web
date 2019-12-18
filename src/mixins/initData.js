@@ -3,7 +3,20 @@ import { Loading } from 'element-ui';
 export default {
   data() {
     return {
-      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 50, isAdd: false,operate:'', downloadLoading: false,loadingInstance:null
+      loading: true,
+      data: [],
+      page: 0,
+      size: 10,
+      total: 0,
+      url: '',
+      params: {},
+      query: {},
+      time: 50,
+      isAdd: false,
+      operate:'',
+      downloadLoading: false,
+      loadingInstance:null,
+      rightClickRow:{}
     }
   },
   methods: {

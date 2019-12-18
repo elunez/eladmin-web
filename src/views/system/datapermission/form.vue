@@ -1,10 +1,10 @@
 <template>
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="operate" width="1000px">
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px" label-position="top">
+    <el-form ref="form" :model="form"  size="small" label-width="80px" label-position="top" :disabled="operate==='详情'">
       <el-row :gutter="8">
-         <el-col :span="8">
-           <el-form-item style="margin-bottom: 0px;" label="角色">
-             <el-select v-model="form.roleId"  placeholder="请选择">
+         <el-col :span="6">
+           <el-form-item   label="角色" required>
+             <el-select v-model="form.roleId"  placeholder="请选择" :disabled="operate!=='新增'">
                <el-option
                  v-for="(item, index) in roles"
                  :key="item.name + index"
@@ -13,20 +13,25 @@
              </el-select>
            </el-form-item>
          </el-col>
-        <el-col :span="8">
-          <el-form-item label="表名称"  prop="tableIndex">
-            <el-select v-model="form.tableIndex"  placeholder="请选择">
+        <el-col :span="6">
+          <el-form-item label="表名称"  prop="tableIndex" required>
+            <el-select v-model="form.tableIndex"  placeholder="请选择"  :disabled="operate!=='新增'">
               <el-option
                 v-for="(item, index) in sets"
-                :key="item.tableName + index"
+                :key="index"
                 :label="item.tableName"
                 :value="index"/>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="方案名称"  prop="name" required>
+            <el-input v-model="form.name" placeholder="请输入"  maxlength="50" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item v-if="form.tableIndex>=0 && sets[form.tableIndex]&&('fields' in sets[form.tableIndex]) ">
-            <el-dropdown @command="selectField" style="margin-top: 13%">
+            <el-dropdown @command="selectField" style="margin-top: 17%;margin-left: 10%">
               <el-button type="primary">
                 选择字段
               </el-button>
@@ -42,17 +47,17 @@
       </el-row>
       <el-row :gutter="8" v-for="(field, index) in form.fields" :key="field.index">
         <el-col :span="5">
-          <el-form-item label="字段代码"  :prop="'fields.'+index+'.fieldCode'">
+          <el-form-item label="字段代码"  :prop="'fields.'+index+'.fieldCode'" required>
             <el-input v-model="field.fieldCode" disabled/>
           </el-form-item>
         </el-col>
         <el-col :span="5">
-          <el-form-item label="字段名称"  :prop="'fields.'+index+'.fieldName'">
+          <el-form-item label="字段名称"  :prop="'fields.'+index+'.fieldName'" required>
             <el-input v-model="field.fieldName" disabled/>
           </el-form-item>
         </el-col>
         <el-col :span="5">
-          <el-form-item label="操作类型"  :prop="'fields.'+index+'.operateType'">
+          <el-form-item label="操作类型"  :prop="'fields.'+index+'.operateType'" required>
             <el-select v-model="field.operateType" filterable  placeholder="请选择">
               <el-option
                 v-for="item in dict['operate_type']"
@@ -64,15 +69,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="5">
-          <el-form-item label="字段值"  :prop="'fields.'+index+'.operateValue'">
-            <el-select  v-model="field.operateValue" v-if="field.dictName != ''" required>
+          <el-form-item label="字段值"  :prop="'fields.'+index+'.operateValue'" required>
+            <el-select  v-model="field.operateValue" v-if="field.dictName != ''">
               <el-option
                 v-for="item in dict[field.dictName]"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value" />
             </el-select>
-            <el-input v-model="field.operateValue" v-if="field.dictName == ''" required maxlength="50"/>
+            <el-input v-model="field.operateValue" v-if="field.dictName == ''"  maxlength="50"/>
           </el-form-item>
         </el-col>
         <el-col :span="4">
@@ -84,14 +89,14 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
-      <el-button  :loading="loading" type="primary" @click="doSubmit">确认</el-button>
+      <el-button  v-if="operate!=='详情'" :loading="loading" type="primary" @click="doSubmit">确认</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import { add, edit, getAllSet } from '@/api/dataPermission'
-import { getAll } from '@/api/role'
+import { queryField } from '@/api/dataPermissionField'
 export default {
   props: {
     operate: {
@@ -114,6 +119,7 @@ export default {
       },
       form: {
         id: '',
+        name:'',
         roleId: null,
         tableCode: '',
         className:'',
@@ -131,6 +137,13 @@ export default {
     cancel() {
       this.resetForm()
     },
+    getTableIndex(){
+      this.sets.forEach((item,index)=>{
+        if(this.form.tableName === item.tableName){
+          this.form.tableIndex = index;
+        }
+      });
+    },
     genFormData(){
        this.form.className = this.sets[this.form.tableIndex].className;
        this.form.tableCode = this.sets[this.form.tableIndex].tableCode;
@@ -139,7 +152,7 @@ export default {
     },
     doSubmit() {
       this.$refs.form.validate((vaild)=>{
-          if(vaild) {
+          if(vaild && this.form.fields.length>0) {
             this.loading = true;
             this.genFormData();
             if (this.operate ==='新增') {
@@ -147,6 +160,8 @@ export default {
             } else if(this.operate ==='修改'){
               this.doEdit();
             }
+          }else if(!this.form.fields.length){
+            this.$message.warning("请选择字段进行限制数据权限!")
           }
         })
 
@@ -186,6 +201,7 @@ export default {
       this.$refs['form'].resetFields()
       this.form = {
         id: '',
+        name:'',
         roleId: null,
         className:'',
         tableCode: '',
@@ -197,13 +213,6 @@ export default {
     getSet(){
       getAllSet().then(res => {
         this.sets = res;
-      }).catch(err => {
-        console.log(err.response.data.message)
-      })
-    },
-    getRoles() {
-      getAll().then(res => {
-        this.roles = res
       }).catch(err => {
         console.log(err.response.data.message)
       })
@@ -221,6 +230,18 @@ export default {
         operateType:'',
         operateValue:null
       })
+    },
+    queryAllField(id){
+      queryField(id).then((res)=>{
+        this.form.fields = res;
+      })
+    }
+  },
+  watch:{
+    sets(){
+       if(!this.sets.length){
+          this.getSet();
+       }
     }
   }
 }

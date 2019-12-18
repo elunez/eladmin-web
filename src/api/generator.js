@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function generator(data, tableName) {
+export function generator(data, tableCode,tableName) {
   return request({
-    url: 'api/generator?tableName=' + tableName,
+    url: 'api/generator?tableCode=' + tableCode+"&tableName="+tableName,
     data,
     method: 'post'
   })

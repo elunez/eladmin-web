@@ -2,17 +2,24 @@
   <div>
     <el-button type="primary" size="mini" @click="toGen">生成代码</el-button>
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" title="代码生成配置" append-to-body width="880px">
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="90px">
+      <el-form ref="form" :inline="true" :model="form" :rules="rules"  label-width="120px">
         <el-form-item label="模块名称" prop="moduleName">
-          <el-input v-model="form.moduleName"/>
+          <el-input v-model="form.moduleName" style="width: 500px"/>
         </el-form-item>
-        <el-form-item label="至于包下" prop="pack">
-          <el-input v-model="form.pack"/>
+        <el-row>
+          <el-form-item label="至于包下" prop="pack"  >
+            <el-input v-model="form.pack" style="width: 500px"/>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="前端路径" prop="path">
+            <el-input v-model="form.path" style="width: 500px"/>
+          </el-form-item>
+        </el-row>
+        <el-form-item label="表中文名称"  >
+          <el-input v-model="tableName" style="width: 500px"/>
         </el-form-item>
-        <el-form-item label="前端路径" prop="path">
-          <el-input v-model="form.path"/>
-        </el-form-item>
-        <el-table v-loading="loading" :data="data" size="small" style="width: 100%;margin-bottom: 15px">
+        <el-table v-loading="loading" :data="data"  style="width: 100%;margin-bottom: 15px">
           <el-table-column label="序号" width="80" align="center">
             <template slot-scope="scope">
               <div>{{ scope.$index + 1 }}</div>
@@ -95,7 +102,7 @@ export default {
   },
   data() {
     return {
-      genLoading: false, dialog: false, columnQuery: '',
+      genLoading: false, dialog: false, columnQuery: '',tableName:'',
       form: { author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '' },
       rules: {
         author: [
@@ -109,6 +116,9 @@ export default {
         ],
         path: [
           { required: true, message: '前端代码生成路径不能为空', trigger: 'blur' }
+        ],
+        tableName: [
+          { required: true, message: '表名称不能为空', trigger: 'blur' }
         ],
         cover: [
           { required: true, message: '不能为空', trigger: 'blur' }
@@ -145,7 +155,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           update(this.form).then(res => {
-            generator(this.data, this.name).then(res => {
+            generator(this.data, this.name,this.tableName).then(res => {
               this.$notify({
                 title: '生成成功',
                 type: 'success',

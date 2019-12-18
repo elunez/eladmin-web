@@ -28,31 +28,31 @@
                 style="margin-left: 20px"
                 @click="add">新增</el-button>
         <!-- 导出 -->
-         <el-dropdown
-                 class="filter-item"
-                 type="primary"
-                 icon="el-icon-download"
-                 style="margin-left: 20px"
-                 v-permission="['admin','dataPermission:export']"
-                 @command="download">
-           <el-button type="primary" size="mini">
-             导出EXECL<i class="el-icon-arrow-down el-icon--right"></i>
-           </el-button>
-           <el-dropdown-menu slot="dropdown">
-             <el-dropdown-item command="导出全部">导出全部</el-dropdown-item>
-             <el-dropdown-item command="导出选择">导出选择</el-dropdown-item>
-           </el-dropdown-menu>
-         </el-dropdown>
+<!--         <el-dropdown-->
+<!--                 class="filter-item"-->
+<!--                 type="primary"-->
+<!--                 icon="el-icon-download"-->
+<!--                 style="margin-left: 20px"-->
+<!--                 v-permission="['admin','dataPermission:export']"-->
+<!--                 @command="download">-->
+<!--           <el-button type="primary" size="mini">-->
+<!--             导出EXECL<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+<!--           </el-button>-->
+<!--           <el-dropdown-menu slot="dropdown">-->
+<!--             <el-dropdown-item command="导出全部">导出全部</el-dropdown-item>-->
+<!--             <el-dropdown-item command="导出选择">导出选择</el-dropdown-item>-->
+<!--           </el-dropdown-menu>-->
+<!--         </el-dropdown>-->
         <!--导入-->
-          <el-button
-                  v-permission="['admin','dataPermission:import']"
-                  class="filter-item"
-                  type="primary"
-                  size="mini"
-                  style="margin-left: 20px"
-                  icon="el-icon-upload"
-                  @click="upload">导入EXECL
-          </el-button>
+<!--          <el-button-->
+<!--                  v-permission="['admin','dataPermission:import']"-->
+<!--                  class="filter-item"-->
+<!--                  type="primary"-->
+<!--                  size="mini"-->
+<!--                  style="margin-left: 20px"-->
+<!--                  icon="el-icon-upload"-->
+<!--                  @click="upload">导入EXECL-->
+<!--          </el-button>-->
      </div>
     <!--表单组件-->
     <eForm ref="form" :operate="operate" :dict="dict" />
@@ -64,11 +64,17 @@
               type="selection"
               width="55">
       </el-table-column>
+      <el-table-column prop="name" label="方案名称"/>
+      <el-table-column prop="roleId" label="角色名称">
+        <template slot-scope="scope">
+           <div>{{getRoleName(scope.row.roleId)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="tableCode" label="表代码"/>
       <el-table-column prop="tableName" label="表名称"/>
-      <el-table-column v-if="checkPermission(['admin','dataPermission:edit','dataPermission:del'])" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['admin','dataPermission:edit','dataPermission:del'])" label="操作" width="200px" align="center">
         <template slot-scope="scope">
-<!--          <el-button v-permission="['admin','dataPermission:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>-->
+          <el-button v-permission="['admin','dataPermission:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
             v-permission="['admin','dataPermission:del']"
             :ref="scope.row.id"
@@ -101,6 +107,7 @@ import initData from '@/mixins/initData'
 import { del, downloadDataPermission } from '@/api/dataPermission'
 import uploadForm from  '@/views/business/upload/form'
 import { parseTime, downloadFile, deepClone } from '@/utils/index'
+import { getAll } from '@/api/role'
 import eForm from './form'
 export default {
   components: { eForm, uploadForm },
@@ -116,7 +123,8 @@ export default {
         roleId: '',
         tableCode: '',
         tableName: ''
-      }
+      },
+      roles:[]
     }
   },
   created() {
@@ -124,7 +132,7 @@ export default {
       this.init();
       //初始化配置
       this.$refs.form.getSet();
-      this.$refs.form.getRoles();
+      this.getRoles();
     })
   },
   methods: {
@@ -160,14 +168,19 @@ export default {
     },
     edit(data) {
       this.operate = '修改'
-      const _this = this.$refs.form
+      const _this = this.$refs.form;
       _this.form = {
         id: data.id,
+        className:'',
+        name:data.name,
         roleId: data.roleId,
         tableCode: data.tableCode,
-        tableName: data.tableName
-      }
-      _this.dialog = true
+        tableName: data.tableName,
+        tableIndex:null,
+        fields:deepClone(data.fields)
+      };
+     _this.getTableIndex();
+     _this.dialog = true
     },
     handleSelectionChange(val){
       this.multipleSelection = val;
@@ -175,6 +188,7 @@ export default {
     rowDoubleClick(row){
       const _this = this.$refs.form;
       _this.form = deepClone(row);
+      _this.getTableIndex();
       this.operate = '详情';
       _this.dialog = true
     },
@@ -202,9 +216,34 @@ export default {
     upload(){
       this.$refs.upform.dialog=true;
     },
+    getRoles() {
+      getAll().then(res => {
+        this.roles = res
+        this.$refs.form.roles =res;
+      }).catch(err => {
+        console.log(err.response.data.message)
+      })
+    },
+    getRoleName(roleId){
+       var name = "未找到对应角色名";
+       for (var i = 0;i<this.roles.length;i++){
+         if(roleId===this.roles[i].id){
+           name =this.roles[i].name;
+           break;
+         }
+       }
+      return  name;
+    },
     resetQuery(){
       this.$refs['queryForm'].resetFields();
     }
+  },
+  watch:{
+     roles(){
+        if(!this.roles.length){
+          this.getRoles();
+        }
+     }
   }
 }
 </script>
