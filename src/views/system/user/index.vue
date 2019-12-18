@@ -143,7 +143,7 @@
         </el-dialog>
         <!--表格渲染-->
         <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
-          <el-table-column type="selection" width="55" />
+          <el-table-column :selectable="checkboxT" type="selection" width="55" />
           <el-table-column v-if="columns.visible('username')" :show-overflow-tooltip="true" prop="username" label="用户名" />
           <el-table-column v-if="columns.visible('nickName')" :show-overflow-tooltip="true" prop="nickName" label="昵称" />
           <el-table-column v-if="columns.visible('sex')" prop="sex" label="性别" />
@@ -418,6 +418,9 @@ export default {
       getLevel().then(res => {
         this.level = res.level
       }).catch(() => { })
+    },
+    checkboxT(row, rowIndex) {
+      return row.id !== this.user.id
     }
   }
 }

@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function del(id) {
+export function del(ids) {
   return request({
-    url: 'api/deployHistory/' + id,
-    method: 'delete'
+    url: 'api/deployHistory',
+    method: 'delete',
+    data: ids
   })
 }
 

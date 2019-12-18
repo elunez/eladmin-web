@@ -8,10 +8,11 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(ids) {
   return request({
-    url: 'api/database/' + id,
-    method: 'delete'
+    url: 'api/database',
+    method: 'delete',
+    data: ids
   })
 }
 

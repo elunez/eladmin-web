@@ -5,12 +5,24 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable placeholder="模糊搜索" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-date-picker
+          v-model="query.createTime"
+          :default-time="['00:00:00','23:59:59']"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="date-item"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        />
         <rrOperation :crud="crud" />
       </div>
       <crudOperation :permission="permission">
         <el-button
           slot="right"
           v-permission="['admin','database:add']"
+          :disabled="!selectIndex"
           class="filter-item"
           size="mini"
           type="warning"
@@ -49,6 +61,11 @@
       <el-table-column v-if="columns.visible('name')" prop="name" label="数据库名称" />
       <el-table-column v-if="columns.visible('jdbcUrl')" prop="jdbcUrl" label="连接地址" />
       <el-table-column v-if="columns.visible('userName')" prop="userName" label="用户名" />
+      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-permission="['admin','database:edit','database:del']" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation
@@ -121,11 +138,7 @@ export default {
       })
     },
     execute() {
-      if (!this.selectIndex) {
-        this.$message.error('请先选择数据库')
-      } else {
-        this.$refs.execute.dialog = true
-      }
+      this.$refs.execute.dialog = true
     },
     handleCurrentChange(row) {
       this.currentRow = row

@@ -8,10 +8,11 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(ids) {
   return request({
-    url: 'api/serverDeploy/' + id,
-    method: 'delete'
+    url: 'api/serverDeploy',
+    method: 'delete',
+    data: ids
   })
 }
 

@@ -43,6 +43,7 @@
       <el-button
         v-if="crud.optShow.download"
         :loading="crud.downloadLoading"
+        :disabled="!crud.data.length"
         class="filter-item"
         size="mini"
         type="warning"
