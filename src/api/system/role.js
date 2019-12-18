@@ -30,10 +30,11 @@ export function getLevel() {
   })
 }
 
-export function del(id) {
+export function del(ids) {
   return request({
-    url: 'api/roles/' + id,
-    method: 'delete'
+    url: 'api/roles',
+    method: 'delete',
+    data: ids
   })
 }
 
@@ -53,12 +54,4 @@ export function editMenu(data) {
   })
 }
 
-export function delAll(ids) {
-  return request({
-    url: 'api/roles/',
-    method: 'delete',
-    data: ids
-  })
-}
-
-export default { add, edit, del, get, editMenu, delAll }
+export default { add, edit, del, get, editMenu }

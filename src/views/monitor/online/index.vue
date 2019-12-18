@@ -12,9 +12,9 @@
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          :loading="crud.delAllLoading"
+          :loading="delLoading"
           :disabled="crud.selections.length === 0"
-          @click="crud.toDelete(crud.selections)"
+          @click="doDelete(crud.selections)"
         >
           强退
         </el-button>
@@ -91,18 +91,37 @@ export default {
       this.url = 'auth/online'
       return true
     },
+    doDelete(datas) {
+      this.$confirm(`确认强退选中的${datas.length}个用户?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delMethod(datas)
+      }).catch(() => {})
+    },
     // 踢出用户
     delMethod(key, index) {
+      const ids = []
+      if (key instanceof Array) {
+        key.forEach(val => {
+          ids.push(val.key)
+        })
+      } else ids.push(key)
       this.delLoading = true
-      del(key).then(() => {
+      del(ids).then(() => {
         this.delLoading = false
-        this.$refs[index].doClose()
+        if (this.$refs[index]) {
+          this.$refs[index].doClose()
+        }
         this.crud.dleChangePage(1)
         this.crud.delSuccessNotify()
         this.crud.toQuery()
       }).catch(() => {
         this.delLoading = false
-        this.$refs[index].doClose()
+        if (this.$refs[index]) {
+          this.$refs[index].doClose()
+        }
       })
     }
   }

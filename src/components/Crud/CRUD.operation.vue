@@ -126,11 +126,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.crud.delAllLoading = true
-        if (datas.length === 1) {
-          this.crud.doDelete(datas[0])
-        } else {
-          this.crud.doDeletes(datas)
-        }
+        this.crud.doDelete(datas)
       }).catch(() => {
       })
     },

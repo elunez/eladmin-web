@@ -109,7 +109,7 @@ import pagination from '@crud/Pagination'
 
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '监控', url: 'api/server', sort: 'sort,asc', crudMethod: { ...crudServer }})
-const defaultForm = { id: null, name: null, ip: null, port: 8777, state: null, cpuRate: null, cpuCore: null, memTotal: null, memUsed: null, diskTotal: null, diskUsed: null, swapTotal: null, swapUsed: null, sort: 999 }
+const defaultForm = { id: null, address: 'localhost', name: null, ip: null, port: 8777, state: null, cpuRate: null, cpuCore: null, memTotal: null, memUsed: null, diskTotal: null, diskUsed: null, swapTotal: null, swapUsed: null, sort: 999 }
 export default {
   name: 'ServerMonitor',
   components: { pagination, crudOperation, rrOperation, udOperation },
@@ -133,6 +133,9 @@ export default {
         ]
       }
     }
+  },
+  created() {
+    this.crud.optShow.download = false
   },
   methods: {
     formatCpuRate(row, column) {

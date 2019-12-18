@@ -16,10 +16,11 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(ids) {
   return request({
-    url: 'api/dept/' + id,
-    method: 'delete'
+    url: 'api/dept',
+    method: 'delete',
+    data: ids
   })
 }
 
@@ -31,12 +32,4 @@ export function edit(data) {
   })
 }
 
-export function delAll(ids) {
-  return request({
-    url: 'api/dept/',
-    method: 'delete',
-    data: ids
-  })
-}
-
-export default { add, edit, del, getDepts, delAll }
+export default { add, edit, del, getDepts }

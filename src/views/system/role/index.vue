@@ -134,7 +134,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '角色', url: 'api/roles', sort: 'level,asc', crudMethod: { ...crudRoles }})
-const defaultForm = { name: null, depts: [], remark: null, dataScope: null, level: 3, permission: null }
+const defaultForm = { name: null, depts: [], remark: null, dataScope: '全部', level: 3, permission: null }
 export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, rrOperation, udOperation },
@@ -172,7 +172,6 @@ export default {
     },
     // 编辑前
     [CRUD.HOOK.beforeToEdit](crud, form) {
-      console.log(form.dataScope)
       if (form.dataScope === '自定义') {
         this.getDepts()
       }
@@ -181,7 +180,6 @@ export default {
         depts.push(dept.id)
       })
       form.depts = depts
-      console.log(form)
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {

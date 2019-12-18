@@ -264,8 +264,8 @@ function CRUD(options) {
       crud.crudMethod.edit(crud.form).then(() => {
         crud.status.edit = CRUD.STATUS.NORMAL
         crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
-        crud.resetForm()
         crud.editSuccessNotify()
+        crud.resetForm()
         callVmHook(crud, CRUD.HOOK.afterSubmit)
         crud.refresh()
       }).catch(() => {
@@ -277,44 +277,36 @@ function CRUD(options) {
      * @param {*} data 数据项
      */
     doDelete(data) {
-      const dataStatus = crud.getDataStatus(data.id)
-      if (!callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
-        return
-      }
-      dataStatus.delete = CRUD.STATUS.PROCESSING
-      return crud.crudMethod.del(data.id).then(() => {
-        dataStatus.delete = CRUD.STATUS.NORMAL
-        crud.dleChangePage(1)
-        crud.delSuccessNotify()
-        callVmHook(crud, CRUD.HOOK.afterDelete, data)
-        crud.refresh()
-        crud.delAllLoading = false
-      }).catch(() => {
-        crud.delAllLoading = false
-        dataStatus.delete = CRUD.STATUS.PREPARED
-      })
-    },
-    /**
-     * 删除多条记录
-     * @param datas
-     * @returns {Promise<T>}
-     */
-    doDeletes(datas) {
+      let delAll = false
+      let dataStatus
       const ids = []
-      datas.forEach(val => {
-        ids.push(val.id)
-      })
+      if (data instanceof Array) {
+        delAll = true
+        data.forEach(val => {
+          ids.push(val.id)
+        })
+      } else {
+        ids.push(data.id)
+        dataStatus = crud.getDataStatus(data.id)
+      }
       if (!callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
         return
       }
-      return crud.crudMethod.delAll(ids).then(() => {
+      if (!delAll) {
+        dataStatus.delete = CRUD.STATUS.PROCESSING
+      }
+      return crud.crudMethod.del(ids).then(() => {
+        if (delAll) {
+          crud.delAllLoading = false
+        } else dataStatus.delete = CRUD.STATUS.PREPARED
         crud.dleChangePage(1)
         crud.delSuccessNotify()
         callVmHook(crud, CRUD.HOOK.afterDelete, data)
-        crud.delAllLoading = false
         crud.refresh()
       }).catch(() => {
-        crud.delAllLoading = false
+        if (delAll) {
+          crud.delAllLoading = false
+        } else dataStatus.delete = CRUD.STATUS.PREPARED
       })
     },
     /**
