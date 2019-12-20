@@ -8,4 +8,11 @@ export function del(ids) {
   })
 }
 
-export default { del }
+export function sync() {
+  return request({
+    url: 'api/pictures/synchronize',
+    method: 'post'
+  })
+}
+
+export default { del, sync }
