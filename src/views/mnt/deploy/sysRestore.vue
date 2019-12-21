@@ -104,7 +104,7 @@ export default {
             this.dialog = false
             this.submitLoading = false
             this.appNames = ''
-            this.$parent.init()
+            this.$parent.crud.toQuery()
           })
           .catch(err => {
             this.submitLoading = false

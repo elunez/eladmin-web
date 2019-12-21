@@ -49,11 +49,11 @@
         <el-form-item label="备份目录" prop="backupPath">
           <el-input v-model="form.backupPath" style="width: 670px" placeholder="例如: /opt/backup" />
         </el-form-item>
-        <el-form-item label="启动脚本" prop="startScript">
-          <el-input v-model="form.startScript" :rows="3" type="textarea" autosize style="width: 670px" placeholder="" />
-        </el-form-item>
         <el-form-item label="部署脚本" prop="deployScript">
           <el-input v-model="form.deployScript" :rows="3" type="textarea" autosize style="width: 670px" placeholder="" />
+        </el-form-item>
+        <el-form-item label="启动脚本" prop="startScript">
+          <el-input v-model="form.startScript" :rows="3" type="textarea" autosize style="width: 670px" placeholder="" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

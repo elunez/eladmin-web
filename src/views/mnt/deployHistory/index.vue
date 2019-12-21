@@ -86,7 +86,7 @@ export default {
   methods: {
     delMethod(id) {
       this.delLoading = true
-      del(id).then(() => {
+      del([id]).then(() => {
         this.delLoading = false
         this.$refs[id].doClose()
         this.crud.dleChangePage(1)

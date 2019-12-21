@@ -41,7 +41,7 @@ export default {
       loading: false,
       dialog: false,
       headers: {
-        Authorization: 'Bearer ' + getToken()
+        Authorization: getToken()
       },
       rules: {}
     }

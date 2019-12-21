@@ -36,14 +36,14 @@
     <eForm ref="execute" :database-info="currentRow" />
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="530px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
-        <el-form-item label="数据库名称" prop="name">
+        <el-form-item label="连接名称" prop="name">
           <el-input v-model="form.name" style="width: 370px" />
         </el-form-item>
-        <el-form-item label="连接地址" prop="jdbcUrl">
+        <el-form-item label="JDBC地址" prop="jdbcUrl">
           <el-input v-model="form.jdbcUrl" style="width: 300px" />
-          <el-button :loading="loading" type="info" @click="testConnectDatabase">测试</el-button>
+          <el-button :loading="loading" type="success" @click="testConnectDatabase">测试</el-button>
         </el-form-item>
-        <el-form-item label="用户名" prop="userName">
+        <el-form-item label="用户" prop="userName">
           <el-input v-model="form.userName" style="width: 370px" />
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
@@ -58,10 +58,10 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" prop="name" label="数据库名称" />
+      <el-table-column v-if="columns.visible('name')" prop="name" width="130px" label="数据库名称" />
       <el-table-column v-if="columns.visible('jdbcUrl')" prop="jdbcUrl" label="连接地址" />
-      <el-table-column v-if="columns.visible('userName')" prop="userName" label="用户名" />
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column v-if="columns.visible('userName')" prop="userName" width="200px" label="用户名" />
+      <el-table-column v-if="columns.visible('createTime')" prop="createTime" width="200px" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -91,7 +91,7 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '数据库', url: 'api/database', crudMethod: { ...crudDatabase }})
-const defaultForm = { id: null, name: null, jdbcUrl: null, userName: null, pwd: null }
+const defaultForm = { id: null, name: null, jdbcUrl: 'jdbc:mysql://', userName: null, pwd: null }
 export default {
   name: 'DataBase',
   components: { eForm, pagination, crudOperation, rrOperation, udOperation },
@@ -130,7 +130,7 @@ export default {
           this.loading = true
           testDbConnect(this.form).then((res) => {
             this.loading = false
-            crud.notify(res ? '连接成功' : '连接失败', res ? 'success' : 'error')
+            this.crud.notify(res ? '连接成功' : '连接失败', res ? 'success' : 'error')
           }).catch(() => {
             this.loading = false
           })
