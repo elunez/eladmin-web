@@ -1,7 +1,7 @@
 <template>
   <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="100px">
     <el-form-item label="appID" prop="appID">
-      <el-input v-model="form.appID" style="width: 40%" />
+      <el-input v-model="form.appId" style="width: 40%" />
       <span style="color: #C0C0C0;margin-left: 10px;">应用APPID,收款账号既是APPID对应支付宝账号</span>
     </el-form-item>
     <el-form-item label="商家账号" prop="sysServiceProviderId">
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       loading: false,
-      form: { appID: '', sysServiceProviderId: '', privateKey: '', publicKey: '', returnUrl: '', notifyUrl: '' },
+      form: { appId: '', sysServiceProviderId: '', privateKey: '', publicKey: '', returnUrl: '', notifyUrl: '' },
       rules: {
         appID: [
           { required: true, message: '请输入appID', trigger: 'blur' }

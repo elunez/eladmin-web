@@ -23,9 +23,9 @@ export default {
   methods: {
     tabClick(name) {
       if (this.activeName === 'first') {
-        this.$refs.local.init()
+        this.$refs.local.crud.toQuery()
       } else {
-        this.$refs.qiNiu.init()
+        this.$refs.qiNiu.crud.toQuery()
       }
     }
   }

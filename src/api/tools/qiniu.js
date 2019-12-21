@@ -15,13 +15,6 @@ export function update(data) {
   })
 }
 
-export function del(id) {
-  return request({
-    url: 'api/qiNiuContent/' + id,
-    method: 'delete'
-  })
-}
-
 export function download(id) {
   return request({
     url: 'api/qiNiuContent/download/' + id,
@@ -36,12 +29,12 @@ export function sync() {
   })
 }
 
-export function delAll(ids) {
+export function del(ids) {
   return request({
-    url: 'api/qiNiuContent/',
+    url: 'api/qiNiuContent',
     method: 'delete',
     data: ids
   })
 }
 
-export default { del, download, sync, delAll }
+export default { del, download, sync }

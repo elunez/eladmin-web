@@ -77,7 +77,7 @@ export default {
               type: 'success',
               duration: 2500
             })
-            this.$parent.init()
+            this.$parent.crud.toQuery()
             this.loading = false
             this.dialog = false
           }).catch(err => {

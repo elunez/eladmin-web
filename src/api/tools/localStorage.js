@@ -8,14 +8,7 @@ export function add(data) {
   })
 }
 
-export function del(id) {
-  return request({
-    url: 'api/localStorage/' + id,
-    method: 'delete'
-  })
-}
-
-export function delAll(ids) {
+export function del(ids) {
   return request({
     url: 'api/localStorage/',
     method: 'delete',
@@ -31,4 +24,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, delAll }
+export default { add, edit, del }
