@@ -35,7 +35,7 @@
             class="filter-item"
             size="mini"
             type="success"
-            icon="el-icon-upload"
+            icon="el-icon-refresh"
             :loading="syncLoading"
             @click="sync"
           >同步</el-button>

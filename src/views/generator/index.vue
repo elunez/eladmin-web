@@ -2,21 +2,31 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <el-input v-model="query.name" clearable size="small" placeholder="请输入表名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
+      <div v-if="crud.props.searchToggle">
+        <el-input v-model="query.name" clearable size="small" placeholder="请输入表名" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <rrOperation :crud="crud" />
+      </div>
+      <crudOperation>
+        <el-button
+          slot="left"
+          class="filter-item"
+          size="mini"
+          type="success"
+          icon="el-icon-refresh"
+          :loading="syncLoading"
+          :disabled="crud.selections.length === 0"
+          @click="sync"
+        >同步</el-button>
+      </crudOperation>
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" style="width: 100%;">
-      <el-table-column label="序号" width="85" align="center">
-        <template slot-scope="scope">
-          <div>{{ scope.$index + 1 }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="tableName" label="表名" />
-      <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
-      <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
-      <el-table-column :show-overflow-tooltip="true" prop="remark" label="备注" />
-      <el-table-column prop="createTime" label="创建日期">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+      <el-table-column type="selection" width="55" />
+      <el-table-column v-if="columns.visible('tableName')" :show-overflow-tooltip="true" prop="tableName" label="表名" />
+      <el-table-column v-if="columns.visible('engine')" :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
+      <el-table-column v-if="columns.visible('coding')" :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
+      <el-table-column v-if="columns.visible('remark')" :show-overflow-tooltip="true" prop="remark" label="备注" />
+      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -39,37 +49,32 @@
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px;"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
+    <pagination />
   </div>
 </template>
 
 <script>
-import crud from '@/mixins/crud'
-import { generator } from '@/api/generator/generator'
+import { generator, sync } from '@/api/generator/generator'
+import CRUD, { presenter, header } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import pagination from '@crud/Pagination'
+
+// crud交由presenter持有
+const defaultCrud = CRUD({ url: 'api/generator/tables' })
 export default {
   name: 'GeneratorIndex',
-  mixins: [crud],
+  components: { pagination, crudOperation, rrOperation },
+  mixins: [presenter(defaultCrud), header()],
   data() {
     return {
+      syncLoading: false
     }
   },
   created() {
-    this.$nextTick(() => {
-      this.init()
-    })
+    this.crud.optShow = { add: false, edit: false, del: false, download: false }
   },
   methods: {
-    beforeInit() {
-      this.url = 'api/generator/tables'
-      return true
-    },
     toGen(tableName) {
       // 生成代码
       generator(tableName, 0).then(data => {
@@ -84,6 +89,20 @@ export default {
       // 打包下载
       generator(tableName, 2).then(data => {
         this.downloadFile(data, tableName, 'zip')
+      })
+    },
+    sync() {
+      const tables = []
+      this.crud.selections.forEach(val => {
+        tables.push(val.tableName)
+      })
+      this.syncLoading = true
+      sync(tables).then(() => {
+        this.crud.refresh()
+        this.crud.notify('同步成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        this.syncLoading = false
+      }).then(() => {
+        this.syncLoading = false
       })
     }
   }

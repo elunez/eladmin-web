@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <el-row :gutter="15">
-      <!--角色管理-->
       <el-col style="margin-bottom: 10px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
@@ -10,10 +9,18 @@
               :loading="columnLoading"
               icon="el-icon-check"
               size="mini"
-              style="float: right; padding: 6px 9px"
+              style="float: right; padding: 6px 9px;"
               type="primary"
               @click="saveColumnConfig"
             >保存</el-button>
+            <el-button
+              :loading="syncLoading"
+              icon="el-icon-refresh"
+              size="mini"
+              style="float: right; padding: 6px 9px;margin-right: 10px"
+              type="success"
+              @click="sync"
+            >同步</el-button>
           </div>
           <el-form size="small" label-width="90px">
             <el-table v-loading="loading" :data="data" :max-height="tableHeight" size="small" style="width: 100%;margin-bottom: 15px">
@@ -179,7 +186,7 @@
 <script>
 import crud from '@/mixins/crud'
 import { update, get } from '@/api/generator/genConfig'
-import { save } from '@/api/generator/generator'
+import { save, sync } from '@/api/generator/generator'
 import { getDicts } from '@/api/system/dict'
 export default {
   name: 'GeneratorConfig',
@@ -187,7 +194,7 @@ export default {
   mixins: [crud],
   data() {
     return {
-      activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [],
+      activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [], syncLoading: false,
       form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '', apiAlias: null },
       rules: {
         author: [
@@ -235,11 +242,7 @@ export default {
     saveColumnConfig() {
       this.columnLoading = true
       save(this.data).then(res => {
-        this.$notify({
-          title: '保存成功',
-          type: 'success',
-          duration: 2500
-        })
+        this.notify('保存成功', 'success')
         this.columnLoading = false
       }).catch(err => {
         this.columnLoading = false
@@ -251,11 +254,7 @@ export default {
         if (valid) {
           this.configLoading = true
           update(this.form).then(res => {
-            this.$notify({
-              title: '保存成功',
-              type: 'success',
-              duration: 2500
-            })
+            this.notify('保存成功', 'success')
             this.form = res
             this.form.cover = this.form.cover.toString()
             this.configLoading = false
@@ -264,6 +263,16 @@ export default {
             console.log(err.response.data.message)
           })
         }
+      })
+    },
+    sync() {
+      this.syncLoading = true
+      sync([this.tableName]).then(() => {
+        this.init()
+        this.notify('同步成功', 'success')
+        this.syncLoading = false
+      }).then(() => {
+        this.syncLoading = false
       })
     }
   }
