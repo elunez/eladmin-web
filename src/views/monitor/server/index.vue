@@ -5,7 +5,7 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者服务地址" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>

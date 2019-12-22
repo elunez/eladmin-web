@@ -17,7 +17,7 @@
           start-placeholder="部署开始日期"
           end-placeholder="部署结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>

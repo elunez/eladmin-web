@@ -18,7 +18,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <template slot="left">

@@ -3,7 +3,7 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <el-input v-model="query.filter" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation>
         <el-button

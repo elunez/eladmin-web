@@ -107,7 +107,7 @@ export default {
   props: {
     permission: {
       type: Object,
-      default: null
+      default: () => { return {} }
     }
   },
   data() {

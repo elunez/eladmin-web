@@ -64,7 +64,7 @@
                 :value="item.key"
               />
             </el-select>
-            <rrOperation :crud="crud" />
+            <rrOperation />
           </div>
           <crudOperation show="" :permission="permission" />
         </div>
