@@ -1,26 +1,30 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
-      <h3 class="title">EL-ADMIN 后台管理系统</h3>
+      <h3 class="title">
+        EL-ADMIN 后台管理系统
+      </h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="code">
         <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode">
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住我</el-checkbox>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
+        记住我
+      </el-checkbox>
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
@@ -30,7 +34,7 @@
     </el-form>
     <!--  底部  -->
     <div v-if="$store.state.settings.showFooter" id="el-login-footer">
-      <span v-html="$store.state.settings.footerTxt"/>
+      <span v-html="$store.state.settings.footerTxt" />
       <span> ⋅ </span>
       <a href="http://www.beian.miit.gov.cn" target="_blank">{{ $store.state.settings.caseNumber }}</a>
     </div>
@@ -39,7 +43,7 @@
 
 <script>
 import { encrypt } from '@/utils/rsaEncrypt'
-import Config from '@/config'
+import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
 export default {
@@ -143,11 +147,11 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(	https://docs-1255840532.cos.ap-shanghai.myqcloud.com/3968.jpg );
+    background-image:url(https://api.isoyu.com/bing_images.php);
     background-size: cover;
   }
   .title {
-    margin: 0px auto 30px auto;
+    margin: 0 auto 30px auto;
     text-align: center;
     color: #707070;
   }

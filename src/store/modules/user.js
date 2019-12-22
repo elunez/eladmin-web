@@ -1,6 +1,5 @@
 import { login, getInfo, logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { decrypt } from '@/utils/rsaEncrypt'
 
 const user = {
   state: {
@@ -29,13 +28,9 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username
-      const password = decrypt(userInfo.password)
-      const code = userInfo.code
-      const uuid = userInfo.uuid
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        login(username, password, code, uuid).then(res => {
+        login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid).then(res => {
           setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
           setUserInfo(res.user, commit)
@@ -59,7 +54,6 @@ const user = {
         })
       })
     },
-
     // 登出
     LogOut({ commit }) {
       return new Promise((resolve, reject) => {

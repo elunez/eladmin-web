@@ -1,10 +1,10 @@
 import router from './routers'
 import store from '@/store'
-import Config from '@/config'
+import Config from '@/settings'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import { getToken } from '@/utils/auth' // getToken from cookie
-import { buildMenus } from '@/api/menu'
+import { buildMenus } from '@/api/system/menu'
 import { filterAsyncRouter } from '@/store/modules/permission'
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
@@ -13,14 +13,14 @@ const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title + ' - ' + Config.webName
+    document.title = to.meta.title + ' - ' + Config.title
   }
-  NProgress.start() // start progress bar
+  NProgress.start()
   if (getToken()) {
     // 已登录且要跳转的页面是登录页
     if (to.path === '/login') {
       next({ path: '/' })
-      NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
+      NProgress.done()
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetInfo').then(res => { // 拉取user_info

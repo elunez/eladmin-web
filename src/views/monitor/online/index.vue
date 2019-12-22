@@ -1,110 +1,127 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <el-input v-model="query.value" clearable placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
-      <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download">导出</el-button>
+      <div v-if="crud.props.searchToggle">
+        <el-input v-model="query.filter" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <rrOperation :crud="crud" />
       </div>
+      <crudOperation>
+        <el-button
+          slot="left"
+          class="filter-item"
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :loading="delLoading"
+          :disabled="crud.selections.length === 0"
+          @click="doDelete(crud.selections)"
+        >
+          强退
+        </el-button>
+      </crudOperation>
     </div>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column prop="userName" label="用户名"/>
-      <el-table-column prop="job" label="岗位"/>
-      <el-table-column prop="ip" label="登录IP"/>
-      <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点"/>
-      <el-table-column prop="browser" label="浏览器"/>
-      <el-table-column prop="loginTime" label="登录时间">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+      <el-table-column type="selection" width="55" />
+      <el-table-column v-if="columns.visible('userName')" prop="userName" label="用户名" />
+      <el-table-column v-if="columns.visible('nickName')" prop="nickName" label="用户昵称" />
+      <el-table-column v-if="columns.visible('job')" prop="job" label="岗位" />
+      <el-table-column v-if="columns.visible('ip')" prop="ip" label="登录IP" />
+      <el-table-column v-if="columns.visible('address')" :show-overflow-tooltip="true" prop="address" label="登录地点" />
+      <el-table-column v-if="columns.visible('browser')" prop="browser" label="浏览器" />
+      <el-table-column v-if="columns.visible('loginTime')" prop="loginTime" label="登录时间">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.loginTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="操作" width="100px" fixed="right">
+      <el-table-column label="操作" width="100px" fixed="right">
         <template slot-scope="scope">
           <el-popover
-            v-permission="['admin']"
             :ref="scope.$index"
+            v-permission="['admin']"
             placement="top"
-            width="180">
-            <p>确定踢出该用户吗？</p>
+            width="180"
+          >
+            <p>确定强制退出该用户吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.$index, scope.row.key)">确定</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.key, scope.$index)">确定</el-button>
             </div>
-            <el-button slot="reference" size="mini" type="text">踢出</el-button>
+            <el-button slot="reference" size="mini" type="text">强退</el-button>
           </el-popover>
         </template>
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px;"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"/>
+    <pagination />
   </div>
 </template>
 
 <script>
-import initData from '@/mixins/initData'
-import { parseTime, downloadFile } from '@/utils/index'
-import { del, downloadOnline } from '@/api/online'
+import { del } from '@/api/monitor/online'
+import CRUD, { presenter, header, crud } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import pagination from '@crud/Pagination'
+
+// crud交由presenter持有
+const defaultCrud = CRUD({ url: 'auth/online', title: '在线用户' })
 export default {
   name: 'OnlineUser',
-  mixins: [initData],
+  components: { pagination, crudOperation, rrOperation },
+  mixins: [presenter(defaultCrud), header(), crud()],
   data() {
     return {
-      delLoading: false
+      delLoading: false,
+      permission: {}
     }
   },
   created() {
-    this.$nextTick(() => {
-      this.init()
-    })
+    this.crud.msg.del = '强退成功！'
+    this.crud.optShow = {
+      add: false,
+      edit: false,
+      del: false,
+      download: true
+    }
   },
   methods: {
-    parseTime,
+    // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'auth/online'
-      this.params = { page: this.page, size: this.size }
-      if (this.query.value) { this.params['filter'] = this.query.value }
       return true
     },
-    subDelete(index, key) {
-      this.delLoading = true
-      del(key).then(res => {
-        this.delLoading = false
-        this.$refs[index].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '踢出成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[index].doClose()
-        console.log(err.response.data.message)
-      })
+    doDelete(datas) {
+      this.$confirm(`确认强退选中的${datas.length}个用户?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delMethod(datas)
+      }).catch(() => {})
     },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadOnline(this.params).then(result => {
-        downloadFile(result, '在线用户列表', 'xlsx')
-        this.downloadLoading = false
+    // 踢出用户
+    delMethod(key, index) {
+      const ids = []
+      if (key instanceof Array) {
+        key.forEach(val => {
+          ids.push(val.key)
+        })
+      } else ids.push(key)
+      this.delLoading = true
+      del(ids).then(() => {
+        this.delLoading = false
+        if (this.$refs[index]) {
+          this.$refs[index].doClose()
+        }
+        this.crud.dleChangePage(1)
+        this.crud.delSuccessNotify()
+        this.crud.toQuery()
       }).catch(() => {
-        this.downloadLoading = false
+        this.delLoading = false
+        if (this.$refs[index]) {
+          this.$refs[index].doClose()
+        }
       })
     }
   }

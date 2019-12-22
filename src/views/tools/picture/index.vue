@@ -2,48 +2,45 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <!--搜索-->
-      <el-input v-model="query.filename" clearable placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-      <el-date-picker
-        v-model="query.date"
-        type="daterange"
-        range-separator=":"
-        class="el-range-editor--small filter-item"
-        style="height: 30.5px;width: 220px"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
-      <!-- 上传 -->
-      <div style="display: inline-block;margin: 0px 2px;">
+      <div v-if="crud.props.searchToggle">
+        <!--搜索-->
+        <el-input v-model="query.filename" clearable size="small" placeholder="输入文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-date-picker
+          v-model="query.createTime"
+          :default-time="['00:00:00','23:59:59']"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="date-item"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        />
+        <rrOperation :crud="crud" />
+      </div>
+      <crudOperation :permission="permission">
+        <!-- 上传 -->
         <el-button
+          slot="left"
           v-permission="['admin','pictures:add']"
           class="filter-item"
           size="mini"
           type="primary"
           icon="el-icon-upload"
-          @click="dialog = true">上传图片</el-button>
-      </div>
-      <div v-permission="['admin','pictures:del']" style="display: inline-block;">
-        <el-button
-          :loading="delAllLoading"
-          :disabled="data.length === 0 || $refs.table.selection.length === 0"
-          class="filter-item"
-          size="mini"
-          type="danger"
-          icon="el-icon-delete"
-          @click="open">删除</el-button>
-      </div>
-      <!-- 导出 -->
-      <div style="display: inline-block;">
-        <el-button
-          :loading="downloadLoading"
-          size="mini"
-          class="filter-item"
-          type="warning"
-          icon="el-icon-download"
-          @click="download">导出</el-button>
-      </div>
+          @click="dialog = true"
+        >上传</el-button>
+        <el-tooltip slot="right" class="item" effect="dark" content="使用同步功能需要在 https://sm.ms/login 中注册账号，并且在 application.yml 文件中修改 Secret Token" placement="top-start">
+          <el-button
+            v-permission="['admin','pictures:add']"
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-refresh"
+            :loading="syncLoading"
+            @click="sync"
+          >同步</el-button>
+        </el-tooltip>
+      </crudOperation>
     </div>
     <!--上传图片-->
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" append-to-body width="600px" @close="doSubmit">
@@ -55,10 +52,11 @@
         :headers="headers"
         :file-list="fileList"
         :action="imagesUploadApi"
-        list-type="picture-card">
-        <i class="el-icon-plus"/>
+        list-type="picture-card"
+      >
+        <i class="el-icon-plus" />
       </el-upload>
-      <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
+      <el-dialog append-to-body :visible.sync="dialogVisible">
         <img :src="dialogImageUrl" width="100%" alt="">
       </el-dialog>
       <div slot="footer" class="dialog-footer">
@@ -66,68 +64,60 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
-      <el-table-column type="selection" width="55"/>
-      <el-table-column prop="filename" label="文件名"/>
-      <el-table-column prop="username" label="上传者"/>
-      <el-table-column ref="table" :show-overflow-tooltip="true" prop="url" label="缩略图">
-        <template slot-scope="scope">
-          <a :href="scope.row.url" style="color: #42b983" target="_blank"><img :src="scope.row.url" alt="点击打开" class="el-avatar"></a>
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+      <el-table-column type="selection" width="55" />
+      <el-table-column v-if="columns.visible('filename')" width="200" prop="filename" label="文件名" />
+      <el-table-column v-if="columns.visible('username')" prop="username" label="上传者" />
+      <el-table-column v-if="columns.visible('url')" ref="table" :show-overflow-tooltip="true" prop="url" label="缩略图">
+        <template slot-scope="{row}">
+          <el-image
+            :src="row.url"
+            :preview-src-list="[row.url]"
+            fit="contain"
+            lazy
+            class="el-avatar"
+          />
         </template>
       </el-table-column>
-      <el-table-column prop="size" label="文件大小"/>
-      <el-table-column prop="height" label="高度"/>
-      <el-table-column prop="width" label="宽度"/>
-      <el-table-column width="180px" prop="createTime" label="创建日期">
+      <el-table-column v-if="columns.visible('size')" prop="size" label="文件大小" />
+      <el-table-column v-if="columns.visible('height')" prop="height" label="高度" />
+      <el-table-column v-if="columns.visible('width')" prop="width" label="宽度" />
+      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(['admin','pictures:del'])" label="操作" width="100px" align="center" fixed="right">
-        <template slot-scope="scope">
-          <el-popover
-            :ref="scope.row.id"
-            placement="top"
-            width="180">
-            <p>确定删除本条数据吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
-            </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
-          </el-popover>
-        </template>
-      </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page + 1"
-      style="margin-top: 8px;"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"/>
+    <pagination />
   </div>
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
-import initData from '@/mixins/initData'
-import { parseTime, downloadFile } from '@/utils/index'
 import { mapGetters } from 'vuex'
-import { del, delAll, downloadPicture } from '@/api/picture'
+import crudPic from '@/api/tools/picture'
+import CRUD, { presenter, header, crud } from '@crud/crud'
 import { getToken } from '@/utils/auth'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import pagination from '@crud/Pagination'
+
+// crud交由presenter持有
+const defaultCrud = CRUD({ title: '图片', url: 'api/pictures', crudMethod: { ...crudPic }})
 export default {
   name: 'Pictures',
-  mixins: [initData],
+  components: { pagination, crudOperation, rrOperation },
+  mixins: [presenter(defaultCrud), header(), crud()],
   data() {
     return {
-      delLoading: false,
-      delAllLoading: false,
-      headers: {
-        'Authorization': 'Bearer ' + getToken()
-      },
       dialog: false,
+      syncLoading: false,
+      headers: {
+        'Authorization': getToken()
+      },
+      permission: {
+        del: ['admin', 'pictures:del']
+      },
       dialogImageUrl: '',
       dialogVisible: false,
       fileList: [],
@@ -140,74 +130,10 @@ export default {
     ])
   },
   created() {
-    this.$nextTick(() => {
-      this.init()
-    })
+    this.crud.optShow.add = false
+    this.crud.optShow.edit = false
   },
   methods: {
-    parseTime,
-    checkPermission,
-    beforeInit() {
-      this.url = 'api/pictures'
-      const sort = 'id,desc'
-      const query = this.query
-      const filename = query.filename
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (filename) { this.params[filename] = filename }
-      if (query.date) {
-        this.params['startTime'] = query.date[0]
-        this.params['endTime'] = query.date[1]
-      }
-      return true
-    },
-    subDelete(id) {
-      this.delLoading = true
-      del(id).then(res => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[id].doClose()
-        console.log(err.response.data.message)
-      })
-    },
-    doDelete() {
-      this.delAllLoading = true
-      const data = this.$refs.table.selection
-      const ids = []
-      for (let i = 0; i < data.length; i++) {
-        ids.push(data[i].id)
-      }
-      delAll(ids).then(res => {
-        this.delAllLoading = false
-        this.init()
-        this.dleChangePage(ids.length)
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delAllLoading = false
-        console.log(err.response.data.message)
-      })
-    },
-    open() {
-      this.$confirm('你确定删除选中的数据吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.doDelete()
-      })
-    },
     handleSuccess(response, file, fileList) {
       const uid = file.uid
       const id = response.id
@@ -216,7 +142,7 @@ export default {
     handleBeforeRemove(file, fileList) {
       for (let i = 0; i < this.pictures.length; i++) {
         if (this.pictures[i].uid === file.uid) {
-          del(this.pictures[i].id).then(res => {})
+          crudPic.del(this.pictures[i].id).then(res => {})
           return true
         }
       }
@@ -231,7 +157,7 @@ export default {
       this.dialogVisible = false
       this.dialogImageUrl = ''
       this.dialog = false
-      this.init()
+      this.crud.toQuery()
     },
     // 监听上传失败
     handleError(e, file, fileList) {
@@ -242,14 +168,12 @@ export default {
         duration: 2500
       })
     },
-    download() {
-      this.beforeInit()
-      this.downloadLoading = true
-      downloadPicture(this.params).then(result => {
-        downloadFile(result, '图片列表', 'xlsx')
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
+    sync() {
+      this.syncLoading = true
+      crudPic.sync().then(res => {
+        this.crud.notify('同步成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        this.crud.toQuery()
+        this.syncLoading = false
       })
     }
   }

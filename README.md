@@ -1,6 +1,6 @@
-# eladmin-qt
+# ELADMIN-WEB
 
-eladmin 前端源码
+ELADMIN 前端源码
 
 #### 项目源码
 
@@ -14,7 +14,7 @@ eladmin 前端源码
 
 #### 前端模板
 
-初始模板基于： [https://github.com/PanJiaChen/vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
+初始模板基于： [https://github.com/PanJiaChen/vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
 
 模板文档： [https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
 

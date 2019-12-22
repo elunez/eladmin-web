@@ -1,5 +1,5 @@
 <template>
-  <elFrame :src="swaggerApi"/>
+  <elFrame :src="swaggerApi" />
 </template>
 <script>
 import { mapGetters } from 'vuex'

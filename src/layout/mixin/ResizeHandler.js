@@ -1,39 +1,43 @@
 import store from '@/store'
 
 const { body } = document
-const WIDTH = 1024
-const RATIO = 3
+const WIDTH = 992 // refer to Bootstrap's responsive design
 
 export default {
   watch: {
     $route(route) {
       if (this.device === 'mobile' && this.sidebar.opened) {
-        store.dispatch('closeSideBar', { withoutAnimation: false })
+        store.dispatch('app/closeSideBar', { withoutAnimation: false })
       }
     }
   },
   beforeMount() {
-    window.addEventListener('resize', this.resizeHandler)
+    window.addEventListener('resize', this.$_resizeHandler)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.$_resizeHandler)
   },
   mounted() {
-    const isMobile = this.isMobile()
+    const isMobile = this.$_isMobile()
     if (isMobile) {
-      store.dispatch('toggleDevice', 'mobile')
-      store.dispatch('closeSideBar', { withoutAnimation: true })
+      store.dispatch('app/toggleDevice', 'mobile')
+      store.dispatch('app/closeSideBar', { withoutAnimation: true })
     }
   },
   methods: {
-    isMobile() {
+    // use $_ for mixins properties
+    // https://vuejs.org/v2/style-guide/index.html#Private-property-names-essential
+    $_isMobile() {
       const rect = body.getBoundingClientRect()
-      return rect.width - RATIO < WIDTH
+      return rect.width - 1 < WIDTH
     },
-    resizeHandler() {
+    $_resizeHandler() {
       if (!document.hidden) {
-        const isMobile = this.isMobile()
-        store.dispatch('toggleDevice', isMobile ? 'mobile' : 'desktop')
+        const isMobile = this.$_isMobile()
+        store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
 
         if (isMobile) {
-          store.dispatch('closeSideBar', { withoutAnimation: true })
+          store.dispatch('app/closeSideBar', { withoutAnimation: true })
         }
       }
     }

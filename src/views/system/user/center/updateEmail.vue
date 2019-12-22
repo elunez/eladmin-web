@@ -3,14 +3,14 @@
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="title" append-to-body width="475px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
         <el-form-item label="新邮箱" prop="email">
-          <el-input v-model="form.email" auto-complete="on" style="width: 200px;"/>
+          <el-input v-model="form.email" auto-complete="on" style="width: 200px;" />
           <el-button :loading="codeLoading" :disabled="isDisabled" size="small" @click="sendCode">{{ buttonName }}</el-button>
         </el-form-item>
         <el-form-item label="验证码" prop="code">
-          <el-input v-model="form.code" style="width: 320px;"/>
+          <el-input v-model="form.code" style="width: 320px;" />
         </el-form-item>
         <el-form-item label="当前密码" prop="pass">
-          <el-input v-model="form.pass" type="password" style="width: 320px;"/>
+          <el-input v-model="form.pass" type="password" style="width: 320px;" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -23,9 +23,9 @@
 
 <script>
 import store from '@/store'
-import { validatEmail } from '@/utils/validate'
-import { updateEmail } from '@/api/user'
-import { resetEmail } from '@/api/code'
+import { validEmail } from '@/utils/validate'
+import { updateEmail } from '@/api/system/user'
+import { resetEmail } from '@/api/system/code'
 export default {
   props: {
     email: {
@@ -39,7 +39,7 @@ export default {
         callback(new Error('新邮箱不能为空'))
       } else if (value === this.email) {
         callback(new Error('新邮箱不能与旧邮箱相同'))
-      } else if (validatEmail(value)) {
+      } else if (validEmail(value)) {
         callback()
       } else {
         callback(new Error('邮箱格式错误'))
@@ -103,8 +103,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.user = { email: this.form.email, password: this.form.pass }
-          updateEmail(this.form.code, this.user).then(res => {
+          updateEmail(this.form).then(res => {
             this.loading = false
             this.resetForm()
             this.$notify({

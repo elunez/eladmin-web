@@ -5,7 +5,7 @@
       <a href="https://github.com/codemirror/CodeMirror" target="_blank">CodeMirror</a>，
       主题预览地址 <a href="https://codemirror.net/demo/theme.html#idea" target="_blank">Theme</a>
     </p>
-    <Yaml :value="value" :height="height"/>
+    <Yaml :value="value" :height="height" />
   </div>
 </template>
 
