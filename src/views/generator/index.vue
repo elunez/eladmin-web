@@ -7,16 +7,17 @@
         <rrOperation :crud="crud" />
       </div>
       <crudOperation>
-        <el-button
-          slot="left"
-          class="filter-item"
-          size="mini"
-          type="success"
-          icon="el-icon-refresh"
-          :loading="syncLoading"
-          :disabled="crud.selections.length === 0"
-          @click="sync"
-        >同步</el-button>
+        <el-tooltip slot="right" class="item" effect="dark" content="数据库中表字段变动时使用该功能" placement="top-start">
+          <el-button
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-refresh"
+            :loading="syncLoading"
+            :disabled="crud.selections.length === 0"
+            @click="sync"
+          >同步</el-button>
+        </el-tooltip>
       </crudOperation>
     </div>
     <!--表格渲染-->
@@ -54,7 +55,9 @@
 </template>
 
 <script>
+
 import { generator, sync } from '@/api/generator/generator'
+import { downloadFile } from '@/utils/index'
 import CRUD, { presenter, header } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -88,7 +91,7 @@ export default {
     toDownload(tableName) {
       // 打包下载
       generator(tableName, 2).then(data => {
-        this.downloadFile(data, tableName, 'zip')
+        downloadFile(data, tableName, 'zip')
       })
     },
     sync() {

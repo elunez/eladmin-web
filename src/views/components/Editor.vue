@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <p class="warn-content">
-      Markdown 基于
+      富文本基于
       <el-link type="primary" href="https://www.kancloud.cn/wangfupeng/wangeditor3/332599" target="_blank">wangEditor</el-link>
       ，图片上传使用 <el-link type="primary" href="https://sm.ms/" target="_blank">SM.MS</el-link>
     </p>

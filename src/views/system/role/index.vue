@@ -62,7 +62,7 @@
             <span class="role-span">角色列表</span>
           </div>
           <el-table ref="table" v-loading="crud.loading" highlight-current-row style="width: 100%;" :data="crud.data" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
-            <el-table-column type="selection" width="55" />
+            <el-table-column :selectable="checkboxT" type="selection" width="55" />
             <el-table-column v-if="columns.visible('name')" prop="name" label="名称" />
             <el-table-column v-if="columns.visible('dataScope')" prop="dataScope" label="数据权限" />
             <el-table-column v-if="columns.visible('permission')" prop="permission" label="角色权限" />
@@ -76,6 +76,7 @@
             <el-table-column v-permission="['admin','roles:edit','roles:del']" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <udOperation
+                  v-if="scope.row.level >= level"
                   :data="scope.row"
                   :permission="permission"
                 />
@@ -142,7 +143,7 @@ export default {
   data() {
     return {
       defaultProps: { children: 'children', label: 'label' },
-      dateScopes: ['全部', '本级', '自定义'],
+      dateScopes: ['全部', '本级', '自定义'], level: 3,
       currentId: 0, menuLoading: false, showButton: false,
       menus: [], menuIds: [], depts: [],
       permission: {
@@ -162,6 +163,10 @@ export default {
   },
   created() {
     this.getMenus()
+    crudRoles.getLevel().then(data => {
+      this.level = data.level
+      console.log(this.level)
+    })
     this.$nextTick(() => {
       this.crud.toQuery()
     })
@@ -189,15 +194,30 @@ export default {
           type: 'warning'
         })
         return false
-      } else {
+      } else if (crud.form.dataScope === '自定义') {
         const depts = []
         crud.form.depts.forEach(function(data, index) {
           const dept = { id: data }
           depts.push(dept)
         })
         crud.form.depts = depts
+      } else {
+        crud.form.depts = []
       }
       return true
+    },
+    [CRUD.HOOK.afterAddError](crud) {
+      this.afterErrorMethod(crud)
+    },
+    [CRUD.HOOK.afterEditError](crud) {
+      this.afterErrorMethod(crud)
+    },
+    afterErrorMethod(crud) {
+      const depts = []
+      crud.form.depts.forEach(function(dept, index) {
+        depts.push(dept.id)
+      })
+      crud.form.depts = depts
     },
     // 获取所有菜单
     getMenus() {
@@ -213,8 +233,7 @@ export default {
         this.$refs.menu.setCheckedKeys([])
         // 保存当前的角色id
         this.currentId = val.id
-        // 点击后显示按钮
-        this.showButton = true
+        this.showButton = this.level <= val.level
         // 初始化
         this.menuIds = []
         // 菜单数据需要特殊处理
@@ -269,6 +288,9 @@ export default {
       if (this.form.dataScope === '自定义') {
         this.getDepts()
       }
+    },
+    checkboxT(row, rowIndex) {
+      return row.level >= this.level
     }
   }
 }

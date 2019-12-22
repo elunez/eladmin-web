@@ -6,21 +6,31 @@
           <div slot="header" class="clearfix">
             <span class="role-span">字段配置：{{ tableName }}</span>
             <el-button
+              :loading="genLoading"
+              icon="el-icon-s-promotion"
+              size="mini"
+              style="float: right; padding: 6px 9px;"
+              type="success"
+              @click="toGen"
+            >保存&生成</el-button>
+            <el-button
               :loading="columnLoading"
               icon="el-icon-check"
               size="mini"
-              style="float: right; padding: 6px 9px;"
+              style="float: right; padding: 6px 9px;margin-right: 9px"
               type="primary"
               @click="saveColumnConfig"
             >保存</el-button>
-            <el-button
-              :loading="syncLoading"
-              icon="el-icon-refresh"
-              size="mini"
-              style="float: right; padding: 6px 9px;margin-right: 10px"
-              type="success"
-              @click="sync"
-            >同步</el-button>
+            <el-tooltip class="item" effect="dark" content="数据库中表字段变动时使用该功能" placement="top-start">
+              <el-button
+                :loading="syncLoading"
+                icon="el-icon-refresh"
+                size="mini"
+                style="float: right; padding: 6px 9px;"
+                type="info"
+                @click="sync"
+              >同步</el-button>
+            </el-tooltip>
           </div>
           <el-form size="small" label-width="90px">
             <el-table v-loading="loading" :data="data" :max-height="tableHeight" size="small" style="width: 100%;margin-bottom: 15px">
@@ -96,6 +106,10 @@
                       value="Like"
                     />
                     <el-option
+                      label="NotNull"
+                      value="NotNull"
+                    />
+                    <el-option
                       label="BetWeen"
                       value="BetWeen"
                     />
@@ -161,14 +175,14 @@
               <el-input v-model="form.path" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">输入views文件夹下的目录，不存在即创建</span>
             </el-form-item>
+            <!--            <el-form-item label="接口目录">-->
+            <!--              <el-input v-model="form.apiPath" style="width: 40%" />-->
+            <!--              <span style="color: #C0C0C0;margin-left: 10px;">Api存放路径[src/api]，为空则自动生成路径</span>-->
+            <!--            </el-form-item>-->
             <el-form-item label="去表前缀" prop="prefix">
               <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">默认不去除表前缀，可自定义</span>
             </el-form-item>
-            <!--            <el-form-item label="Api路径">-->
-            <!--              <el-input v-model="form.apiPath"/>-->
-            <!--              <span style="color: #C0C0C0;margin-left: 10px;">Sender mailbox</span>-->
-            <!--            </el-form-item>-->
             <el-form-item label="是否覆盖" prop="cover">
               <el-radio-group v-model="form.cover" size="mini" style="width: 40%">
                 <el-radio-button label="true">是</el-radio-button>
@@ -186,7 +200,7 @@
 <script>
 import crud from '@/mixins/crud'
 import { update, get } from '@/api/generator/genConfig'
-import { save, sync } from '@/api/generator/generator'
+import { save, sync, generator } from '@/api/generator/generator'
 import { getDicts } from '@/api/system/dict'
 export default {
   name: 'GeneratorConfig',
@@ -194,7 +208,7 @@ export default {
   mixins: [crud],
   data() {
     return {
-      activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [], syncLoading: false,
+      activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [], syncLoading: false, genLoading: false,
       form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '', apiAlias: null },
       rules: {
         author: [
@@ -273,6 +287,23 @@ export default {
         this.syncLoading = false
       }).then(() => {
         this.syncLoading = false
+      })
+    },
+    toGen() {
+      this.genLoading = true
+      save(this.data).then(res => {
+        this.notify('保存成功', 'success')
+        // 生成代码
+        generator(this.tableName, 0).then(data => {
+          this.genLoading = false
+          this.notify('生成成功', 'success')
+        }).catch(err => {
+          this.genLoading = false
+          console.log(err.response.data.message)
+        })
+      }).catch(err => {
+        this.genLoading = false
+        console.log(err.response.data.message)
       })
     }
   }
