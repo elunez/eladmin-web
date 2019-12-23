@@ -211,7 +211,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 let userRoles = []
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '用户', url: 'api/users', crudMethod: { ...crudUser }})
-const defaultForm = { username: null, nickName: null, sex: '男', email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null }
+const defaultForm = { id: null, username: null, nickName: null, sex: '男', email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null }
 export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination },
