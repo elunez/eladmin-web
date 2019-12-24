@@ -3,7 +3,7 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <el-input v-model="query.filter" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation>
         <el-button
@@ -23,13 +23,13 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('userName')" prop="userName" label="用户名" />
-      <el-table-column v-if="columns.visible('nickName')" prop="nickName" label="用户昵称" />
-      <el-table-column v-if="columns.visible('job')" prop="job" label="岗位" />
-      <el-table-column v-if="columns.visible('ip')" prop="ip" label="登录IP" />
-      <el-table-column v-if="columns.visible('address')" :show-overflow-tooltip="true" prop="address" label="登录地点" />
-      <el-table-column v-if="columns.visible('browser')" prop="browser" label="浏览器" />
-      <el-table-column v-if="columns.visible('loginTime')" prop="loginTime" label="登录时间">
+      <el-table-column prop="userName" label="用户名" />
+      <el-table-column prop="nickName" label="用户昵称" />
+      <el-table-column prop="job" label="岗位" />
+      <el-table-column prop="ip" label="登录IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点" />
+      <el-table-column prop="browser" label="浏览器" />
+      <el-table-column prop="loginTime" label="登录时间">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.loginTime) }}</span>
         </template>

@@ -18,7 +18,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <template slot="left">
@@ -58,16 +58,16 @@
       <!--表格渲染-->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
         <el-table-column type="selection" width="55" />
-        <el-table-column v-if="columns.visible('name')" prop="name" :show-overflow-tooltip="true" label="文件名">
+        <el-table-column prop="name" :show-overflow-tooltip="true" label="文件名">
           <template slot-scope="scope">
             <a href="JavaScript:" class="el-link el-link--primary" target="_blank" type="primary" @click="download(scope.row.id)">{{ scope.row.key }}</a>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('suffix')" :show-overflow-tooltip="true" prop="suffix" label="文件类型" @selection-change="crud.selectionChangeHandler" />
-        <el-table-column v-if="columns.visible('bucket')" prop="bucket" label="空间名称" />
-        <el-table-column v-if="columns.visible('size')" prop="size" label="文件大小" />
-        <el-table-column v-if="columns.visible('type')" prop="type" label="空间类型" />
-        <el-table-column v-if="columns.visible('updateTime')" prop="updateTime" label="创建日期">
+        <el-table-column :show-overflow-tooltip="true" prop="suffix" label="文件类型" @selection-change="crud.selectionChangeHandler" />
+        <el-table-column prop="bucket" label="空间名称" />
+        <el-table-column prop="size" label="文件大小" />
+        <el-table-column prop="type" label="空间类型" />
+        <el-table-column prop="updateTime" label="创建日期">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.updateTime) }}</span>
           </template>

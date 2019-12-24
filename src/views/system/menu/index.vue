@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -95,39 +95,39 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" @select="crud.selectChange" @select-all="crud.selectAllChange" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name" />
-      <el-table-column v-if="columns.visible('icon')" prop="icon" label="图标" align="center" width="60px">
+      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name" />
+      <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('sort')" prop="sort" align="center" label="排序">
+      <el-table-column prop="sort" align="center" label="排序">
         <template slot-scope="scope">
           {{ scope.row.sort }}
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('path')" :show-overflow-tooltip="true" prop="path" label="路由地址" />
-      <el-table-column v-if="columns.visible('permission')" :show-overflow-tooltip="true" prop="permission" label="权限标识" />
-      <el-table-column v-if="columns.visible('component')" :show-overflow-tooltip="true" prop="component" label="组件路径" />
-      <el-table-column v-if="columns.visible('iframe')" prop="iframe" label="外链" width="75px">
+      <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址" />
+      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
+      <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" />
+      <el-table-column prop="iframe" label="外链" width="75px">
         <template slot-scope="scope">
           <span v-if="scope.row.iframe">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('cache')" prop="cache" label="缓存" width="75px">
+      <el-table-column prop="cache" label="缓存" width="75px">
         <template slot-scope="scope">
           <span v-if="scope.row.cache">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('hidden')" prop="hidden" label="可见" width="75px">
+      <el-table-column prop="hidden" label="可见" width="75px">
         <template slot-scope="scope">
           <span v-if="scope.row.hidden">否</span>
           <span v-else>是</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期" width="135px">
+      <el-table-column prop="createTime" label="创建日期" width="135px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>

@@ -5,7 +5,7 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者服务地址" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -33,7 +33,7 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('state')" prop="state" label="状态" width="50px">
+      <el-table-column prop="state" label="状态" width="50px">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.state === '1' ? 'success' : 'info'"
@@ -44,12 +44,12 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('name')" prop="name" label="名称" />
-      <el-table-column v-if="columns.visible('address')" prop="address" label="地址" />
-      <el-table-column v-if="columns.visible('port')" prop="port" label="端口" width="80px" align="center" />
-      <el-table-column v-if="columns.visible('cpuRate')" :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
-      <el-table-column v-if="columns.visible('cpuCore')" prop="cpuCore" label="CPU内核数" width="100px" align="center" />
-      <el-table-column v-if="columns.visible('memTotal')" prop="memTotal" label="物理内存" align="center">
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="address" label="地址" />
+      <el-table-column prop="port" label="端口" width="80px" align="center" />
+      <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
+      <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center" />
+      <el-table-column prop="memTotal" label="物理内存" align="center">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="24">{{ formatMem(scope.row) }}</el-col>
@@ -61,7 +61,7 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('diskTotal')" prop="diskTotal" :formatter="formatDisk" label="磁盘使用情况" align="center">
+      <el-table-column prop="diskTotal" :formatter="formatDisk" label="磁盘使用情况" align="center">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="24">{{ formatDisk(scope.row) }}</el-col>
@@ -73,7 +73,7 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('swapTotal')" prop="swapTotal" label="交换空间" align="center">
+      <el-table-column prop="swapTotal" label="交换空间" align="center">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="24">{{ formatSwap(scope.row) }}</el-col>
@@ -91,7 +91,7 @@
             :data="scope.row"
             :permission="permission"
           />
-        </template> v-if="columns.visible('name')"
+        </template>
       </el-table-column>
     </el-table>
     <!--分页组件-->

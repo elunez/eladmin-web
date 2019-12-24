@@ -6,12 +6,10 @@
   </span>
 </template>
 <script>
+import { crud } from '@crud/crud'
 export default {
+  mixins: [crud()],
   props: {
-    crud: {
-      type: Object,
-      required: true
-    },
     itemClass: {
       type: String,
       required: false,

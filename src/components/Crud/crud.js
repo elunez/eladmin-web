@@ -551,13 +551,6 @@ function mergeOptions(src, opts) {
  * crud主页
  */
 function presenter(crud) {
-  function obColumns(columns) {
-    return {
-      visible(col) {
-        return !columns || !columns[col] ? true : columns[col].visible
-      }
-    }
-  }
   return {
     inject: ['crud'],
     beforeCreate() {
@@ -571,8 +564,7 @@ function presenter(crud) {
     },
     data() {
       return {
-        searchToggle: true,
-        columns: obColumns()
+        searchToggle: true
       }
     },
     methods: {
@@ -588,18 +580,21 @@ function presenter(crud) {
       this.crud.unregisterVM(this)
     },
     mounted() {
-      const columns = {}
-      this.$refs.table.columns.forEach(e => {
+      const columns = []
+      this.$refs.table.columns.forEach((e, index) => {
         if (!e.property || e.type !== 'default') {
           return
         }
-        columns[e.property] = {
+        e.__index = index
+        columns.push({
+          property: e.property,
+          index,
           label: e.label,
           visible: true
-        }
+        })
       })
-      this.columns = obColumns(columns)
       this.crud.updateProp('tableColumns', columns)
+      this.crud.updateProp('table', this.$refs.table)
     }
   }
 }

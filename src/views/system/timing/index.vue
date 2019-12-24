@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <!-- 任务日志 -->
@@ -65,18 +65,18 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column :selectable="checkboxT" type="selection" width="55" />
-      <el-table-column v-if="columns.visible('jobName')" :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
-      <el-table-column v-if="columns.visible('beanName')" :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
-      <el-table-column v-if="columns.visible('methodName')" :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />
-      <el-table-column v-if="columns.visible('params')" :show-overflow-tooltip="true" prop="params" width="80px" label="参数" />
-      <el-table-column v-if="columns.visible('cronExpression')" :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式" />
-      <el-table-column v-if="columns.visible('isPause')" :show-overflow-tooltip="true" prop="isPause" width="90px" label="状态">
+      <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />
+      <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数" />
+      <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式" />
+      <el-table-column :show-overflow-tooltip="true" prop="isPause" width="90px" label="状态">
         <template slot-scope="scope">
           <el-tag :type="scope.row.isPause ? 'warning' : 'success'">{{ scope.row.isPause ? '已暂停' : '运行中' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('remark')" :show-overflow-tooltip="true" prop="remark" label="描述" />
-      <el-table-column v-if="columns.visible('createTime')" :show-overflow-tooltip="true" prop="createTime" label="创建日期">
+      <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
+      <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>

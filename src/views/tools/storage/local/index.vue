@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <!-- 新增 -->
@@ -64,7 +64,7 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" prop="name" label="文件名">
+      <el-table-column prop="name" label="文件名">
         <template slot-scope="scope">
           <el-popover
             :content="'file/' + scope.row.type + '/' + scope.row.realName"
@@ -85,7 +85,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('path')" prop="path" label="预览图">
+      <el-table-column prop="path" label="预览图">
         <template slot-scope="{row}">
           <el-image
             :src=" baseApi + '/file/' + row.type + '/' + row.realName"
@@ -100,11 +100,11 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('suffix')" prop="suffix" label="文件类型" />
-      <el-table-column v-if="columns.visible('type')" prop="type" label="类别" />
-      <el-table-column v-if="columns.visible('size')" prop="size" label="大小" />
-      <el-table-column v-if="columns.visible('operate')" prop="operate" label="操作人" />
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column prop="suffix" label="文件类型" />
+      <el-table-column prop="type" label="类别" />
+      <el-table-column prop="size" label="大小" />
+      <el-table-column prop="operate" label="操作人" />
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>

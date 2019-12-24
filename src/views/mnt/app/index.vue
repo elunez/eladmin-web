@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <el-button
@@ -64,12 +64,12 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" prop="name" label="应用名称" />
-      <el-table-column v-if="columns.visible('port')" prop="port" label="端口号" />
-      <el-table-column v-if="columns.visible('uploadPath')" prop="uploadPath" label="上传目录" />
-      <el-table-column v-if="columns.visible('deployPath')" prop="deployPath" label="部署目录" />
-      <el-table-column v-if="columns.visible('backupPath')" prop="backupPath" label="备份目录" />
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column prop="name" label="应用名称" />
+      <el-table-column prop="port" label="端口号" />
+      <el-table-column prop="uploadPath" label="上传目录" />
+      <el-table-column prop="deployPath" label="部署目录" />
+      <el-table-column prop="backupPath" label="备份目录" />
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
