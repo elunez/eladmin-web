@@ -86,11 +86,6 @@ export default {
     }
   },
   methods: {
-    // 获取数据前设置好接口地址
-    beforeInit() {
-      this.url = 'auth/online'
-      return true
-    },
     doDelete(datas) {
       this.$confirm(`确认强退选中的${datas.length}个用户?`, '提示', {
         confirmButtonText: '确定',

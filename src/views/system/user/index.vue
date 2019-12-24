@@ -308,10 +308,6 @@ export default {
         }
       })
     },
-    beforeInit() {
-      this.url = 'api/users'
-      return true
-    },
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       this.getDepts()
