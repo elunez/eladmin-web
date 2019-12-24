@@ -2,24 +2,21 @@
   <div class="app-container">
     <p class="warn-content">
       Markdown 基于
-      <a href="https://github.com/hinesboy/mavonEditor" target="_blank">mavonEditor</a>
+      <el-link type="primary" href="https://github.com/hinesboy/mavonEditor" target="_blank">MavonEditor</el-link>
+      ，图片上传使用 <el-link type="primary" href="https://sm.ms/" target="_blank">SM.MS</el-link>
     </p>
-    <mavon-editor ref="md" :style="'height:' + height" @imgAdd="imgAdd" @imgDel="imgDel"/>
+    <mavon-editor ref="md" :style="'height:' + height" @imgAdd="imgAdd" />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import { upload } from '@/utils/upload'
 import { mapGetters } from 'vuex'
-import { getToken } from '@/utils/auth'
-import { del } from '@/api/picture'
 export default {
   name: 'Markdown',
   data() {
     return {
-      height: document.documentElement.clientHeight - 200 + 'px',
-      data: null,
-      images: {}
+      height: document.documentElement.clientHeight - 200 + 'px'
     }
   },
   computed: {
@@ -28,7 +25,6 @@ export default {
     ])
   },
   mounted() {
-    this.$refs.md.$refs.toolbar_left.img_file = []
     const that = this
     window.onresize = function temp() {
       that.height = document.documentElement.clientHeight - 200 + 'px'
@@ -36,31 +32,9 @@ export default {
   },
   methods: {
     imgAdd(pos, $file) {
-      var formdata = new FormData()
-      formdata.append('file', $file)
-      axios({
-        url: this.imagesUploadApi,
-        method: 'post',
-        data: formdata,
-        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + getToken() }
-      }).then((data) => {
-        this.data = data.data
-        this.$refs.md.$img2Url(pos, this.data.data[0])
-
-        this.images[this.data.data[0]] = this.data
-      }).catch((error) => {
-        console.log('image upload error', error)
-        this.$refs.md.$refs.toolbar_left.$imgDel(pos)
+      upload(this.imagesUploadApi, $file).then(data => {
+        this.$refs.md.$img2Url(pos, data.data.url)
       })
-    },
-    imgDel(file, pos) {
-      const image = this.images[file[1]]
-      if (image) {
-        del(image.id).then(res => {
-        }).catch(err => {
-          console.log(err.response.data.message)
-        })
-      }
     }
   }
 }

@@ -2,14 +2,14 @@
   <div>
     <el-form ref="form" :model="form" :rules="rules" style="margin-top: 6px;" size="small" label-width="90px">
       <el-form-item label="商品名称" prop="subject">
-        <el-input v-model="form.subject" style="width: 35%"/>
+        <el-input v-model="form.subject" style="width: 35%" />
       </el-form-item>
       <el-form-item label="商品价格" prop="totalAmount">
-        <el-input v-model="form.totalAmount" style="width: 35%"/>
+        <el-input v-model="form.totalAmount" style="width: 35%" />
         <span style="color: #C0C0C0;margin-left: 10px;">测试允许区间(0,5000]</span>
       </el-form-item>
       <el-form-item label="商品描述" prop="body">
-        <el-input v-model="form.body" style="width: 35%" rows="8" type="textarea"/>
+        <el-input v-model="form.body" style="width: 35%" rows="8" type="textarea" />
       </el-form-item>
       <el-form-item label="">
         <el-button :loading="loading" size="medium" type="primary" @click="doSubmit">去支付</el-button>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { toAliPay } from '@/api/alipay'
+import { toAliPay } from '@/api/tools/alipay'
 export default {
   data() {
     return {

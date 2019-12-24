@@ -6,8 +6,8 @@
           <svg-icon icon-class="visits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Daily Pv</div>
-          <count-to :start-val="0" :end-val="count.newVisits" :duration="2600" class="card-panel-num"/>
+          <div class="card-panel-text">日流量</div>
+          <count-to :start-val="0" :end-val="count.newVisits" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -17,8 +17,8 @@
           <svg-icon icon-class="ipvisits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Daily Ip</div>
-          <count-to :start-val="0" :end-val="count.newIp" :duration="3000" class="card-panel-num"/>
+          <div class="card-panel-text">日IP量</div>
+          <count-to :start-val="0" :end-val="count.newIp" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -28,8 +28,8 @@
           <svg-icon icon-class="visits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Weekly Pv</div>
-          <count-to :start-val="0" :end-val="count.recentVisits" :duration="3200" class="card-panel-num"/>
+          <div class="card-panel-text">周流量</div>
+          <count-to :start-val="0" :end-val="count.recentVisits" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -39,8 +39,8 @@
           <svg-icon icon-class="ipvisits" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Weekly Ip</div>
-          <count-to :start-val="0" :end-val="count.recentIp" :duration="3600" class="card-panel-num"/>
+          <div class="card-panel-text">周IP量</div>
+          <count-to :start-val="0" :end-val="count.recentIp" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -49,7 +49,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { get } from '@/api/visits'
+import { get } from '@/api/monitor/visits'
 export default {
   components: {
     CountTo

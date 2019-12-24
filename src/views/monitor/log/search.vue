@@ -1,28 +1,35 @@
 <template>
-  <div class="head-container">
-    <el-input v-model="query.value" clearable placeholder="请输入搜索内容" style="width: 150px;" class="filter-item" @keyup.enter.native="toQuery"/>
-    <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
-      <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-    </el-select>
-    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="$parent.toQuery">搜索</el-button>
+  <div v-if="crud.props.searchToggle">
+    <el-input
+      v-model="query.blurry"
+      clearable
+      size="small"
+      placeholder="请输入你要搜索的内容"
+      style="width: 200px;"
+      class="filter-item"
+    />
+    <el-date-picker
+      v-model="query.createTime"
+      :default-time="['00:00:00','23:59:59']"
+      type="daterange"
+      range-separator=":"
+      size="small"
+      class="date-item"
+      value-format="yyyy-MM-dd HH:mm:ss"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+    />
+    <rrOperation
+      :crud="crud"
+    />
   </div>
 </template>
 
 <script>
+import { header } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
 export default {
-  props: {
-    query: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      queryTypeOptions: [
-        { key: 'username', display_name: '用户名' },
-        { key: 'description', display_name: '描述' }
-      ]
-    }
-  }
+  components: { rrOperation },
+  mixins: [header()]
 }
 </script>
