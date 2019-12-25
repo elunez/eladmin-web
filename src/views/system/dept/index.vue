@@ -123,7 +123,7 @@ export default {
     },
     // 提交前的验证
     [CRUD.HOOK.afterValidateCU]() {
-      if (!this.form.pid) {
+      if (!this.form.pid && this.form.id !== 1) {
         this.$message({
           message: '上级部门不能为空',
           type: 'warning'

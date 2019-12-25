@@ -157,7 +157,7 @@ import udOperation from '@crud/UD.operation'
 
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '菜单', url: 'api/menus', crudMethod: { ...crudMenu }})
-const defaultForm = { name: null, sort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
+const defaultForm = { id: null, name: null, sort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
 export default {
   name: 'Menu',
   components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation },

@@ -119,7 +119,7 @@ import pagination from '@crud/Pagination'
 
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
-const defaultForm = { jobName: null, beanName: null, methodName: null, params: null, cronExpression: null, isPause: false, remark: null }
+const defaultForm = { id: null, jobName: null, beanName: null, methodName: null, params: null, cronExpression: null, isPause: false, remark: null }
 export default {
   name: 'Timing',
   components: { Log, pagination, crudOperation, rrOperation },
