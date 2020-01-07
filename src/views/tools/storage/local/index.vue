@@ -58,7 +58,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
         <el-button v-if="crud.status.add" :loading="loading" type="primary" @click="upload">确认</el-button>
-        <el-button v-else :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button v-else :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--表格渲染-->
