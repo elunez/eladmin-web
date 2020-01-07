@@ -16,7 +16,7 @@
           <el-form-item label="字典标签" prop="label">
             <el-input v-model="form.label" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="字典值">
+          <el-form-item label="字典值" prop="value">
             <el-input v-model="form.value" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="排序" prop="sort">
@@ -83,6 +83,9 @@ export default {
       rules: {
         label: [
           { required: true, message: '请输入字典标签', trigger: 'blur' }
+        ],
+        value: [
+          { required: true, message: '请输入字典值', trigger: 'blur' }
         ],
         sort: [
           { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }

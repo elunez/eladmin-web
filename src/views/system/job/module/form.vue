@@ -73,7 +73,7 @@
         取消
       </el-button>
       <el-button
-        :loading="crud.cu === 2"
+        :loading="crud.status.cu === 2"
         type="primary"
         @click="crud.submitCU"
       >

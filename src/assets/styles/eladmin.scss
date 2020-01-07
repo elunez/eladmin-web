@@ -3,11 +3,14 @@
   .filter-item {
     display: inline-block;
     vertical-align: middle;
-    margin: 0 2px 10px 0;
+    margin: 0 3px 10px 0;
     input {
       height: 30.5px;
       line-height: 30.5px;
     }
+  }
+  .el-button+.el-button {
+    margin-left: 0 !important;
   }
   .el-select__caret.el-input__icon.el-icon-arrow-up{
     line-height: 30.5px;
@@ -17,7 +20,7 @@
     vertical-align: middle;
     margin-bottom: 10px;
     height: 30.5px;
-    width: 223px;
+    width: 223px !important;
   }
 }
 .el-avatar {

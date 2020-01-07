@@ -51,7 +51,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <el-row :gutter="15">
@@ -165,7 +165,6 @@ export default {
     this.getMenus()
     crudRoles.getLevel().then(data => {
       this.level = data.level
-      console.log(this.level)
     })
     this.$nextTick(() => {
       this.crud.toQuery()
