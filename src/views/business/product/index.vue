@@ -163,7 +163,7 @@
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"/>
-    <right-menu ref="rightMenu" @copyClick="copyClick"/>
+    <right-menu ref="rightMenu" :menu="menu"/>
   </div>
 </template>
 
@@ -182,7 +182,7 @@ export default {
   data() {
     return {
       delLoading: false,
-      uploadApi:'api/product/upload',
+      uploadApi:'api/product',
       multipleSelection:[],
       form: {
         id: '',
@@ -193,7 +193,13 @@ export default {
         releaseStatus: '',
         releaseTime: null,
         memo: ''
-      }
+      },
+      menu:[
+        {
+          title:'复制新增',
+          click:this.copyClick
+        }
+      ]
     }
   },
   created() {
@@ -270,7 +276,7 @@ export default {
         }
         data = this.multipleSelection ;
       }
-      this.openFullScreen('产品信息列表');
+      this.openFullScreen('导出','产品信息列表');
       downloadProduct(data).then(result => {
         downloadFile(result, '产品信息列表', 'xlsx')
         this.loadingInstance.close();

@@ -104,7 +104,6 @@
             :data="menus"
             :default-checked-keys="menuIds"
             :props="defaultProps"
-            check-strictly
             accordion
             show-checkbox
             node-key="id"/>
@@ -197,8 +196,13 @@ export default {
         this.menuIds = []
         // 菜单数据需要特殊处理
         val.menus.forEach(function(data, index) {
-          _this.menuIds.push(data.id)
+          if(data.type==2){
+            _this.menuIds.push(data.id)
+          }else if(data.type==1 &&data.children ==null ) {
+            _this.menuIds.push(data.id)
+          }
         })
+
       }
     },
     saveMenu() {

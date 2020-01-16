@@ -26,7 +26,7 @@ export default {
   /**
    * @description 请求超时时间，毫秒（默认2分钟）
    */
-  timeout: 1200000,
+  timeout: 1200000000,
 
   /**
    * @description 是否显示 tagsView

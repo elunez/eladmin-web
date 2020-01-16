@@ -85,7 +85,7 @@ export default {
         functionName: [
           { required: true, message: '请输入功能名称', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个汉字', trigger: 'blur' }
-          ],
+        ],
         functionType: [
           {required:true, message: '请选择功能类型',trigger: 'blur'}
         ],
@@ -94,10 +94,10 @@ export default {
           { min: 1, max: 50, message: '长度在 1 到 20 个汉字', trigger: 'blur' }
         ],
         memo: [
-          { required: true, message: '请输入备注', trigger: 'blur' },
-          { min: 1, max: 100, message: '长度在 1 到 100 个汉字', trigger: 'blur' }
+          { min: 1, max: 200, message: '长度在 1 到 200 个汉字', trigger: 'blur' }
         ]
-      }
+      },
+      functionItem:{}
     }
   },
   methods: {
@@ -124,11 +124,13 @@ export default {
           title: '添加成功',
           type: 'success',
           duration: 2500
-        })
+        });
+        this.functionItem = res;
         this.loading = false
         this.$parent.init()
       }).catch(err => {
-        this.loading = false
+        this.loading = false;
+        this.functionItem = {};
         console.log(err.response.data.message)
       })
     },

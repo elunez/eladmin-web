@@ -11,8 +11,9 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: BASE_SERVICE + '/' + id,
-    method: 'delete'
+    url: BASE_SERVICE+'/delete',
+    method: 'post',
+    data:id
   })
 }
 
@@ -24,11 +25,11 @@ export function edit(data) {
   })
 }
 
-export function downloadBusinessInfo(data) {
+export function downloadBusinessInfo(params) {
   return request({
     url: BASE_SERVICE+'/download',
     method: 'post',
-    data:data,
+    data:params,
     responseType: 'blob'
   })
 }

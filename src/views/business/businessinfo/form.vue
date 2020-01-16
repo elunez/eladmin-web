@@ -1,10 +1,10 @@
 <template>
-  <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="operate" width="1200px">
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="180px" :disabled="operate==='详情'">
-      <el-row :gutter="8">
-        <el-col :span="8">
+  <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="operate" width="70%">
+    <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="80px" :disabled="operate==='详情'">
+      <el-row :gutter="4">
+        <el-col :span="6">
           <el-form-item label="行业" prop="custType">
-            <el-select v-model="form.custType" filterable  placeholder="请选择" @change="custTypeAndAreaChange">
+            <el-select v-model="form.custType"  filterable  placeholder="请选择" @change="custTypeAndAreaChange" style="width: 150px;">
               <el-option
                 v-for="item in dictCustType"
                 :key="item.value"
@@ -13,9 +13,9 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="地区" prop="area">
-            <el-select v-model="form.area" filterable  placeholder="请选择" @change="custTypeAndAreaChange">
+            <el-select v-model="form.area" filterable  placeholder="请选择" @change="custTypeAndAreaChange" style="width: 150px;">
               <el-option
                 v-for="item in dictArea"
                 :key="item.value"
@@ -24,14 +24,15 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="客户名称" prop="custName">
+        <el-col :span="6">
+          <el-form-item label="客户名称" prop="custName" >
             <el-select
               v-model="form.custName"
               filterable
               remote
               reserve-keyword
               placeholder="输入客户名称(支持模糊查询)"
+              style="width: 150px;"
               :remote-method="custRemoteMethod"
               :loading="custLoading">
               <el-option
@@ -43,11 +44,9 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="8">
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="产品" prop="productId">
-            <el-select v-model="form.productId" filterable  placeholder="请选择">
+            <el-select v-model="form.productId" filterable  placeholder="请选择" style="width: 150px;">
               <el-option
                 v-for="item in dictBisProductId"
                 :key="item.value"
@@ -56,9 +55,11 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+      </el-row>
+      <el-row :gutter="4">
+        <el-col :span="6">
           <el-form-item label="项目类型" prop="projectType">
-            <el-select v-model="form.projectType" filterable  placeholder="请选择">
+            <el-select v-model="form.projectType" filterable  placeholder="请选择" style="width: 150px;" >
               <el-option
                 v-for="item in dictProjectType"
                 :key="item.value"
@@ -67,15 +68,31 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="项目类别" prop="projectClass">
-            <el-select v-model="form.projectClass" filterable  placeholder="请选择">
+            <el-select v-model="form.projectClass" filterable  placeholder="请选择" style="width: 150px;">
               <el-option
                 v-for="item in dictProjectClass"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value" ></el-option>
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="竞争对手" prop="competitor">
+            <el-select v-model="form.competitor" filterable  multiple placeholder="请选择" style="width: 150px;">
+              <el-option
+                v-for="item in dictCompetitor"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="预计金额" prop="contractBalance">
+            <el-input v-model="form.contractBalance" style="width: 150px;"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -86,33 +103,15 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="8">
-        <el-col :span="8">
-          <el-form-item label="竞争对手" prop="competitor">
-            <el-select v-model="form.competitor" filterable  multiple placeholder="请选择">
-              <el-option
-                v-for="item in dictCompetitor"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value" ></el-option>
-            </el-select>
+      <el-row :gutter="4">
+        <el-col :span="6">
+          <el-form-item label="成交金额" prop="confirmBalance">
+            <el-input v-model="form.confirmBalance" style="width: 150px;"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="预计合同金额(万元)" prop="contractBalance">
-            <el-input v-model="form.contractBalance" style="width: 200px;"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="成交金额(万元)" prop="confirmBalance">
-            <el-input v-model="form.confirmBalance" style="width: 200px;"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="8">
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="成功率" prop="successRate">
-            <el-select v-model="form.successRate" filterable  placeholder="请选择">
+            <el-select v-model="form.successRate" filterable  placeholder="请选择" style="width: 150px;">
               <el-option
                 v-for="item in dictSuccessRate"
                 :key="item.value"
@@ -121,14 +120,14 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="预计合同签订日期" prop="contractTime">
-            <el-date-picker v-model="form.contractTime" type="month"/>
+        <el-col :span="6">
+          <el-form-item label="预签日期" prop="contractTime">
+            <el-date-picker v-model="form.contractTime" type="month" style="width: 150px;"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="所处阶段" prop="stage">
-            <el-select v-model="form.stage" filterable  placeholder="请选择">
+            <el-select v-model="form.stage" filterable  placeholder="请选择" style="width: 150px;">
               <el-option
                 v-for="item in dictStage"
                 :key="item.value"
@@ -138,10 +137,10 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="8">
-        <el-col :span="8">
+      <el-row :gutter="4">
+        <el-col :span="6">
           <el-form-item label="跟进人员" prop="followPerson">
-            <el-select v-model="form.followPerson" filterable  placeholder="请选择">
+            <el-select v-model="form.followPerson" filterable  placeholder="请选择" style="width: 150px;">
               <el-option
                 v-for="item in dictFollowPerson"
                 :key="item.value"
@@ -150,34 +149,35 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="更新时间" prop="updateTime">
-            <el-date-picker v-model="form.updateTime" type="date" style="width: 200px;"/>
+            <el-date-picker v-model="form.updateTime" type="date" style="width: 150px;"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="销售" prop="salePerson">
-            <el-input v-model="form.salePerson" style="width: 200px;"/>
+            <el-input v-model="form.salePerson" style="width: 150px;"/>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="8">
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="签单时间" prop="estimatedTime">
-            <el-date-picker v-model="form.estimatedTime" type="date" style="width: 200px;"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="合同归档日期" prop="contractFillDate">
-            <el-date-picker v-model="form.contractFillDate" type="date" style="width: 200px;"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="问题反馈及备注" prop="memo">
-            <el-input v-model="form.memo" style="width: 200px;" type="textarea"/>
+            <el-date-picker v-model="form.estimatedTime" type="date" style="width: 150px;"/>
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :span="6">
+          <el-form-item label="归档日期" prop="contractFillDate">
+            <el-date-picker v-model="form.contractFillDate" type="date" style="width: 150px;"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="18">
+          <el-form-item label="问题反馈" prop="memo">
+            <el-input v-model="form.memo"  type="textarea"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -189,6 +189,7 @@
 <script>
 import { add, edit } from '@/api/businessInfo'
 import { initData } from  '@/api/data'
+import { queryCustName } from  '@/utils/business'
 import { arrToString, deepClone, formatDate, yearMonthDate } from '@/utils/index'
 export default {
   props: {
@@ -393,28 +394,6 @@ export default {
         memo: ''
       }
     },
-    queryCustName(custType,area,custName){
-      var url = 'api/customer'
-      const sort = 'id,desc'
-      var params = { page: 0, size: 999999, sort: sort };
-      if (custType !== ''){
-        params["custType"] = custType
-      }
-      if (area !== ''){
-        params["area"] = area;
-      }
-      if (custName !== ''){
-        params["custName"] = custName;
-      }
-      initData(url,params).then( (res)=>{
-          this.custOption = res.content;
-          this.custLoading = false;
-      }).catch((err)=>{
-        this.custLoading = false;
-        this.custOption =[];
-        this.$message.error("查询客户名称选项出错!")
-      })
-    },
     custRemoteMethod(custName){
        if (!this.form.custType){
           this.$message.warning("请先选择行业!");
@@ -424,7 +403,11 @@ export default {
           this.custOption = [];
         } else if(this.form.custType !== '' && this.form.area !== ''){
          this.custLoading = true;
-         this.queryCustName(this.form.custType,this.form.area,custName);
+         queryCustName(this.form.custType,this.form.area,custName).then(res=>{
+           this.custOption  = res.option;
+           this.custLoading = res.loading;
+         });
+
        }else {
          this.custOption = [];
        }
@@ -433,13 +416,17 @@ export default {
       if(this.form.custType !== '' && this.form.area !== ''){
         this.custLoading = true;
         this.form.custName = '';
-        this.queryCustName(this.form.custType,this.form.area,this.form.custName);
+        queryCustName(this.form.custType,this.form.area,this.form.custName).then(res=>{
+          this.custOption  = res.option;
+          this.custLoading = res.loading;
+        })
+
       }
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>

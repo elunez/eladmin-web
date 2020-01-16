@@ -37,6 +37,23 @@ export function parseTimeYMD(time) {
     return ''
   }
 }
+/*年月日*/
+export function parseTimeymd(time) {
+  if (time) {
+    var date = new Date(time)
+    var year = date.getFullYear()
+    /* 在日期格式中，月份是从0开始的，因此要加0
+     * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+     * */
+    var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+    var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+    var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+    // 拼接
+    return year +''+ month+'' + day;
+  } else {
+    return ''
+  }
+}
 export function formatTime(time, option) {
   time = +time * 1000
   const d = new Date(time)
@@ -165,11 +182,11 @@ export function removeClass(ele, cls) {
 }
 
 export function downloadFile(obj, name, suffix) {
-  const url = window.URL.createObjectURL(new Blob([obj]))
+  const url = window.URL.createObjectURL(new Blob([obj],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
   const link = document.createElement('a')
   link.style.display = 'none'
   link.href = url
-  const fileName = parseTime(new Date()) + '-' + name + '.' + suffix
+   const fileName = parseTime(new Date()) + '-' + name + '.' + suffix
   link.setAttribute('download', fileName)
   document.body.appendChild(link)
   link.click()
@@ -201,31 +218,48 @@ export  function arrToString(arr){
   }
   return '';
 }
-
-export function dictValueFindLabel(dict,value) {
-   if(dict){
-      var label = '';
-      for(var i=0;i<dict.length;i++){
-         if(dict[i].value === value){
-            label = dict[i].label;
-         }
+export  function getDictCaption(value,dict){
+  var dictlabel = value;
+  if(!value ||  !dict){
+    return dictlabel;
+  }else {
+    if(value.indexOf(',') === -1){
+      dictlabel = dictValueFindLabel(value,dict);
+    }else {
+      var dataArr = value.split(',');
+      dictlabel =  dictValueFindLabel(dataArr[0],dict)
+      for(var i = 1; i<dataArr.length;i++){
+        dictlabel = dictlabel+','+dictValueFindLabel(dataArr[i],dict);
       }
-      return label;
-   }
-}
-
-export function stringSplitHaveDict(val,dict) {
-  var data = '';
-  if(val.length){
-    var dataArr = val.split(',');
-    data = dictValueFindLabel(dict,dataArr[0])
-    for(var i = 1; i<dataArr.length;i++){
-      data = data+','+dictValueFindLabel(dict,dataArr[i]);
     }
   }
-  return data;
+  return  dictlabel;
 }
-
+export  function getDictValue(label,dict){
+  var dictVaule = label;
+  if(!label ||  !dict){
+    return dictVaule;
+  }else {
+    for(var i=0;i<dict.length;i++){
+       if(dict[i].label === label){
+         dictVaule = dict[i].value;
+         break;
+       }
+    }
+  }
+  return  dictVaule;
+}
+function dictValueFindLabel(value,dict) {
+  if(dict){
+    var label = '';
+    for(var i=0;i<dict.length;i++){
+      if(dict[i].value === value){
+        label = dict[i].label;
+      }
+    }
+    return label;
+  }
+}
 export const formatDate = (date, fmt = 'yyyy/MM/dd') => {
   if (!date) date = new Date()
   if (typeof date === 'string') {
@@ -274,3 +308,51 @@ export const yearMonthDate = (date, fmt = 'yyyy/MM/dd') => {
   var mydate = (year.toString()+"-"+month.toString());
   return mydate
 };
+
+
+export function findArrayAttr(arr,attr,value){
+    var index = -1;
+    if(arr){
+      for(var i = 0;i < arr.length;i++){
+         if(arr[i][attr]===value){
+           index = i;
+           break;
+         }
+      }
+    }
+    return index;
+}
+
+export function trim(str){ //删除左右两端的空格
+  return str.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+export function ltrim(str){ //删除左边的空格
+  return str.replace(/(^\s*)/g,"");
+}
+
+export function rtrim(str){ //删除右边的空格
+  return str.replace(/(\s*$)/g,"");
+}
+
+export function strDate(str){
+  var date = str;
+  if(date&&date.length ===8){
+    date = str.substring(0,4)+'/'+str.substring(4,6)+'/'+str.substring(6,8)
+  }
+  return date;
+}
+
+export   function find(str,cha,num){
+  var x=str.indexOf(cha);
+  for(var i=1;i<num;i++){
+    x=str.indexOf(cha,x+1);
+  }
+  return x;
+}
+
+export function coutChar(str,cha) {
+  var num = 0;
+  num = (str.split(cha)).length-1;
+  return num;
+}

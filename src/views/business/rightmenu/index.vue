@@ -1,21 +1,29 @@
 <template>
   <div class="tags-view-container">
     <ul v-show="rightMenuVisible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="copyClick">复制新增</li>
+      <li v-for="menuItem in menu" @click="menuItem.click">{{menuItem.title}}</li>
     </ul>
   </div>
 </template>
 
 <script>
     export default {
-        name: "rightMenu",
-        data(){
-          return {
-            rightMenuVisible: false,
-            left: 0,
-            top: 0
-          }
-        },
+      name: "rightMenu",
+      props:{
+        menu:{
+           type:Array,
+           default(){
+             return []
+           }
+        }
+      },
+      data(){
+        return {
+          rightMenuVisible: false,
+          left: 0,
+          top: 0
+        }
+      },
       watch: {
         rightMenuVisible(value){
           if (value) {
@@ -42,9 +50,6 @@
         },
         closeMenu() {
           this.rightMenuVisible = false
-        },
-        copyClick(){
-            this.$emit("copyClick");
         }
       }
     }

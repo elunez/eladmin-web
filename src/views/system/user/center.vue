@@ -15,7 +15,7 @@
                 :headers="headers"
                 :action="updateAvatarApi"
                 class="avatar-uploader">
-                <img :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" title="点击上传头像" class="avatar">
+                <img :src="user.avatar ? baseApi + fileUrl + user.avatar : Avatar" title="点击上传头像" class="avatar">
               </el-upload>
             </div>
             <ul class="user-info">
@@ -94,6 +94,7 @@ export default {
   data() {
     return {
       Avatar: Avatar,
+      fileUrl:process.env.NODE_ENV === 'production' ?'/pdpmfile/avatar/':'/avatar/',
       ico: 'el-icon-refresh',
       headers: {
         'Authorization': 'Bearer ' + getToken()
@@ -178,7 +179,7 @@ export default {
     }
     .user-right {
       float: right;
-
+      font-size: 10px;
       a{
         color: #317EF3;
       }

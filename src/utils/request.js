@@ -8,7 +8,7 @@ import Config from '@/config'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.NODE_ENV === 'production' ? process.env.BASE_API : '/', // api 的 base_url
-  timeout: Config.timeout // 请求超时时间
+  timeout: 1200000000000 // 请求超时时间
 })
 
 // request拦截器

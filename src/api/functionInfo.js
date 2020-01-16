@@ -1,6 +1,19 @@
 import request from '@/utils/request'
 const  BASE_SERVICE = 'api/functionInfo';
 
+export function all() {
+  return request({
+    url: BASE_SERVICE+'/all',
+    method: 'get'
+  })
+}
+export function scriptName(params) {
+  return request({
+    url: BASE_SERVICE+'/scriptName',
+    method: 'post',
+    data:params
+  })
+}
 export function add(data) {
   return request({
     url: BASE_SERVICE,

@@ -1,5 +1,5 @@
 import { initData } from '@/api/data'
-import { Loading } from 'element-ui';
+import { Loading } from 'element-ui';;
 export default {
   data() {
     return {
@@ -16,7 +16,8 @@ export default {
       operate:'',
       downloadLoading: false,
       loadingInstance:null,
-      rightClickRow:{}
+      rightClickRow:{},
+      clientHeight:0
     }
   },
   methods: {
@@ -64,10 +65,10 @@ export default {
       this.page = 0
       this.init()
     },
-    openFullScreen(name) {
+    openFullScreen(type,name) {
       this.loadingInstance = Loading.service({
         lock: true,
-        text: '正在导出'+name+'Execl...',
+        text: '正在'+type+name+'Execl...',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });

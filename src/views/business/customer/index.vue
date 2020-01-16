@@ -164,7 +164,7 @@
         <custProduct ref="custProduct" :cust="cust"/>
       </el-card>
     </el-dialog>
-    <right-menu ref="rightMenu" @copyClick="copyClick"/>
+    <right-menu ref="rightMenu" :menu="menu"/>
   </div>
 </template>
 
@@ -186,7 +186,7 @@ export default {
   data() {
     return {
       delLoading: false,
-      uploadApi:'api/customer/upload',
+      uploadApi:'api/customer',
       multipleSelection:[],
       dialog:false,
       cust:{},
@@ -196,7 +196,13 @@ export default {
         area: '',
         custName: '',
         memo: ''
-      }
+      },
+      menu:[
+        {
+          title:'复制新增',
+          click:this.copyClick
+        }
+      ]
     }
   },
   created() {
@@ -269,7 +275,7 @@ export default {
          }
          data = this.multipleSelection ;
       }
-      this.openFullScreen('客户列表');
+      this.openFullScreen('导出','客户列表');
       downloadCustomer(data).then(result => {
         downloadFile(result, '客户列表', 'xlsx')
         this.loadingInstance.close();

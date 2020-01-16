@@ -64,7 +64,7 @@
             trigger="hover">
             <a
               slot="reference"
-              :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName"
+              :href="baseApi + fileUrl + scope.row.type + '/' + scope.row.realName"
               class="el-link--primary"
               style="word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color: #1890ff;font-size: 13px;"
               target="_blank">
@@ -76,8 +76,8 @@
       <el-table-column prop="path" label="预览图">
         <template slot-scope="{row}">
           <el-image
-            :src=" baseApi + '/file/' + row.type + '/' + row.realName"
-            :preview-src-list="[baseApi + '/file/' + row.type + '/' + row.realName]"
+            :src=" baseApi + fileUrl + row.type + '/' + row.realName"
+            :preview-src-list="[baseApi + fileUrl + row.type + '/' + row.realName]"
             fit="contain"
             lazy
             class="el-avatar">
@@ -139,6 +139,7 @@ export default {
   data() {
     return {
       delLoading: false, delAllLoading: false,
+      fileUrl:process.env.NODE_ENV === 'production' ?'/pdpmfile/file/':'/file/',
       queryTypeOptions: [
         { key: 'name', display_name: '文件名' },
         { key: 'suffix', display_name: '后缀' },

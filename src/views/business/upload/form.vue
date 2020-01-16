@@ -12,7 +12,7 @@
           :on-success="handleSuccess"
           :on-error="handleError"
           accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          :action="baseURL+uploadApi">
+          :action="baseURL+uploadApi+'/upload'">
           <div class="eladmin-upload"><i class="el-icon-upload"/> 添加文件</div>
           <div slot="tip" class="el-upload__tip">只可上传EXECL文件,且文件行数不超过2000行</div>
         </el-upload>
@@ -20,7 +20,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
-      <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
+      <el-button  type="primary" @click="doSubmit">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -28,6 +28,7 @@
 <script>
 import { getToken } from '@/utils/auth'
 import Config from '@/config'
+import initData from '@/mixins/initData'
 export default {
   props: {
     uploadApi: {
@@ -35,15 +36,16 @@ export default {
       required: true
     }
   },
+  mixins: [initData],
   data() {
     return {
-      loading: false, dialog: false,
+      fileName: '', dialog: false,
       headers: { 'Authorization': 'Bearer ' + getToken() },
       form: {
         id: '',
         name: ''
       },
-      baseURL: process.env.NODE_ENV === 'production' ? process.env.BASE_API : '/',
+      baseURL: process.env.NODE_ENV === 'production' ? process.env.BASE_API+'/' : '/',
       rules: {
       }
     }
@@ -55,7 +57,7 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.loading = true;
+      this.openFullScreen('导入',this.fileName);
       this.$refs.upload.submit()
     },
     resetForm() {
@@ -76,7 +78,7 @@ export default {
       if (!isLt2M) {
         this.$message.error('文件格式不正确(.xls或.xlsx)');
       }
-      this.loading = false;
+      this.fileName = file.name;
       return isLt2M
     },
     handleSuccess(response, file, fileList) {
@@ -84,6 +86,7 @@ export default {
       this.resetForm();
       this.$refs.upload.clearFiles();
       this.$parent.init();
+      this.loadingInstance.close();
     },
     // 监听上传失败
     handleError(e, file, fileList) {
@@ -93,7 +96,8 @@ export default {
         type: 'error',
         duration: 2500
       });
-      this.loading = false
+      this.fileName = ''
+      this.loadingInstance.close();
     }
   }
 }
