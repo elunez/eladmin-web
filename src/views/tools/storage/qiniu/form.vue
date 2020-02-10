@@ -13,7 +13,7 @@
       <el-form-item label="外链域名" prop="host">
         <el-input v-model="form.host" style="width: 95%;" placeholder="外链域名，可自定义，需在七牛云绑定" />
       </el-form-item>
-      <el-form-item label="存储区域" prop="port">
+      <el-form-item label="存储区域">
         <el-select v-model="form.zone" placeholder="请选择存储区域">
           <el-option
             v-for="item in zones"
@@ -23,7 +23,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="空间类型" prop="host">
+      <el-form-item label="空间类型" prop="type">
         <el-radio v-model="form.type" label="公开">公开</el-radio>
         <el-radio v-model="form.type" label="私有">私有</el-radio>
       </el-form-item>
