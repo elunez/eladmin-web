@@ -11,7 +11,7 @@
         <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       </div>
       <!--表单组件-->
-      <eForm ref="form" :is-add="isAdd" :dict-id="dictId"/>
+      <eForm ref="form" :is-add="isAdd" :dict-id="dictId" :last-dict-detail="lastDictDetail"/>
       <!--表格渲染-->
       <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
         <el-table-column label="所属字典">
@@ -62,11 +62,18 @@ export default {
   mixins: [initData],
   data() {
     return {
-      delLoading: false, dictName: '', dictId: 0
+      delLoading: false, dictName: '', dictId: 0,lastDictDetail:''
     }
   },
   created() {
     this.loading = false
+  },
+  watch:{
+    loading(loading){
+      if(!loading){
+        this.detailrefresh();
+      }
+    }
   },
   methods: {
     checkPermission,
@@ -106,6 +113,32 @@ export default {
         sort: data.sort
       }
       _this.dialog = true
+    },
+    detailrefresh(){
+      if( this.data &&  this.data.length){
+        this.data.sort((a,b)=>{
+          var orderA = a.value;
+          var orderB = b.value;
+          if(orderA.length==orderB.length){
+            return orderB.localeCompare(orderA);
+          }else{
+            return orderB.length-orderA.length;
+          }
+        })
+        this.lastDictDetail = this.data[0].value;
+        console.log("lastDictDetail:"+JSON.stringify(this.lastDictDetail))
+        var val = this.lastDictDetail;
+        console.log("val:"+val);
+        var value = '0';
+        if(val){
+          if(parseFloat(val).toString() == "NaN"){
+            value = val+'1';
+          }else {
+            value = String(Number(val)+1);
+          }
+        }
+        this.lastDictDetail = value;
+      }
     }
   }
 }

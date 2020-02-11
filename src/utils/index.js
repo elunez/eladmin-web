@@ -344,15 +344,20 @@ export function strDate(str){
 }
 
 export   function find(str,cha,num){
-  var x=str.indexOf(cha);
-  for(var i=1;i<num;i++){
-    x=str.indexOf(cha,x+1);
+  var x=-1;
+  if(str){
+    x= str.indexOf(cha);
+    for(var i=1;i<num;i++){
+      x=str.indexOf(cha,x+1);
+    }
   }
   return x;
 }
 
 export function coutChar(str,cha) {
   var num = 0;
-  num = (str.split(cha)).length-1;
+  if(str){
+    num = (str.split(cha)).length-1;
+  }
   return num;
 }

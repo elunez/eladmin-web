@@ -157,50 +157,52 @@
     <!--导入表单-->
     <uploadForm ref="upform" :uploadApi="uploadApi"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="rowDoubleClick"
+    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;" border
+              @selection-change="handleSelectionChange"
+              @row-dblclick="rowDoubleClick"
               :max-height="clientHeight"
               @contextmenu.prevent.native="$refs.rightMenu.openMenu($event,checkPermission(['admin','functionInfo:add']))" @row-contextmenu="rowContextMenu"
               @expand-change="expandChange">
-      <el-table-column
+      <af-table-column
               type="selection"
               width="55">
-      </el-table-column>
-      <el-table-column type="expand">
+      </af-table-column>
+      <af-table-column type="expand">
         <template slot-scope="scope">
           <el-tabs v-if="scope.row.scripts && scope.row.scripts.length > 0" tab-position="left" :value="expandActiveName[scope.row.id].activeName" @tab-click="(tab,event)=>{expandTabClick(tab,event,scope.row)}">
             <el-tab-pane lazy v-for="item in expandModuleType.concat(dict.module_type)" :label="item.label" :key="item.value" :name="item.value">
               <el-table   :data="expandActiveName[scope.row.id].data" size="small" style="width: 100%;">
-                <el-table-column prop="scriptClass" label="脚本类别">
+                <af-table-column prop="scriptClass" label="脚本类别">
                   <template slot-scope="scopest">
                     <div>{{getDictCaption(scopest.row.scriptClass,dict.script_class)}}</div>
                   </template>
-                </el-table-column>
-                <el-table-column prop="scriptName" label="脚本名称"/>
-                <el-table-column prop="effectVersion" label="生效版本"/>
-                <el-table-column prop="userManualName" label="用户手册名称"/>
+                </af-table-column>
+                <af-table-column prop="scriptName" label="脚本名称"/>
+                <af-table-column prop="effectVersion" label="生效版本"/>
+                <af-table-column prop="userManualName" label="用户手册名称"/>
               </el-table>
             </el-tab-pane>
           </el-tabs>
         </template>
-      </el-table-column>
-      <el-table-column prop="productId" label="产品名称"  width="85px">
+      </af-table-column>
+      <af-table-column prop="productId" label="产品名称"  width="85px">
         <template slot-scope="scope">
           <div>{{getDictCaption(scope.row.productId,dict.product_id)}}</div>
         </template>
-      </el-table-column>
-      <el-table-column prop="functionName" label="功能名称"  :show-overflow-tooltip="true" width="100px"/>
-      <el-table-column prop="functionType" label="功能类型"  :show-overflow-tooltip="true" width="100px">
-        <template slot-scope="scope">
-          <div>{{getDictCaption(scope.row.functionType,dict.function_type)}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="functionMode" label="功能模式" :show-overflow-tooltip="true" width="100px"/>
-      <el-table-column label="脚本明细">
+      </af-table-column>
+      <af-table-column prop="functionName" label="功能名称"  :show-overflow-tooltip="true" width="200px"/>
+      <af-table-column prop="functionMode" label="功能模式" :show-overflow-tooltip="true" width="80px"/>
+      <af-table-column label="脚本明细">
         <template slot-scope="scope">
           <div>{{getColScript(scope.row)}}</div>
         </template>
-      </el-table-column>
-      <el-table-column prop="memo" label="备注" :show-overflow-tooltip="true" width="80px"/>
+      </af-table-column>
+<!--      <af-table-column prop="functionType" label="功能类型"  :show-overflow-tooltip="true" width="100px">-->
+<!--        <template slot-scope="scope">-->
+<!--          <div>{{getDictCaption(scope.row.functionType,dict.function_type)}}</div>-->
+<!--        </template>-->
+<!--      </af-table-column>-->
+      <af-table-column prop="memo" label="备注" :show-overflow-tooltip="true"/>
     </el-table>
     <!--分页组件-->
     <el-pagination

@@ -168,7 +168,7 @@ export default {
       }).catch(() => {
         this.downloadLoading = false
       })
-    }
+    },
   }
 }
 </script>

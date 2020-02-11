@@ -93,14 +93,12 @@
           </el-table-column>
           <el-table-column prop="custType" label="客户类型">
             <template slot-scope="scope">
-              <div v-if="scope.row.custType in dict.cust_type">{{dict.cust_type[scope.row.custType].label}}</div>
-              <div v-if=" ! scope.row.custType in dict.cust_type">{{scope.row.custType}}</div>
+              <div>{{getDictCaption(scope.row.custType,dict.cust_type)}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="area" label="地区">
             <template slot-scope="scope">
-              <div v-if="scope.row.area in dict.area">{{dict.area[scope.row.area].label}}</div>
-              <div v-if=" ! scope.row.area in dict.area">{{scope.row.area}}</div>
+              <div>{{getDictCaption(scope.row.area,dict.area)}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="custName" label="客户名称"/>
@@ -172,7 +170,7 @@
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import { del, downloadCustomer } from '@/api/customer'
-import { downloadFile,deepClone } from '@/utils/index'
+import { downloadFile,deepClone, getDictCaption } from '@/utils/index'
 import custUser from '../custuser/index'
 import custProduct from '../custproduct/index'
 import eForm from './form'
@@ -211,6 +209,7 @@ export default {
     })
   },
   methods: {
+    getDictCaption,
     checkPermission,
     beforeInit() {
       this.url = 'api/customer'

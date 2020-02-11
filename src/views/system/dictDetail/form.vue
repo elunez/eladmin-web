@@ -29,6 +29,9 @@ export default {
     dictId: {
       type: Number,
       required: true
+    },
+    lastDictDetail:{
+      type:String,
     }
   },
   data() {
@@ -48,6 +51,14 @@ export default {
           { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
         ]
       }
+    }
+  },
+  watch:{
+    dialog(){
+       console.log(this.dialog)
+       if(this.isAdd){
+         this.form.value = this.lastDictDetail;
+       }
     }
   },
   methods: {

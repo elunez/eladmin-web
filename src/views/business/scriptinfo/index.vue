@@ -140,50 +140,50 @@
     <el-tabs type="border-card" v-model="activeName"  @tab-click="tabHandleClick">
       <el-tab-pane   v-for="item in dict.module_type" :key="item.value">
         <span slot="label"><i>{{item.label}}</i></span>
-        <el-table   v-loading="loading" :data="data" size="small" style="width: 100%;"
+        <el-table   v-loading="loading" :data="data" size="small" style="width: 100%;" border
                   @selection-change="handleSelectionChange"
                   @row-dblclick="rowDoubleClick"
                   @expand-change="expandChange"
                   :max-height="clientHeight"
                   @contextmenu.prevent.native="$refs.rightMenu.openMenu($event,checkPermission(['admin','scriptInfo:add']))"
                   @row-contextmenu="rowContextMenu">
-          <el-table-column
+          <af-table-column
             type="selection"
             width="55">
-          </el-table-column>
-          <el-table-column type="expand">
+          </af-table-column>
+          <af-table-column type="expand">
             <template slot-scope="scope">
               <el-tabs v-if="scope.row.functions && scope.row.functions.length>0" tab-position="left" >
                 <el-tab-pane label="关联功能">
                   <el-table :data="scope.row.functions" size="small" style="width: 100%;">
-                    <el-table-column prop="productId" label="产品名称">
+                    <af-table-column prop="productId" label="产品名称" width="80px">
                       <template slot-scope="scopef">
                         <div>{{getDictCaption(scopef.row.productId,dict.product_id)}}</div>
                       </template>
-                    </el-table-column>
-                    <el-table-column prop="functionName" label="功能名称"/>
-                    <el-table-column prop="functionType" label="功能类型">
+                    </af-table-column>
+                    <af-table-column prop="functionName" label="功能名称"/>
+                    <af-table-column prop="functionType" label="功能类型">
                       <template slot-scope="scopef">
                         <div>{{getDictCaption(scopef.row.functionType,dict.function_type)}}</div>
                       </template>
-                    </el-table-column>
-                    <el-table-column prop="functionMode" label="功能模式"/>
+                    </af-table-column>
+                    <af-table-column prop="functionMode" label="功能模式"/>
                   </el-table>
                 </el-tab-pane>
               </el-tabs>
             </template>
-          </el-table-column>
-          <el-table-column prop="productId"  label="产品名称"/>
-          <el-table-column prop="scriptClass" label="脚本类别">
+          </af-table-column>
+          <af-table-column prop="productId"  label="产品名称"  width="80px"/>
+          <af-table-column prop="scriptClass" label="脚本类别" width="80px">
             <template slot-scope="scope">
               <div>{{getDictCaption(scope.row.scriptClass,dict.script_class)}}</div>
             </template>
-          </el-table-column>
-          <el-table-column prop="scriptName" label="脚本名称" :show-overflow-tooltip="true"/>
-          <el-table-column prop="effectVersion" label="生效版本"/>
-          <el-table-column prop="userManualName" label="用户手册名称" :show-overflow-tooltip="true"/>
-          <el-table-column prop="memo" label="备注" :show-overflow-tooltip="true"/>
-          <el-table-column v-if="checkPermission(['admin','scriptInfo:edit','scriptInfo:del'])" label="操作" width="150px" align="center">
+          </af-table-column>
+          <af-table-column prop="scriptName" label="脚本名称" :show-overflow-tooltip="true" width="250px"/>
+          <af-table-column prop="effectVersion" label="生效版本"/>
+          <af-table-column prop="userManualName" label="用户手册名称" :show-overflow-tooltip="true"/>
+          <af-table-column prop="memo" label="备注" :show-overflow-tooltip="true"/>
+          <af-table-column v-if="checkPermission(['admin','scriptInfo:edit','scriptInfo:del'])" label="操作" width="150px" align="center">
             <template slot-scope="scope">
               <el-button v-permission="['admin','scriptInfo:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
               <el-popover
@@ -199,7 +199,7 @@
                 <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
               </el-popover>
             </template>
-          </el-table-column>
+          </af-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>

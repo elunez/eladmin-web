@@ -9,6 +9,14 @@ export function add(data) {
   })
 }
 
+export function quryScriptHaveFunc(data) {
+  return request({
+    url: BASE_SERVICE+'/havefunc',
+    method: 'post',
+    data:data
+  })
+}
+
 export function del(id) {
   return request({
     url: BASE_SERVICE + '/' + id,

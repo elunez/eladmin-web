@@ -151,7 +151,7 @@
                size="mini"
                icon="el-icon-edit"
                style="margin-left: 20px;margin-bottom: 4px"
-               @click="edit(multipleSelection[0])">修改</el-button>
+               @click="edit(multipleSelection[0],'修改')">修改</el-button>
              <el-popover
                v-if="multipleSelection.length !== 1"
                v-permission="['admin','businessInfo:edit']"
@@ -423,8 +423,8 @@ export default {
       _this.dialog = true
       _this.form.updateTime = this.todayTime;
     },
-    edit(data) {
-      this.operate = '修改'
+    edit(data,type) {
+      this.operate = type
       const _this = this.$refs.form
       _this.form = {
         id: data.id,
@@ -435,7 +435,7 @@ export default {
         productDescription: data.productDescription,
         projectType: data.projectType,
         projectClass: data.projectClass,
-        competitor: data.competitor,
+        competitor: data.competitor.split(',').filter(item=>item!=''),
         contractBalance: data.contractBalance,
         confirmBalance: data.confirmBalance,
         successRate: data.successRate,
@@ -454,10 +454,7 @@ export default {
       this.multipleSelection = val;
     },
     rowDoubleClick(row){
-      const _this = this.$refs.form;
-      _this.dealForm(row);
-      this.operate = '详情';
-      _this.dialog = true
+       this.edit(row,'详情')
     },
     // 导出
     download(command) {
@@ -498,6 +495,8 @@ export default {
     copyClick(){
       const  _this = this.$refs.form;
       _this.form = deepClone(this.rightClickRow);
+      _this.form.updateTime = this.todayTime;
+      _this.form.competitor = this.rightClickRow.competitor.split(',').filter(item=>item!='');
       this.operate = '新增';
       _this.dialog = true
     },
