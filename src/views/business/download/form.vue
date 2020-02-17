@@ -1,22 +1,6 @@
 <template>
-  <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog"  width="600px">
+  <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog"  width="600px" title="导出Execl">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <!--   上传文件   -->
-      <el-form-item  label="上传">
-        <el-upload
-          ref="upload"
-          :limit="1"
-          :before-upload="beforeUpload"
-          :auto-upload="false"
-          :http-request="uploadFile"
-          :on-success="handleSuccess"
-          :on-error="handleError"
-          accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          :action="baseURL+uploadApi+'/upload'">
-          <div class="eladmin-upload"><i class="el-icon-upload"/> 添加文件</div>
-          <div slot="tip" class="el-upload__tip">只可上传EXECL文件</div>
-        </el-upload>
-      </el-form-item>
       <el-form-item>
         <div>
           <h4 v-if="fileProcess.code>=0">{{fileProcess.status}}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -31,18 +15,14 @@
         </div>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="text" @click="cancel">取消</el-button>
-      <el-button  type="primary" @click="doSubmit">确认</el-button>
-    </div>
   </el-dialog>
 </template>
 
 <script>
 import { getToken } from '@/utils/auth'
-import axios from 'axios'
+import {download} from  '@/api/data'
 import initData from '@/mixins/initData'
-import { randomString } from '@/utils/index'
+import { randomString, downloadFile } from '@/utils/index'
 export default {
   props: {
     uploadApi: {
@@ -63,11 +43,11 @@ export default {
       rules: {
       },
       fileProcess:{
-        status:'正在导入',
+        status:'',
         code:-1,
         count:0,
         finish:0
-      }
+      },
     }
   },
   computed: {
@@ -75,10 +55,6 @@ export default {
   methods: {
     cancel() {
       this.resetForm()
-    },
-    doSubmit() {
-      this.openFullScreen('导入',this.fileName);
-      this.$refs.upload.submit()
     },
     resetForm() {
       this.dialog = false
@@ -94,24 +70,11 @@ export default {
           finish:0
       }
     },
-    beforeUpload(file) {
-      let isLt2M = true;
-      isLt2M = file.size / 1024 / 1024 < 100;
-      if (!isLt2M) {
-        this.$message.error('上传文件大小不能超过 100MB!');
-      }
-      isLt2M = /\.xlsx?$/.test(file.name);
-      if (!isLt2M) {
-        this.$message.error('文件格式不正确(.xls或.xlsx)');
-      }
-      this.fileName = file.name;
-      return isLt2M
-    },
     handleSuccess(response, param,form) {
       console.log(response)
       if(response){
          var res = response.data;
-        if(res.code == 0){
+        if(res.code == 0 || res.code == 3){
             this.loadingInstance.text = "";
             this.fileProcess.status = res.status;
             this.fileProcess.code = res.code;
@@ -125,14 +88,13 @@ export default {
         }else if(res.code == 1){
           this.loadingInstance.close();
           this.dialog = false;
-          this.resetForm();
-          this.$refs.upload.clearFiles();
           this.$parent.init();
           this.$notify({
-            title: '文件['+param.file.name+']导入成功',
+            title: '文件导出成功',
             type: 'success',
             duration: 2500
           });
+          downloadFile(response,this.fileName, 'xlsx')
         }else{
            this.handleError(res.status);
         }
@@ -142,7 +104,6 @@ export default {
     handleError(msg) {
       this.dialog = false;
       this.loadingInstance.close();
-      this.resetForm();
       this.$refs.upload.clearFiles();
       this.$notify({
         title: msg,
@@ -151,29 +112,17 @@ export default {
       });
       this.fileName = ''
     },
-    uploadFile(param){
-      var fileObj = param.file;
-      var form = new FormData();
-      var id = randomString(32);
-      form.append("file", fileObj);
-      form.append("id", id);
-      this.postFile(param,form);
+    downloadFile(param){
+      param["id"] = randomString(32);
+      this.openFullScreen('导出',this.fileName);
+      this.postFile(param,param);
     },
     postFile(param,form){
-      axios.post(
-        this.uploadApi+'/upload',
-        form,
-        {
-          headers: { 'Content-Type': 'multipart/form-data','Authorization': 'Bearer ' + getToken() },
-          baseURL: this.baseURL
-        },
-        {
-          timeout:30000000
-        }).then((response)=>{
+      download(this.uploadApi,form).then((response)=>{
         this.handleSuccess(response,param,form);
       }).catch(e=>{
         this.handleError(e.message);
-      })
+      });
     }
   }
 }

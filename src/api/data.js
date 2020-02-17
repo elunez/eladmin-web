@@ -7,3 +7,20 @@ export function initData(url, params) {
     params
   })
 }
+
+
+export function upload(url, form) {
+  return request({
+    url: url,
+    method: 'post',
+    form
+  })
+}
+export function download(url,data) {
+  return request({
+    url: url+'/download',
+    method: 'post',
+    data:data,
+    responseType: 'blob'
+  })
+}

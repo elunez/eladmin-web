@@ -8,7 +8,7 @@
         <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
       </el-form-item>
       <el-form-item label="电话" prop="phone">
-        <el-input v-model.number="form.phone" />
+        <el-input v-model="form.phone" @input="phoneFormat(form.phone)" />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email" />
@@ -94,7 +94,13 @@ export default {
       }
     }
   },
+  watch:{
+
+  },
   methods: {
+     phoneFormat:function (phone) {
+       this.form.phone = phone.toString().replace(/\+86-/,'');
+    },
     cancel() {
       this.resetForm()
     },

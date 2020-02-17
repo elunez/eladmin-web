@@ -70,7 +70,7 @@ export default {
         lock: true,
         text: '正在'+type+name+'Execl...',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+        background: 'rgba(0,153,229,0)'
       });
     }
   }

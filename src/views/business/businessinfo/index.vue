@@ -209,6 +209,8 @@
     <eForm ref="form" :operate="operate"  :dictCustType="dict.cust_type"   :dictArea="dict.area"   :dictBisProductId="dict.bis_product_id"   :dictProjectType="dict.project_type"   :dictProjectClass="dict.project_class"   :dictCompetitor="dict.competitor"   :dictSuccessRate="dict.success_rate"   :dictStage="dict.stage"   :dictFollowPerson="dict.follow_person"  />
     <!--导入表单-->
     <uploadForm ref="upform" :uploadApi="uploadApi"/>
+    <!--导出表单-->
+    <downloadForm ref="downform" :uploadApi="uploadApi" />
     <!--表格渲染-->
     <el-table id="table" v-loading="loading"
                 :data="data"
@@ -315,11 +317,12 @@ import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import { del, downloadBusinessInfo } from '@/api/businessInfo'
 import uploadForm from  '@/views/business/upload/form'
+import downloadForm from  '@/views/business/download/form'
 import { parseTime, downloadFile, deepClone, parseTimeYMD, getDictCaption } from '@/utils/index'
 import rightMenu from '../rightmenu/index'
 import eForm from './form'
 export default {
-  components: { eForm, uploadForm, rightMenu },
+  components: { eForm, uploadForm,downloadForm, rightMenu },
   mixins: [initData],
   dicts:['cust_type','area','bis_product_id','project_type','project_class','competitor','success_rate','stage','follow_person'],
   data() {
@@ -469,7 +472,7 @@ export default {
         }
         data = this.multipleSelection ;
       }
-      const params =  {}
+      var params =  {};
       params['data'] = data;
       params['criteria'] = {};
       if(command === '导出查询'){
