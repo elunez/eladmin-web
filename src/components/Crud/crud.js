@@ -8,9 +8,11 @@ import Vue from 'vue'
  * @param {*} options <br>
  * @return crud instance.
  * @example
+ * 要使用多crud时，请在关联crud的组件处使用crud-tag进行标记，如：<jobForm :job-status="dict.job_status" crud-tag="job" />
  */
 function CRUD(options) {
   const defaultOptions = {
+    tag: '',
     // 标题
     title: '',
     // 请求数据的url
@@ -530,6 +532,7 @@ function callVmHook(crud, hook) {
   if (crud.debug) {
     console.log('callVmHook: ' + hook)
   }
+  const tagHook = crud.tag ? hook + '$' + crud.tag : null
   let ret = true
   const nargs = [crud]
   for (let i = 2; i < arguments.length; ++i) {
@@ -541,6 +544,9 @@ function callVmHook(crud, hook) {
   vmSet.forEach(vm => {
     if (vm[hook]) {
       ret = vm[hook].apply(vm, nargs) !== false && ret
+    }
+    if (tagHook && vm[tagHook]) {
+      ret = vm[tagHook].apply(vm, nargs) !== false && ret
     }
   })
   return ret
@@ -558,20 +564,46 @@ function mergeOptions(src, opts) {
   return optsRet
 }
 
+function getCrudPiName(crudTag) {
+  return 'crud' + (crudTag ? '$' + crudTag : '')
+}
+
+/**
+ * 根据tag修正注入crud时from值
+ * @param {*} vm
+ */
+function reviseInject(vm) {
+  if (vm.$attrs['crud-tag']) {
+    const inject = vm.$options.inject
+    for (const k in inject) {
+      const v = inject[k]
+      const from = v.from
+      if (from === 'crud' || from.startsWith('crud.')) {
+        v.from = from.replace('crud', getCrudPiName(vm.$attrs['crud-tag']))
+      }
+    }
+  }
+}
+
 /**
  * crud主页
  */
 function presenter(crud) {
+  const crudPiName = getCrudPiName(crud.tag)
   return {
-    inject: ['crud'],
+    inject: {
+      crud: {
+        from: crudPiName
+      }
+    },
     beforeCreate() {
       // 由于initInjections在initProvide之前执行，如果该组件自己就需要crud，需要在initInjections前准备好crud
-      this._provided = {
-        crud,
-        'crud.query': crud.query,
-        'crud.page': crud.page,
-        'crud.form': crud.form
-      }
+      this._provided = Object.assign(this._provided || {}, {
+        [crudPiName]: crud,
+        [crudPiName + '.query']: crud.query,
+        [crudPiName + '.page']: crud.page,
+        [crudPiName + '.form']: crud.form
+      })
     },
     data() {
       return {
@@ -623,6 +655,9 @@ function header() {
         from: 'crud.query'
       }
     },
+    beforeCreate() {
+      reviseInject(this)
+    },
     created() {
       this.crud.registerVM('header', this, 1)
     },
@@ -645,6 +680,9 @@ function pagination() {
         from: 'crud.page'
       }
     },
+    beforeCreate() {
+      reviseInject(this)
+    },
     created() {
       this.crud.registerVM('pagination', this, 2)
     },
@@ -666,6 +704,9 @@ function form(defaultForm) {
       form: {
         from: 'crud.form'
       }
+    },
+    beforeCreate() {
+      reviseInject(this)
     },
     created() {
       this.crud.registerVM('form', this, 3)
@@ -691,6 +732,9 @@ function crud(options = {}) {
       crud: {
         from: 'crud'
       }
+    },
+    beforeCreate() {
+      reviseInject(this)
     },
     created() {
       this.crud.registerVM(options.type, this)
