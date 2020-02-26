@@ -173,7 +173,11 @@
               </el-tabs>
             </template>
           </af-table-column>
-          <af-table-column prop="productId"  label="产品名称"  width="80px"/>
+          <af-table-column prop="productId"  label="产品名称" width="80px">
+            <template slot-scope="scope">
+              <div>{{getDictCaption(scope.row.productId,dict.product_id)}}</div>
+            </template>
+          </af-table-column>
           <af-table-column prop="scriptClass" label="脚本类别" width="80px">
             <template slot-scope="scope">
               <div>{{getDictCaption(scope.row.scriptClass,dict.script_class)}}</div>

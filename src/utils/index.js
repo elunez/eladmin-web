@@ -373,3 +373,12 @@ export function randomString(len) {
   }
   return pwd;
 }
+
+
+export function replaceFrontNZero(str) {
+  var data = str
+   if(data){
+      return  data.replace(/\b(0+)/gi,"");
+   }
+   return data;
+}

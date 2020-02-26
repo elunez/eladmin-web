@@ -58,7 +58,11 @@
           <div v-else-if=" !scope.row.versionType in dict.cust_version_type">{{scope.row.versionType}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="product.productId" label="产品名称"/>
+      <el-table-column prop="product.productId"  label="产品名称">
+        <template slot-scope="scope">
+          <div>{{getDictCaption(scope.row.product.productId,dict.product_id)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="product.versionNo" label="版本号"/>
       <el-table-column prop="product.versionType" label="版本类型">
         <template slot-scope="scope">

@@ -25,6 +25,16 @@ const fontRate = {
   OTHER_RATE: 0.5 // 除汉字和数字以外的字符的比率
 }
 const fontSize = 12
+
+Array.prototype.contains = function (obj) {
+  var index = this.length;
+  while (index--) {
+    if (this[index] === obj) {
+      return true;
+    }
+  }
+  return false;
+}
 Vue.use(AFTableColumn, { fontRate, fontSize })
 Vue.use(mavonEditor)
 Vue.use(permission)

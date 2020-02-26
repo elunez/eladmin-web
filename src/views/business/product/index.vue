@@ -116,7 +116,11 @@
               type="selection"
               width="55">
       </el-table-column>
-      <el-table-column prop="productId" label="产品名称"/>
+      <el-table-column prop="productId"  label="产品名称">
+        <template slot-scope="scope">
+          <div>{{getDictCaption(scope.row.productId,dict.product_id)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="versionNo" label="版本号"/>
       <el-table-column prop="versionType" label="版本类型">
         <template slot-scope="scope">
