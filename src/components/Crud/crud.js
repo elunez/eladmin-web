@@ -13,6 +13,8 @@ import Vue from 'vue'
 function CRUD(options) {
   const defaultOptions = {
     tag: 'default',
+    // id字段名
+    idField: 'id',
     // 标题
     title: '',
     // 请求数据的url
@@ -165,7 +167,7 @@ function CRUD(options) {
         return
       }
       crud.status.edit = CRUD.STATUS.PREPARED
-      crud.getDataStatus(data.id).edit = CRUD.STATUS.PREPARED
+      crud.getDataStatus(crud.getDataId(data)).edit = CRUD.STATUS.PREPARED
       callVmHook(crud, CRUD.HOOK.afterToEdit, crud.form)
       callVmHook(crud, CRUD.HOOK.afterToCU, crud.form)
     },
@@ -174,7 +176,7 @@ function CRUD(options) {
      * @param {*} data 数据项
      */
     toDelete(data) {
-      crud.getDataStatus(data.id).delete = CRUD.STATUS.PREPARED
+      crud.getDataStatus(crud.getDataId(data)).delete = CRUD.STATUS.PREPARED
     },
     /**
      * 取消删除
@@ -184,7 +186,7 @@ function CRUD(options) {
       if (!callVmHook(crud, CRUD.HOOK.beforeDeleteCancel, data)) {
         return
       }
-      crud.getDataStatus(data.id).delete = CRUD.STATUS.NORMAL
+      crud.getDataStatus(crud.getDataId(data)).delete = CRUD.STATUS.NORMAL
       callVmHook(crud, CRUD.HOOK.afterDeleteCancel, data)
     },
     /**
@@ -204,7 +206,7 @@ function CRUD(options) {
           return
         }
         crud.status.edit = CRUD.STATUS.NORMAL
-        crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
+        crud.getDataStatus(crud.getDataId(crud.form)).edit = CRUD.STATUS.NORMAL
       }
       crud.resetForm()
       if (addStatus === CRUD.STATUS.PREPARED) {
@@ -268,7 +270,7 @@ function CRUD(options) {
       crud.status.edit = CRUD.STATUS.PROCESSING
       crud.crudMethod.edit(crud.form).then(() => {
         crud.status.edit = CRUD.STATUS.NORMAL
-        crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
+        crud.getDataStatus(crud.getDataId(crud.form)).edit = CRUD.STATUS.NORMAL
         crud.editSuccessNotify()
         crud.resetForm()
         callVmHook(crud, CRUD.HOOK.afterSubmit)
@@ -289,11 +291,11 @@ function CRUD(options) {
       if (data instanceof Array) {
         delAll = true
         data.forEach(val => {
-          ids.push(val.id)
+          ids.push(this.getDataId(val))
         })
       } else {
-        ids.push(data.id)
-        dataStatus = crud.getDataStatus(data.id)
+        ids.push(this.getDataId(data))
+        dataStatus = crud.getDataStatus(this.getDataId(data))
       }
       if (!callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
         return
@@ -403,7 +405,7 @@ function CRUD(options) {
       const dataStatus = {}
       function resetStatus(datas) {
         datas.forEach(e => {
-          dataStatus[e.id] = {
+          dataStatus[crud.getDataId(e)] = {
             delete: 0,
             edit: 0
           }
@@ -443,7 +445,7 @@ function CRUD(options) {
      */
     selectChange(selection, row) {
       // 如果selection中存在row代表是选中，否则是取消选中
-      if (selection.find(val => { return val.id === row.id })) {
+      if (selection.find(val => { return this.getDataId(val) === this.getDataId(row) })) {
         if (row.children) {
           row.children.forEach(val => {
             crud.findVM('presenter').$refs['table'].toggleRowSelection(val, true)
@@ -484,6 +486,12 @@ function CRUD(options) {
     },
     updateProp(name, value) {
       Vue.set(crud.props, name, value)
+    },
+    getDataId(data) {
+      if (!data.hasOwnProperty(this.idField)) {
+        console.error('[CRUD error]: no property [%s] in %o', this.idField, data)
+      }
+      return data[this.idField]
     }
   }
   const crud = Object.assign({}, data)
@@ -592,6 +600,7 @@ function presenter(crud) {
         console.error('[CRUD error]: ' + 'crud with tag [' + crud.tag + ' is already exist')
       }
       this.$crud[crud.tag] = crud
+      this.crud = crud
       crud.registerVM('presenter', this, 0)
     },
     data() {

@@ -5,7 +5,7 @@
       <p>{{ msg }}</p>
       <div style="text-align: right; margin: 0">
         <el-button size="mini" type="text" @click="doCancel">取消</el-button>
-        <el-button :loading="crud.dataStatus[data.id].delete === 2" type="primary" size="mini" @click="crud.doDelete(data)">确定</el-button>
+        <el-button :loading="crud.dataStatus[crud.getDataId(data)].delete === 2" type="primary" size="mini" @click="crud.doDelete(data)">确定</el-button>
       </div>
       <el-button slot="reference" :disabled="disabledDle" type="danger" icon="el-icon-delete" size="mini" @click="toDelete" />
     </el-popover>
