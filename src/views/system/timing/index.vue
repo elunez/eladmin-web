@@ -117,13 +117,14 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
 const defaultForm = { id: null, jobName: null, beanName: null, methodName: null, params: null, cronExpression: null, isPause: false, remark: null }
 export default {
   name: 'Timing',
   components: { Log, pagination, crudOperation, rrOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       delLoading: false,

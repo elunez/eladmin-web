@@ -95,13 +95,15 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '应用', url: 'api/app', crudMethod: { ...crudApp }})
+
 const defaultForm = { id: null, name: null, port: 8080, uploadPath: '/opt/upload', deployPath: '/opt/app', backupPath: '/opt/backup', startScript: null, deployScript: null }
 export default {
   name: 'App',
   components: { pagination, crudOperation, rrOperation, udOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '应用', url: 'api/app', crudMethod: { ...crudApp }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       currentRow: null,

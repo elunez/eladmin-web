@@ -124,12 +124,13 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '文件', url: 'api/localStorage', crudMethod: { ...crudFile }})
 const defaultForm = { id: null, name: '' }
 export default {
   components: { pagination, crudOperation, rrOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '文件', url: 'api/localStorage', crudMethod: { ...crudFile }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       delAllLoading: false,

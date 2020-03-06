@@ -128,12 +128,15 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+
 const defaultForm = { id: null, app: { id: null }, deploys: [] }
 export default {
+  name: 'Deploy',
   components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       currentRow: {}, selectIndex: '', appName: '', urlHistory: '',

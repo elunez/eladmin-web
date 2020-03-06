@@ -593,15 +593,24 @@ function lookupCrud(vm, tag) {
  * crud主页
  */
 function presenter(crud) {
+  if (crud) {
+    console.warn('[CRUD warn]: ' + 'please use $options.cruds() { return CRUD(...) or [CRUD(...), ...] }')
+  }
   return {
     beforeCreate() {
       this.$crud = this.$crud || {}
-      if (this.$crud[crud.tag]) {
-        console.error('[CRUD error]: ' + 'crud with tag [' + crud.tag + ' is already exist')
+      let cruds = this.$options.cruds instanceof Function ? this.$options.cruds() : crud
+      if (!(cruds instanceof Array)) {
+        cruds = [cruds]
       }
-      this.$crud[crud.tag] = crud
-      this.crud = crud
-      crud.registerVM('presenter', this, 0)
+      cruds.forEach(ele => {
+        if (this.$crud[ele.tag]) {
+          console.error('[CRUD error]: ' + 'crud with tag [' + ele.tag + ' is already exist')
+        }
+        this.$crud[ele.tag] = ele
+        ele.registerVM('presenter', this, 0)
+      })
+      this.crud = this.$crud['defalut'] || cruds.length > 0 ? cruds[0] : null
     },
     data() {
       return {
@@ -612,12 +621,16 @@ function presenter(crud) {
       parseTime
     },
     created() {
-      if (crud.queryOnPresenterCreated) {
-        crud.toQuery()
+      for (const k in this.$crud) {
+        if (this.$crud[k].queryOnPresenterCreated) {
+          this.$crud[k].toQuery()
+        }
       }
     },
     destroyed() {
-      crud.unregisterVM(this)
+      for (const k in this.$crud) {
+        this.$crud[k].unregisterVM(this)
+      }
     },
     mounted() {
       const columns = []
