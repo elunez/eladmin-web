@@ -61,12 +61,14 @@ import CRUD, { presenter, header } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '部署历史', url: 'api/deployHistory', crudMethod: { del }})
+
 export default {
   name: 'DeployHistory',
   components: { pagination, crudOperation, rrOperation },
-  mixins: [presenter(defaultCrud), header()],
+  cruds() {
+    return CRUD({ title: '部署历史', url: 'api/deployHistory', crudMethod: { del }})
+  },
+  mixins: [presenter(), header()],
   data() {
     return {
       delLoading: false,

@@ -63,12 +63,13 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ url: 'api/generator/tables' })
 export default {
   name: 'GeneratorIndex',
   components: { pagination, crudOperation, rrOperation },
-  mixins: [presenter(defaultCrud), header()],
+  cruds() {
+    return CRUD({ url: 'api/generator/tables' })
+  },
+  mixins: [presenter(), header()],
   data() {
     return {
       syncLoading: false

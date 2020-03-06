@@ -102,12 +102,13 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '图片', url: 'api/pictures', crudMethod: { ...crudPic }})
 export default {
   name: 'Pictures',
   components: { pagination, crudOperation, rrOperation },
-  mixins: [presenter(defaultCrud), header(), crud()],
+  cruds() {
+    return CRUD({ title: '图片', url: 'api/pictures', crudMethod: { ...crudPic }})
+  },
+  mixins: [presenter(), header(), crud()],
   data() {
     return {
       dialog: false,
