@@ -147,7 +147,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(https://api.isoyu.com/bing_images.php);
+    background-image:url(http://api.neweb.top/bing.php?type=rand);
     background-size: cover;
   }
   .title {

@@ -188,7 +188,7 @@ export default {
 
 <style>
   .crud-opts {
-    padding: 6px 0;
+    padding: 4px 0;
     display: -webkit-flex;
     display: flex;
     align-items: center;

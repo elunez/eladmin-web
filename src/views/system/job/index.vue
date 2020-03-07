@@ -97,7 +97,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        // eslint-disable-next-line no-undef
         crud.crudMethod.edit(data).then(() => {
+          // eslint-disable-next-line no-undef
           crud.notify(this.dict.label.job_status[val] + '成功', 'success')
         }).catch(err => {
           data.enabled = !data.enabled
