@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" style="padding-left: 5px;">
+  <el-tabs v-model="activeName" style="padding-left: 8px;">
     <el-tab-pane label="邮箱配置" name="first">
       <Config />
     </el-tab-pane>
