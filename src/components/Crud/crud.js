@@ -597,6 +597,12 @@ function presenter(crud) {
     console.warn('[CRUD warn]: ' + 'please use $options.cruds() { return CRUD(...) or [CRUD(...), ...] }')
   }
   return {
+    data() {
+      // 在data中返回crud，是为了将crud与当前实例关联，组件观测crud相关属性变化
+      return {
+        crud: this.crud
+      }
+    },
     beforeCreate() {
       this.$crud = this.$crud || {}
       let cruds = this.$options.cruds instanceof Function ? this.$options.cruds() : crud
@@ -610,12 +616,7 @@ function presenter(crud) {
         this.$crud[ele.tag] = ele
         ele.registerVM('presenter', this, 0)
       })
-      this.crud = this.$crud['defalut'] || cruds.length > 0 ? cruds[0] : null
-    },
-    data() {
-      return {
-        searchToggle: true
-      }
+      this.crud = this.$crud['defalut'] || cruds[0]
     },
     methods: {
       parseTime
@@ -657,9 +658,14 @@ function presenter(crud) {
  */
 function header() {
   return {
+    data() {
+      return {
+        crud: this.crud,
+        query: this.crud.query
+      }
+    },
     beforeCreate() {
       this.crud = lookupCrud(this)
-      this.query = this.crud.query
       this.crud.registerVM('header', this, 1)
     },
     destroyed() {
@@ -673,9 +679,14 @@ function header() {
  */
 function pagination() {
   return {
+    data() {
+      return {
+        crud: this.crud,
+        page: this.crud.page
+      }
+    },
     beforeCreate() {
       this.crud = lookupCrud(this)
-      this.page = this.crud.page
       this.crud.registerVM('pagination', this, 2)
     },
     destroyed() {
@@ -689,9 +700,14 @@ function pagination() {
  */
 function form(defaultForm) {
   return {
+    data() {
+      return {
+        crud: this.crud,
+        form: this.crud.form
+      }
+    },
     beforeCreate() {
       this.crud = lookupCrud(this)
-      this.form = this.crud.form
       this.crud.registerVM('form', this, 3)
     },
     created() {
@@ -713,6 +729,11 @@ function crud(options = {}) {
   }
   options = mergeOptions(defaultOptions, options)
   return {
+    data() {
+      return {
+        crud: this.crud
+      }
+    },
     beforeCreate() {
       this.crud = lookupCrud(this)
       this.crud.registerVM(options.type, this)
