@@ -15,10 +15,11 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(ids) {
   return request({
-    url: 'api/dict/' + id,
-    method: 'delete'
+    url: 'api/dict/',
+    method: 'delete',
+    data: ids
   })
 }
 

@@ -17,7 +17,7 @@
     </el-dialog>
     <!-- 字典列表 -->
     <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10" style="margin-bottom: 10px">
+      <el-col :xs="24" :sm="24" :md="10" :lg="11" :xl="11" style="margin-bottom: 10px">
         <el-card class="box-card">
           <!--工具栏-->
           <div class="head-container">
@@ -47,7 +47,7 @@
         </el-card>
       </el-col>
       <!-- 字典详情列表 -->
-      <el-col :xs="24" :sm="24" :md="14" :lg="14" :xl="14">
+      <el-col :xs="24" :sm="24" :md="14" :lg="13" :xl="13">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>字典详情</span>
