@@ -552,6 +552,9 @@ function CRUD(options) {
      */
     unregisterVM(type, vm) {
       for (let i = this.vms.length - 1; i >= 0; i--) {
+        if (this.vms[i] === undefined) {
+          continue
+        }
         if (this.vms[i].type === type && this.vms[i].vm === vm) {
           if (i < 4) { // 内置预留vm数
             this.vms[i] = undefined

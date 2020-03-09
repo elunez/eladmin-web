@@ -11,7 +11,6 @@
           <el-input v-model="query.label" clearable size="small" placeholder="输入字典标签查询" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
           <rrOperation />
         </div>
-        <crudOperation :permission="permission" />
       </div>
       <!--表单组件-->
       <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible="crud.status.cu > 0" :title="crud.status.title" width="500px">
@@ -33,7 +32,6 @@
       </el-dialog>
       <!--表格渲染-->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row style="width: 100%;" @selection-change="crud.selectionChangeHandler">
-        <el-table-column type="selection" width="55" />
         <el-table-column label="所属字典">
           {{ query.dictName }}
         </el-table-column>
@@ -59,7 +57,6 @@
 import crudDictDetail from '@/api/system/dictDetail'
 
 import CRUD, { presenter, header, form } from '@crud/crud'
-import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import rrOperation from '@crud/RR.operation'
 import udOperation from '@crud/UD.operation'
@@ -67,7 +64,7 @@ import udOperation from '@crud/UD.operation'
 const defaultForm = { id: null, label: null, value: null, sort: 999 }
 
 export default {
-  components: { crudOperation, pagination, rrOperation, udOperation },
+  components: { pagination, rrOperation, udOperation },
   cruds() {
     return [
       CRUD({ title: '字典详情', url: 'api/dictDetail', query: { dictName: '' }, sort: ['sort,asc', 'id,desc'],
@@ -105,15 +102,6 @@ export default {
         add: ['admin', 'dict:add'],
         edit: ['admin', 'dict:edit'],
         del: ['admin', 'dict:del']
-      }
-    }
-  },
-  watch: {
-    'query.dictName': function(val) {
-      if (val !== '') {
-        this.$nextTick(function() {
-          this.crud.attchTable()
-        })
       }
     }
   }
