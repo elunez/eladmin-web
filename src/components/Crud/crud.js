@@ -47,7 +47,8 @@ function CRUD(options) {
       add: true,
       edit: true,
       del: true,
-      download: true
+      download: true,
+      reset: true
     },
     // 自定义一些扩展属性
     props: {},
@@ -95,7 +96,7 @@ function CRUD(options) {
       total: 0
     },
     // 整体loading
-    loading: true,
+    loading: false,
     // 导出的 Loading
     downloadLoading: false,
     // 删除的 Loading
@@ -150,6 +151,7 @@ function CRUD(options) {
      * 启动添加
      */
     toAdd() {
+      crud.resetForm()
       if (!(callVmHook(crud, CRUD.HOOK.beforeToAdd, crud.form) && callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form))) {
         return
       }
@@ -388,7 +390,7 @@ function CRUD(options) {
      * @param {Array} data 数据
      */
     resetForm(data) {
-      const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm())
+      const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm.apply(crud.findVM('form')))
       const crudFrom = crud.form
       for (const key in form) {
         if (crudFrom.hasOwnProperty(key)) {
@@ -492,6 +494,24 @@ function CRUD(options) {
         console.error('[CRUD error]: no property [%s] in %o', this.idField, data)
       }
       return data[this.idField]
+    },
+    attchTable() {
+      const table = this.findVM('presenter').$refs.table
+      const columns = []
+      table.columns.forEach((e, index) => {
+        if (!e.property || e.type !== 'default') {
+          return
+        }
+        e.__index = index
+        columns.push({
+          property: e.property,
+          index,
+          label: e.label,
+          visible: true
+        })
+      })
+      this.updateProp('tableColumns', columns)
+      this.updateProp('table', table)
     }
   }
   const crud = Object.assign({}, data)
@@ -519,6 +539,10 @@ function CRUD(options) {
         this.vms.push(vmObj)
         return
       }
+      if (index < 4) { // 内置预留vm数
+        this.vms[index] = vmObj
+        return
+      }
       this.vms.length = Math.max(this.vms.length, index)
       this.vms.splice(index, 1, vmObj)
     },
@@ -526,8 +550,20 @@ function CRUD(options) {
      * 取消注册组件实例
      * @param {*} vm 组件实例
      */
-    unregisterVM(vm) {
-      this.vms.splice(this.vms.findIndex(e => e && e.vm === vm), 1)
+    unregisterVM(type, vm) {
+      for (let i = this.vms.length - 1; i >= 0; i--) {
+        if (this.vms[i] === undefined) {
+          continue
+        }
+        if (this.vms[i].type === type && this.vms[i].vm === vm) {
+          if (i < 4) { // 内置预留vm数
+            this.vms[i] = undefined
+          } else {
+            this.vms.splice(i, 1)
+          }
+          break
+        }
+      }
     }
   })
   // 冻结处理，需要扩展数据的话，使用crud.updateProp(name, value)，以crud.props.name形式访问，这个是响应式的，可以做数据绑定
@@ -630,25 +666,14 @@ function presenter(crud) {
     },
     destroyed() {
       for (const k in this.$crud) {
-        this.$crud[k].unregisterVM(this)
+        this.$crud[k].unregisterVM('presenter', this)
       }
     },
     mounted() {
-      const columns = []
-      this.$refs.table.columns.forEach((e, index) => {
-        if (!e.property || e.type !== 'default') {
-          return
-        }
-        e.__index = index
-        columns.push({
-          property: e.property,
-          index,
-          label: e.label,
-          visible: true
-        })
-      })
-      this.crud.updateProp('tableColumns', columns)
-      this.crud.updateProp('table', this.$refs.table)
+      // 如果table未实例化（例如使用了v-if），请稍后在适当时机crud.attchTable刷新table信息
+      if (this.$refs.table !== undefined) {
+        this.crud.attchTable()
+      }
     }
   }
 }
@@ -669,7 +694,7 @@ function header() {
       this.crud.registerVM('header', this, 1)
     },
     destroyed() {
-      this.crud.unregisterVM(this)
+      this.crud.unregisterVM('header', this)
     }
   }
 }
@@ -690,7 +715,7 @@ function pagination() {
       this.crud.registerVM('pagination', this, 2)
     },
     destroyed() {
-      this.crud.unregisterVM(this)
+      this.crud.unregisterVM('pagination', this)
     }
   }
 }
@@ -715,7 +740,7 @@ function form(defaultForm) {
       this.crud.resetForm()
     },
     destroyed() {
-      this.crud.unregisterVM(this)
+      this.crud.unregisterVM('form', this)
     }
   }
 }
@@ -739,7 +764,7 @@ function crud(options = {}) {
       this.crud.registerVM(options.type, this)
     },
     destroyed() {
-      this.crud.unregisterVM(this)
+      this.crud.unregisterVM(options.type, this)
     }
   }
 }
