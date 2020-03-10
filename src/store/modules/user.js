@@ -88,7 +88,7 @@ export const setUserInfo = (res, commit) => {
   } else {
     commit('SET_ROLES', res.roles)
   }
-  commit('SET_USER', res)
+  commit('SET_USER', res.user)
 }
 
 export default user
