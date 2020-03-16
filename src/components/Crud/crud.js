@@ -335,12 +335,12 @@ function CRUD(options) {
      * 获取查询参数
      */
     getQueryParams: function() {
-      // 清楚 参数无值的情况
+      // 清除参数无值的情况
       Object.keys(crud.query).length !== 0 && Object.keys(crud.query).forEach(item => {
-        if (!crud.query[item]) crud.query[item] = undefined
+        if (crud.query[item] === null || crud.query[item] === '') crud.query[item] = undefined
       })
       Object.keys(crud.params).length !== 0 && Object.keys(crud.params).forEach(item => {
-        if (!crud.params[item]) crud.params[item] = undefined
+        if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
       })
       return {
         page: crud.page.page - 1,
