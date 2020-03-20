@@ -60,7 +60,13 @@ export function editMenu(data) {
     data
   })
 }
-
+export function editDataPermission(data) {
+  return request({
+    url: 'api/roles/dataPermission',
+    method: 'put',
+    data
+  })
+}
 export function downloadRole(params) {
   return request({
     url: 'api/roles/download',

@@ -211,6 +211,7 @@ export default {
       this.$refs.form.getDepts()
       this.$refs.form.getRoles()
       this.$refs.form.getRoleLevel()
+      this.$refs.form.getPermission()
       this.$refs.form.dialog = true
     },
     // 数据转换
@@ -231,10 +232,15 @@ export default {
       _this.getRoles()
       _this.getDepts()
       _this.getRoleLevel()
+      _this.getPermission()
       _this.roleIds = []
+      _this.permissionIds = []
       _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roles: [], dept: { id: data.dept.id }, job: { id: data.job.id }}
       data.roles.forEach(function(data, index) {
         _this.roleIds.push(data.id)
+      })
+      data.dataPermissions.forEach((data)=>{
+        _this.permissionIds.push(data.id);
       })
       _this.deptId = data.dept.id
       _this.jobId = data.job.id

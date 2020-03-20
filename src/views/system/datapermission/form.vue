@@ -1,91 +1,87 @@
 <template>
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="operate" width="1000px">
     <el-form ref="form" :model="form"  size="small" label-width="80px" label-position="top" :disabled="operate==='详情'">
-      <el-row :gutter="8">
-         <el-col :span="6">
-           <el-form-item   label="角色" required>
-             <el-select v-model="form.roleId"  placeholder="请选择" :disabled="operate!=='新增'">
-               <el-option
-                 v-for="(item, index) in roles"
-                 :key="item.name + index"
-                 :label="item.name"
-                 :value="item.id"/>
-             </el-select>
-           </el-form-item>
-         </el-col>
-        <el-col :span="6">
-          <el-form-item label="表名称"  prop="tableIndex" required>
-            <el-select v-model="form.tableIndex"  placeholder="请选择"  :disabled="operate!=='新增'">
-              <el-option
-                v-for="(item, index) in sets"
+      <el-card shadow="never">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="方案名称"  prop="name" required :rules="[
+                      { required: true, message: '请输入方案名称', trigger: 'blur' },
+                      { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+                    ]">
+              <el-input v-model="form.name" placeholder="请输入"  maxlength="50" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-dropdown @command="onAddTableClick" :hide-on-click="true">
+            <el-button type="primary" size="small">
+              增加表数据权限
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                v-for="(item,key,index) in sets"
+                :key="key"
+                :disabled = "item.disabled"
+                :command="key">{{item.tableName}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-row>
+      </el-card>
+      <el-card class="box-card" v-for="(table,tableIndex) in form.tables" :key="tableIndex">
+        <div slot="header" class="clearfix">
+          <el-tag>{{table.tableName}}</el-tag>
+          <el-button style="float: right;" type="text" @click="onDelTableClick(tableIndex)">删除表数据权限</el-button>
+          <el-dropdown @command="(command)=>{onAddFieldClick(command,tableIndex)}" :hide-on-click="true">
+            <el-button type="primary" size="small">
+              增加字段数据权限
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                v-for="(field,key,index) in sets[table.tableCode].fields"
                 :key="index"
-                :label="item.tableName"
-                :value="index"/>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="方案名称"  prop="name" required>
-            <el-input v-model="form.name" placeholder="请输入"  maxlength="50" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item v-if="form.tableIndex>=0 && sets[form.tableIndex]&&('fields' in sets[form.tableIndex]) ">
-            <el-dropdown @command="selectField" style="margin-top: 17%;margin-left: 10%">
-              <el-button type="primary">
-                选择字段
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  v-for="(field,index) in sets[form.tableIndex].fields"
-                  :key="field.fieldCode"
-                  :command="index">{{field.fieldName}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="8" v-for="(field, index) in form.fields" :key="field.index">
-        <el-col :span="5">
-          <el-form-item label="字段代码"  :prop="'fields.'+index+'.fieldCode'" required>
-            <el-input v-model="field.fieldCode" disabled/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="字段名称"  :prop="'fields.'+index+'.fieldName'" required>
-            <el-input v-model="field.fieldName" disabled/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="操作类型"  :prop="'fields.'+index+'.operateType'" required>
-            <el-select v-model="field.operateType" filterable  placeholder="请选择">
-              <el-option
-                v-for="item in dict['operate_type']"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value" >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="字段值"  :prop="'fields.'+index+'.operateValue'" required>
-            <el-select  v-model="field.operateValue" v-if="field.dictName != ''">
-              <el-option
-                v-for="item in dict[field.dictName]"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value" />
-            </el-select>
-            <el-input v-model="field.operateValue" v-if="field.dictName == ''"  maxlength="50"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item>
-            <el-button @click.prevent="removeField(index)" style="margin-top: 26%;margin-left: 10%">删除字段设置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+                :command="key">{{field.fieldName}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <el-card class="box-card"  shadow="never" v-for="(field,fieldIndex) in table.fields" :key="fieldIndex">
+          <div slot="header" class="clearfix">
+            <el-tag>{{field.tableName}}</el-tag>
+            <el-tag type="info">{{field.fieldName}}</el-tag>
+            <el-button style="float: right;" type="text" @click="onDelFieldClick(tableIndex,fieldIndex)">删除字段数据权限</el-button>
+          </div>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="操作类型"  :prop="`tables.${tableIndex}.fields.${fieldIndex}.operateType`" :rules="[
+                      { required: true, message: '请选择操作类型', trigger: 'blur' }
+                    ]">
+                <el-select v-model="field.operateType"   placeholder="请选择">
+                  <el-option
+                    v-for="item in dict['operate_type']"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value" >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="字段值"  :prop="`tables.${tableIndex}.fields.${fieldIndex}.operateValue`"   :rules="[
+                      { required: true, message: '请'+(field.dictName!=''?'选择':'输入')+'字段值', trigger: 'blur' },
+                      { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+                    ]">
+                <el-select  v-model="field.operateValue" v-if="field.dictName != ''">
+                  <el-option
+                    v-for="item in dict[field.dictName]"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value" />
+                </el-select>
+                <el-input v-model="field.operateValue" v-if="field.dictName == ''"  maxlength="50"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-card>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -96,7 +92,21 @@
 
 <script>
 import { add, edit, getAllSet } from '@/api/dataPermission'
+import { deepClone, getDictCaption, getDictValue, } from '@/utils/index'
 import { queryField } from '@/api/dataPermissionField'
+const tableModel = {
+        tableCode: '',
+        tableName: '',
+        fields: []
+      };
+const fieldModel = {
+        tableCode: '',
+        tableName: '',
+        fieldCode: '',
+        fieldName: '',
+        operateType:'',
+        dictName: ''
+      };
 export default {
   props: {
     operate: {
@@ -111,63 +121,92 @@ export default {
   data() {
     return {
       loading: false, dialog: false,
-      field:{
-        fieldCode: '',
-        fieldName: '',
-        operateType:'',
-        dictName: ''
-      },
       form: {
         id: '',
         name:'',
-        roleId: null,
-        tableCode: '',
-        className:'',
-        tableName: '',
-        tableIndex:null,
-        fields:[]
+        tables:[]
       },
       rules: {
       },
       roles:[],
-      sets:[]
+      sets:{}
     }
+  },
+  created(){
+    this.$nextTick(() => {
+      this.getSet();
+    })
   },
   methods: {
     cancel() {
       this.resetForm()
     },
-    getTableIndex(){
-      this.sets.forEach((item,index)=>{
-        if(this.form.tableName === item.tableName){
-          this.form.tableIndex = index;
-        }
-      });
-    },
-    genFormData(){
-       this.form.className = this.sets[this.form.tableIndex].className;
-       this.form.tableCode = this.sets[this.form.tableIndex].tableCode;
-       this.form.tableName = this.sets[this.form.tableIndex].tableName;
-       delete  this.form.tableIndex;
+    checkTableAndField(){
+       var result = true;
+       if(this.form.tables && this.form.tables.length){
+         var haveFieldTable = this.form.tables.filter((item)=>item.fields.length > 0);
+         if(haveFieldTable.length === 0){
+           result = false;
+         }
+       }else {
+         result = false;
+       }
+       return result;
     },
     doSubmit() {
       this.$refs.form.validate((vaild)=>{
-          if(vaild && this.form.fields.length>0) {
+          if(vaild && this.checkTableAndField()) {
             this.loading = true;
-            this.genFormData();
             if (this.operate ==='新增') {
               this.doAdd();
             } else if(this.operate ==='修改'){
               this.doEdit();
             }
-          }else if(!this.form.fields.length){
-            this.$message.warning("请选择字段进行限制数据权限!")
+          }else{
+            this.$message.warning("未设置表和字段权限或字段校验未通过!")
           }
         })
 
     },
+    dealFormData(){
+       var data = {};
+       data.id = this.form.id;
+       data.name = this.form.name;
+       data.fields = [];
+       this.form.tables.forEach((table)=>{
+         data.fields =  data.fields.concat(table.fields);
+       })
+      return data;
+    },
+    regroupFormData(data){
+      var tables = {};
+      if(data){
+        this.form.id = data.id;
+        this.form.name = data.name;
+        this.form.tables = [];
+        if(data.fields && data.fields.length){
+           data.fields.forEach((field)=>{
+             var table;
+              if(tables.hasOwnProperty(field.tableCode)){
+                table = table[field.tableCode];
+              }else {
+                table = deepClone(tableModel);
+                tables[field.tableCode] = table;
+                table.tableCode = field.tableCode;
+                table.tableName = field.tableName;
+              }
+              table.fields.push(field);
+           })
+          for(var tableCode in tables){
+            this.form.tables.push(tables[tableCode]);
+          }
+        }
+        console.log(JSON.stringify(this.form))
+      }
+    },
     doAdd() {
-      add(this.form).then(res => {
+      var data = this.dealFormData();
+      add(data).then(res => {
         this.resetForm()
         this.$notify({
           title: '添加成功',
@@ -182,7 +221,8 @@ export default {
       })
     },
     doEdit() {
-      edit(this.form).then(res => {
+      var data = this.dealFormData();
+      edit(data).then(res => {
         this.resetForm()
         this.$notify({
           title: '修改成功',
@@ -202,47 +242,66 @@ export default {
       this.form = {
         id: '',
         name:'',
-        roleId: null,
-        className:'',
-        tableCode: '',
-        tableName: '',
-        tableIndex:null,
-        fields:[]
+        tables:[]
       }
+      for(var key in this.sets){
+         var item = this.sets[key];
+         item.disabled = false;
+      }
+
+    },
+    dealSet(sets){
+       if(sets && sets.length){
+         sets.forEach((item,index)=>{
+            item.disabled = false;
+           this.sets[item.tableCode] = item;
+            var fields = {};
+            if(item.fields && item.fields.length){
+              item.fields.forEach((field)=>{
+                fields[field.fieldCode] = field;
+              })
+            }
+            item.fields = fields;
+
+         })
+       }
     },
     getSet(){
       getAllSet().then(res => {
-        this.sets = res;
+         this.dealSet(res);
       }).catch(err => {
         console.log(err.response.data.message)
       })
     },
-    removeField(index){
-        if(index>=0 && index<this.form.fields.length){
-           this.form.fields.splice(index,1);
-        }
+    onAddTableClick(tableCode){
+      var table = deepClone(tableModel);
+      table.tableCode = tableCode;
+      table.tableName = this.sets[tableCode].tableName;
+      this.form.tables.push(table);
+      this.$set(this.sets[tableCode],"disabled",true);
     },
-    selectField(index){
-      this.form.fields.push({
-        fieldCode: this.sets[this.form.tableIndex].fields[index].fieldCode,
-        fieldName: this.sets[this.form.tableIndex].fields[index].fieldName,
-        dictName:  this.sets[this.form.tableIndex].fields[index].dictName,
-        operateType:'',
-        operateValue:null
-      })
+    onDelTableClick(index){
+      var  tableCode =  this.form.tables[index].tableCode;
+      this.form.tables.splice(index,1);
+      this.sets[tableCode].disabled = false;
     },
-    queryAllField(id){
-      queryField(id).then((res)=>{
-        this.form.fields = res;
-      })
+    onAddFieldClick(command,tableIndex){
+      var field = deepClone(fieldModel);
+      var tableCode = this.form.tables[tableIndex].tableCode;
+      var fieldSet = this.sets[tableCode].fields[command];
+      field.tableCode = tableCode;
+      field.tableName = this.sets[tableCode].tableName;
+      field.fieldCode = fieldSet.fieldCode;
+      field.fieldName = fieldSet.fieldName;
+      field.dictName  = fieldSet.dictName;
+      this.form.tables[tableIndex].fields.push(field);
+    },
+    onDelFieldClick(tableIndex,fieldIndex){
+      this.form.tables[tableIndex].fields.splice(fieldIndex,1);
     }
   },
   watch:{
-    sets(){
-       if(!this.sets.length){
-          this.getSet();
-       }
-    }
+
   }
 }
 </script>

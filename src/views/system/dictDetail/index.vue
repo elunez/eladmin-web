@@ -126,7 +126,6 @@ export default {
           }
         })
         this.lastDictDetail = this.data[0].value;
-        console.log("lastDictDetail:"+JSON.stringify(this.lastDictDetail))
         var val = this.lastDictDetail;
         console.log("val:"+val);
         var value = '0';

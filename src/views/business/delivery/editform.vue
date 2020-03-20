@@ -114,7 +114,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistNoAccretion)==='领导审批'" label="审批人"   :prop="form.approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
+            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistNoAccretion)==='领导审批'" label="审批人"   prop="approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
                    ]">
               <el-select v-model="form.approver" filterable  placeholder="请选择"  style="width: 200px;">
                 <el-option
@@ -243,7 +243,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistAccretion)==='领导审批'" label="审批人"   :prop="form.approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
+            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistAccretion)==='领导审批'" label="审批人"   prop="approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
                    ]">
               <el-select v-model="form.approver" filterable  placeholder="请选择"  style="width: 200px;">
                 <el-option
@@ -362,7 +362,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistNoAccretion)==='领导审批'" label="审批人"   :prop="form.approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
+            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistNoAccretion)==='领导审批'" label="审批人"   prop="approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
                    ]">
               <el-select v-model="form.approver" filterable  placeholder="请选择"  style="width: 200px;">
                 <el-option
@@ -510,6 +510,20 @@
             [{ required: projectNoNeed(form.issueGist,dictIssueGistAuthor), message: '请输入项目编号', trigger: 'blur' },
                    { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }]" >
               <el-input v-model="form.projectNo" style="width: 200px;"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item  v-if="getDictCaption(form.issueGist,dictIssueGistAuthor)==='领导审批'" label="审批人"   prop="approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
+                   ]">
+              <el-select v-model="form.approver" filterable  placeholder="请选择"  style="width: 200px;">
+                <el-option
+                  v-for="item in  dictDeliveryApprover"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value" ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -703,6 +717,7 @@ export default {
         return getDictCaption(issueGist,dict).indexOf('TS')===-1&&
           getDictCaption(issueGist,dict)!=='领导审批' &&
           getDictCaption(issueGist,dict)!=='首次授权' &&
+          getDictCaption(issueGist,dict)!=='授权延期' &&
           getDictCaption(issueGist,dict)!=='脚本更新';
       },
       cancel() {

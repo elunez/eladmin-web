@@ -812,6 +812,11 @@
           <af-table-column prop="projectNo" label="项目编号"/>
           <af-table-column prop="issueDate" label="发放日期"/>
           <af-table-column prop="issuePerson" label="发放人"/>
+          <af-table-column prop="approver" label="审批人">
+            <template slot-scope="scope">
+              <div>{{getDictCaption(scope.row.approver,dict.delivery_approver)}}</div>
+            </template>
+          </af-table-column>
           <af-table-column prop="memo" label="备注"/>
         </el-table>
         <!--分页组件-->

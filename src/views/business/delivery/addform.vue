@@ -218,6 +218,18 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <el-form-item  v-if="getDictCaption(form.publicItem.deliverType4.issueGist,dictIssueGistAuthor)==='领导审批'" label="审批人"   prop="publicItem.deliverType4.approver" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
+                   ]">
+                  <el-select v-model="form.publicItem.deliverType4.approver" filterable   placeholder="请选择"  style="width: 200px;">
+                    <el-option
+                      v-for="item in  dictDeliveryApprover"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value" ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
           </div>
         </el-card>
@@ -225,7 +237,7 @@
           <div slot="header" class="clearfix">
             <span>第{{index+1}}个交付物({{getDictCaption(item.deliverType,dictDeliverType)}})</span>
             <el-button style="float: right;" type="text" @click="delDeliverCard(index)">删除交付明细</el-button>
-            <el-button style="float: right; margin-right: 20px" type="text" @click="addDeliverCard(index,item)">复制交付明细</el-button>
+            <el-button style="float: right; margin-right: 20px" type="text" @click="addDeliverCard(index,item,alloption[index])">复制交付明细</el-button>
             <el-button v-if="item.deliverType ==1 || item.deliverType ==4 " style="float: right; margin-right: 20px" type="text" @click="()=>{alloption[index].addValueFlag = !alloption[index].addValueFlag}">{{alloption[index].addValueFlag?'关闭':'开启'}}个性化{{getDictCaption(item.deliverType,dictDeliverType)}}公共信息</el-button>
             <el-button v-if="item.deliverType ==4" style="float: right; margin-right: 20px" type="text" @click="copyOldAuthor(index)">复制往期授权</el-button>
             <el-select  v-model="item.deliverType" size="mini"  filterable  placeholder="请选择"
@@ -498,6 +510,20 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+              <el-row>
+                <el-col :span="8"  v-if="alloption[index].addValueFlag">
+                  <el-form-item  v-if="getDictCaption(item.issueGist,dictIssueGistAuthor)==='领导审批'" label="审批人"   :prop="`details.${index}.approver`" :rules="[{ required: true, message: '请选择审批人', trigger: 'blur' }
+                   ]">
+                    <el-select v-model="item.approver" filterable  placeholder="请选择"  style="width: 200px;">
+                      <el-option
+                        v-for="item in  dictDeliveryApprover"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value" ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
               <el-form-item label="备注"  :prop="`details.${index}.memo`" :rules="{ min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }" >
                 <el-input v-model="item.memo"  type="textarea" style="width: 900px;"/>
               </el-form-item>
@@ -698,7 +724,7 @@ import { add } from '@/api/delivery'
 import initData from '@/mixins/initData'
 import { quryScriptHaveFunc } from '@/api/scriptInfo'
 import { getFunctionNo } from '@/api/funIdAccount'
-import  {  queryUser,queryCustName } from  '@/utils/business'
+import  {  queryUser,queryCustName, queryFunction } from  '@/utils/business'
 import { scriptName } from '@/api/functionInfo'
 import { validDictSelect } from '@/views/validator/business'
 import { parseTimeymd, deepClone, getDictCaption, trim, getDictValue, strDate, find ,coutChar } from '@/utils/index'
@@ -714,6 +740,7 @@ import store from '@/store'
   const  DELIVER_INTERFACE = "接口";//接口
   const  DELIVER_AUTHOR = "授权";//授权
   const  DELIVER_PROCESS = "流程";//授权
+  const  DELIVER_DICT = "数据字典";//数据字典
   const  formModel = {
     id: '',
     deliverId: '',
@@ -978,16 +1005,33 @@ import store from '@/store'
         return getDictCaption(issueGist,dict).indexOf('TS')===-1&&
         getDictCaption(issueGist,dict)!=='领导审批' &&
         getDictCaption(issueGist,dict)!=='首次授权' &&
+        getDictCaption(issueGist,dict)!=='授权延期' &&
         getDictCaption(issueGist,dict)!=='脚本更新';
       },
       dealCust(detail){
-        if(!this.form.custName && detail){
-          this.form.custName = detail.custName;
-          this.form.custType = detail.custType;
-          this.form.area = detail.area;
-          this.form.productId = detail.productId;
-          this.form.issueDate = strDate(detail.issueDate);
-          this.form.issuePerson = store.getters.user.username;
+        if(detail){
+           if(!this.form.custName){
+             this.form.custName = detail.custName;
+           }
+           if(!this.form.custType){
+             this.form.custType = detail.custType;
+           }
+          if(!this.form.area){
+            this.form.area = detail.area;
+          }
+          if(!this.form.productId){
+            this.form.productId = detail.productId;
+          }
+          if(!this.form.issueDate){
+            if(detail.issueDate){
+              this.form.issueDate =  strDate(detail.issueDate);
+            }else {
+              this.form.issueDate =  strDate(new Date());
+            }
+          }
+          if(!this.form.issuePerson){
+            this.form.issuePerson = store.getters.user.username;
+          }
         }
       },
       clearDeliveryItem(){
@@ -1064,6 +1108,7 @@ import store from '@/store'
             item.projectNo = deliverType4.projectNo;
             item.issueGist = deliverType4.issueGist;
             item.taCode = deliverType4.taCode;
+            item.approver = deliverType4.approver;
           }
         })
       },
@@ -1111,12 +1156,21 @@ import store from '@/store'
         this.form.details.splice(index,1);
         this.alloption.splice(index,1);
       },
-      addDeliverCard(index,data){
+      addDeliverCard(index,data,option){
         if(!data){
           data = deepClone(formModel);
+          data.deliverType = getDictValue('增值',this.dictDeliverType);
+        }else {
+          data = deepClone (data);
+        }
+        if(!option){
+           option = deepClone(this.optionModule);
+        }else {
+          option = deepClone(option);
         }
         this.form.details.splice(index,0,data);
-        this.alloption.splice(index,0,this.alloption[index]);
+        this.alloption.splice(index,0,option);
+        this.dealCust(data);
       },
       refreshClick(index){
          var data = []
@@ -1145,8 +1199,20 @@ import store from '@/store'
         var endLength = this.form.details.length;
         this.batchAddOption(endLength-stratLength);
         //对于增值非增值和授权同时存在进行复制授权补填配置项信息
-        this.fillFunctionNo(this.form.details.filter(item=>item.deliverType == 4),this.form.details.filter(item=>item.deliverType != 0 && item.deliverType != 4));
-        this.checkOutDeliveryType(this.form.details.slice(stratLength,endLength).filter(item=>item.deliverType===getDictValue('非增值',this.dictDeliverType)&&item.configName));
+        this.dealCount++
+        this.fillFunctionNo().then(res=>{
+          this.accretionAddAuthor(res,this.form.details.filter(item=>item.deliverType == 4),this.form.details.filter(item=>item.deliverType != 0 && item.deliverType != 4))
+          this.dealCount--;
+        }).catch(e=>{
+          this.dealCount--;
+        })
+        this.dealCount++
+        this.checkOutDeliveryType(this.form.details.filter(item=>item.deliverType===getDictValue('非增值',this.dictDeliverType)&&item.configName)).then(res=>{
+          this.dealNoAddValueScipts(res.arr,res.res);
+          this.dealCount--;
+        }).catch(e=>{
+          this.dealCount--;
+        });
         this.dealCount--;
       },
       dealSentence(text,index){
@@ -1171,6 +1237,8 @@ import store from '@/store'
          var type = DELIVER_SOFTWARE;
          if(str.match(/授权/g)!==null){
            type =  DELIVER_AUTHOR;
+         }else  if (str.match(/数据字典[_|\/]/g)!==null){
+           type =   DELIVER_DICT;
          }else  if (str.match(/接口[_|\/]/g)!==null){
            type =   DELIVER_INTERFACE;
          }else  if(str.match(/(手册|文档)[.|_|\/]/g)!==null){
@@ -1247,7 +1315,7 @@ import store from '@/store'
           //程序
           detail.custName = textArr[1];
           index = 3;
-          this.dealSoftWare(detail,textArr[index]);
+          this.dealSoftWare(detail,textArr.slice(index,textArr.length));
         }
         this.dealCust(detail);
       },
@@ -1286,7 +1354,7 @@ import store from '@/store'
                   detail.issueDate = strDate(item1);
                 }else if(index1 ===1){
 
-                  if(item1.length>11){
+                  if(item1.length>10){
                     falg =true;
                     detail.noTrunkVersion += '('+item1+")";
                   }else {
@@ -1349,7 +1417,8 @@ import store from '@/store'
             detail.deliverType =getDictValue('非增值',this.dictDeliverType);
             detail.issueGist = getDictValue('TS需求',this.dictIssueGistNoAccretion);
           }
-        }
+         }
+         var productIdName = getDictCaption(detail.productId,this.dictProductId);
          for(var i = 0;i < arr.length;i++) {
            var str = trim(arr[i]);
            if (i === 0) {
@@ -1370,10 +1439,15 @@ import store from '@/store'
                  issueDate = str.substring(find(str, '_', subindex-1)+1, find(str, '_', subindex));
                }
                detail.issueDate = issueDate;
+               var isDir = false;
                var SqlName = str.substring(find(str, '_', subindex) + 1, str.length);
-               if (SqlName.indexOf(".sql") === -1) {
-                 if(moduleType!==DELIVER_REPROT && detail.productId !== getDictValue('AOP',this.dictProductId)){
+               if (SqlName.indexOf(".sql") === -1 && SqlName.indexOf(".pdf") === -1 && SqlName.indexOf(".xlsx") === -1 && SqlName.indexOf(".execl") === -1
+                && SqlName.indexOf(".xls") === -1) {
+                 if(moduleType!==DELIVER_REPROT && productIdName !== 'AOP'){
                    SqlName += ".sql";
+                   if(arr.length  === 1){
+                     isDir = true;
+                   }
                  }else {
                    SqlName += '/'
                  }
@@ -1384,7 +1458,7 @@ import store from '@/store'
                  //去掉第一个开通
                  funcName = funcName.replace(/开通/, '');
                  //获取符合条件的最长最字符串
-                 var matchs = funcName.match(new RegExp(detail.productId+"(\\.[0-9])?[-_]?"));
+                 var matchs = funcName.match(new RegExp(productIdName+"(\\.[0-9])?[-_]?"));
                  //只取最大的字符串
                  if(matchs && matchs.length){
                    matchs.sort((a,b)=>{
@@ -1402,7 +1476,20 @@ import store from '@/store'
                    funcName = funcName.substring(funcName.indexOf(matchs[0])+matchs[0].length,funcName.length);
                  }
                  detail.functionModule = funcName
-                 detail.configName = SqlName
+                 if(isDir){
+                   queryFunction(detail.productId,funcName).then(res=>{
+                        var funcData = res.option;
+                        if(funcData && funcData.length && funcData[0].scripts && funcData[0].scripts.length){
+                           detail.configName = funcData[0].scripts.map((scriptItem)=>{
+                              return scriptItem.scriptName;
+                           }).join(SPLIT_CHAR);
+                        }else {
+                          detail.configName += SqlName
+                        }
+                   })
+                 }else {
+                   detail.configName += SqlName
+                 }
                } else {
                  detail.configName += SqlName;
                }
@@ -1443,26 +1530,27 @@ import store from '@/store'
         }
       },
       checkOutDeliveryType(arr){
-        if(!arr || !arr.length ){
-          return ;
-        }
-        //校验当中如果维护的脚本的是否都是非增值 如果不是则需要改成增值
-        //如果改变类型的时候如果是增值改成非增值增加提示
-        //提取出脚本信息
-        var scripts = []
-        arr.forEach((item,index)=>{
-           if(item.configName){
-             scripts =  scripts.concat(item.configName.split(SPLIT_CHAR));
-           }
+        var result = {arr:arr,res:[]}
+        return new Promise((resolve,reject)=>{
+          if(!arr || !arr.length ){
+            resolve(result);
+          }
+          //校验当中如果维护的脚本的是否都是非增值 如果不是则需要改成增值
+          //如果改变类型的时候如果是增值改成非增值增加提示
+          //提取出脚本信息
+          var scripts = []
+          arr.forEach((item,index)=>{
+            if(item.configName){
+              scripts =  scripts.concat(item.configName.split(SPLIT_CHAR));
+            }
+          })
+          quryScriptHaveFunc(scripts).then((res)=>{
+              result.res = res;
+              resolve(result);
+          }).catch(e=>{
+              reject(result);
+          })
         })
-        this.dealCount++;
-        quryScriptHaveFunc(scripts).then((res)=>{
-          this.dealNoAddValueScipts(arr,res);
-          this.dealCount--;
-        }).catch(e=>{
-          this.dealCount--;
-        })
-
       },
       dealNoAddValueScipts(nArr,arr){
         if(arr && arr.length){
@@ -1567,9 +1655,10 @@ import store from '@/store'
       approverChange(){
         this.form.details.forEach((item)=>{
           if (item.deliverType == 0 || item.deliverType == 2 || item.deliverType == 3) {
-             item.approver = this.form.approver;
-        }
-        })
+             item.approver = this.form.publicItem.deliverType1.approver;
+          }
+        });
+        this.form.publicItem.deliverType4.approver = this.form.publicItem.deliverType1.approver;
       },
       resetQuery(){
         this.$refs['queryForm'].resetFields();
@@ -1617,7 +1706,7 @@ import store from '@/store'
       accretionAddAuthor(functionNoList,authorArr,accretionArr){
         //找出所有增值未在授权中的脚本
         var accretionScript = [];
-        if(accretionArr && accretionArr.length){
+        if( accretionArr && accretionArr.length){
           var addflag = false;
           accretionArr.forEach((item,index)=>{
             if(item.configName && item.configName.length){
@@ -1651,19 +1740,16 @@ import store from '@/store'
         }
       },
       fillFunctionNo(authorArr,accretionArr){
-        if(this.form.productId){
-          this.dealCount++;
+        var result = []
+        return new Promise((resolve,reject)=>{
           getFunctionNo({productId: this.form.productId,controled:'1'}).then(data=>{
-               if(data){
-                  this.accretionAddAuthor(data,authorArr,accretionArr);
-               }
-            this.dealCount--;
+            result = data
+            resolve(result)
           }).catch(e=>{
-            this.dealCount--;
+            console.log(e);
+            reject(result)
           })
-        }else {
-          this.dealCount--;
-        }
+        });
       }
     }
   }

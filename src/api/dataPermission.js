@@ -8,6 +8,15 @@ export function getAllSet() {
   })
 }
 
+export function getDataPermission(params) {
+  return request({
+    url: BASE_SERVICE,
+    method: 'get',
+    params
+  })
+}
+
+
 export function add(data) {
   return request({
     url: BASE_SERVICE,

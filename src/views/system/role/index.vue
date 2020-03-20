@@ -108,6 +108,33 @@
             show-checkbox
             node-key="id"/>
         </el-card>
+        <el-card class="box-card" shadow="never">
+          <div slot="header" class="clearfix">
+            <el-tooltip class="item" effect="dark" content="选择指定业务数据权限" placement="top">
+              <span class="role-span">业务数据权限分配</span>
+            </el-tooltip>
+            <el-button
+              v-permission="['admin','roles:edit']"
+              :disabled="!showButton"
+              :loading="dataPermissionLoading"
+              icon="el-icon-check"
+              size="mini"
+              style="float: right; padding: 6px 9px"
+              type="primary"
+              @click="saveDataPermission">保存</el-button>
+          </div>
+          <el-table ref="table"
+                    :data="dataPermissions"
+                    size="small"
+                    max-height="200px">
+            <el-table-column
+              type="selection"
+              class-name=""
+              width="25"/>
+            <el-table-column prop="name" label="方案名称" width="auto">
+            </el-table-column>
+          </el-table>
+        </el-card>
       </el-col>
     </el-row>
   </div>
@@ -118,9 +145,10 @@ import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import { del } from '@/api/role'
 import { getMenusTree } from '@/api/menu'
+import { getDataPermission } from  '@/api/dataPermission'
 import { parseTime, downloadFile } from '@/utils/index'
 import eForm from './form'
-import { editMenu, get, downloadRole } from '@/api/role'
+import { editMenu, get, downloadRole, editDataPermission } from '@/api/role'
 export default {
   name: 'Role',
   components: { eForm },
@@ -132,11 +160,14 @@ export default {
         label: 'label'
       },
       currentId: 0, menuLoading: false, showButton: false,
-      delLoading: false, menus: [], menuIds: []
+      delLoading: false, menus: [], menuIds: [],
+      dataPermissions:[],
+      dataPermissionLoading: false,
     }
   },
   created() {
     this.getMenus()
+    this.getPerMission();
     this.$nextTick(() => {
       this.init()
     })
@@ -183,6 +214,11 @@ export default {
         this.menus = res
       })
     },
+    getPerMission(){
+      getDataPermission().then(res=>{
+        this.dataPermissions = res.content
+      })
+    },
     handleCurrentChange(val) {
       if (val) {
         const _this = this
@@ -202,6 +238,16 @@ export default {
             _this.menuIds.push(data.id)
           }
         })
+        //业务数据权限选中
+        this.$refs.table.clearSelection();
+        val.dataPermissions.forEach((item)=>{
+           this.dataPermissions.forEach((row)=>{
+              if(item.id === row.id){
+                this.$refs.table.toggleRowSelection(row,true);
+              }
+           })
+        })
+
 
       }
     },
@@ -228,6 +274,27 @@ export default {
         this.update()
       }).catch(err => {
         this.menuLoading = false
+        console.log(err.response.data.message)
+      })
+    },
+    saveDataPermission(){
+      this.dataPermissionLoading = true
+      const role = { id: this.currentId, dataPermissions: [] }
+      this.$refs.table.selection.forEach((item)=>{
+         const  dataPermission = {id : item.id};
+         role.dataPermissions.push(dataPermission);
+      })
+      console.log(JSON.stringify(role))
+      editDataPermission(role).then(res=>{
+        this.$notify({
+          title: '保存成功',
+          type: 'success',
+          duration: 2500
+        })
+        this.dataPermissionLoading = false
+        this.update()
+      }).catch(err => {
+        this.dataPermissionLoading = false
         console.log(err.response.data.message)
       })
     },
@@ -268,7 +335,7 @@ export default {
       }).catch(() => {
         this.downloadLoading = false
       })
-    }
+    },
   }
 }
 </script>
