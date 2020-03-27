@@ -21,7 +21,13 @@ export function add(data) {
     data
   })
 }
-
+export function queryFunctList(data) {
+  return request({
+    url: BASE_SERVICE+'/funcList',
+    method: 'post',
+    data
+  })
+}
 export function del(id) {
   return request({
     url: BASE_SERVICE + '/' + id,

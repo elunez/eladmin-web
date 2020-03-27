@@ -280,7 +280,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="地区"  prop="area" :rules="[]">
+            <el-form-item label="地区"  prop="area" :rules="[{ required: form.custType!==getDictValue('财富云',dictCustType) , message: '请选择地区', trigger: 'blur' }]">
               <el-select v-model="form.area" filterable  placeholder="请选择" style="width: 200px;" >
                 <el-option
                   v-for="item in dictArea"
@@ -397,7 +397,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="地区"  prop="area">
+            <el-form-item label="地区"  prop="area" :rules="[{ required: form.custType!==getDictValue('财富云',dictCustType) , message: '请选择地区', trigger: 'blur' }]">
               <el-select v-model="form.area" filterable  placeholder="请选择" style="width: 200px;" >
                 <el-option
                   v-for="item in dictArea"
@@ -543,7 +543,7 @@
 <script>
 import { edit } from '@/api/delivery'
 import  {  queryUser } from  '@/utils/business'
-import { parseTimeymd, deepClone, getDictCaption  } from '@/utils/index'
+import { parseTimeymd, deepClone, getDictCaption, getDictValue  } from '@/utils/index'
 export default {
     name: "editform",
     props: {
@@ -713,10 +713,12 @@ export default {
     },
     methods:{
       getDictCaption,
+      getDictValue,
       projectNoNeed(issueGist,dict){
         return getDictCaption(issueGist,dict).indexOf('TS')===-1&&
           getDictCaption(issueGist,dict)!=='领导审批' &&
           getDictCaption(issueGist,dict)!=='首次授权' &&
+          getDictCaption(issueGist,dict)!=='云英' &&
           getDictCaption(issueGist,dict)!=='授权延期' &&
           getDictCaption(issueGist,dict)!=='脚本更新';
       },

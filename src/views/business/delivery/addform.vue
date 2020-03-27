@@ -725,7 +725,7 @@ import initData from '@/mixins/initData'
 import { quryScriptHaveFunc } from '@/api/scriptInfo'
 import { getFunctionNo } from '@/api/funIdAccount'
 import  {  queryUser,queryCustName, queryFunction } from  '@/utils/business'
-import { scriptName } from '@/api/functionInfo'
+import { scriptName, queryFunctList } from '@/api/functionInfo'
 import { validDictSelect } from '@/views/validator/business'
 import { parseTimeymd, deepClone, getDictCaption, trim, getDictValue, strDate, find ,coutChar } from '@/utils/index'
 import store from '@/store'
@@ -986,7 +986,8 @@ import store from '@/store'
         multipleSelection:[],
         copyAuthorIndex:0,
         loadingInstance:null,
-        dealCount:0
+        dealCount:0,
+        dirFunctionArr:[]
       }
     },
     watch:{
@@ -1006,6 +1007,7 @@ import store from '@/store'
         getDictCaption(issueGist,dict)!=='领导审批' &&
         getDictCaption(issueGist,dict)!=='首次授权' &&
         getDictCaption(issueGist,dict)!=='授权延期' &&
+        getDictCaption(issueGist,dict)!=='云英' &&
         getDictCaption(issueGist,dict)!=='脚本更新';
       },
       dealCust(detail){
@@ -1182,6 +1184,32 @@ import store from '@/store'
          })
 
       },
+      dealDirFunc(){
+        var configName = {}
+        return new Promise(resolve => {
+          if(this.dirFunctionArr.length){
+            var data = {productId:this.form.productId,functionNames:this.dirFunctionArr};
+            this.dealCount++
+            queryFunctList(data).then(res=>{
+              var funcData = res;
+              if(funcData && funcData.length){
+                funcData.forEach((item,index)=>{
+                   if(item.scripts.length){
+                     var scrpitNames =  item.scripts.map((scriptItem)=>{
+                       return scriptItem.scriptName;
+                     }).join(SPLIT_CHAR);
+                     configName[item.functionName] = scrpitNames;
+                   }else {
+                     configName[item.functionName] =  ''
+                   }
+                })
+              }
+              resolve(configName);
+              this.dealCount--;
+            })
+          }
+        });
+      },
       dealDeliveryText(){
         this.dealCount++;
         var stratLength = this.form.details.length;
@@ -1195,24 +1223,33 @@ import store from '@/store'
         textArr.forEach((item,index)=>{
             this.dealSentence(item,index)
         })
-        //修正非增值为增值
         var endLength = this.form.details.length;
         this.batchAddOption(endLength-stratLength);
-        //对于增值非增值和授权同时存在进行复制授权补填配置项信息
-        this.dealCount++
-        this.fillFunctionNo().then(res=>{
-          this.accretionAddAuthor(res,this.form.details.filter(item=>item.deliverType == 4),this.form.details.filter(item=>item.deliverType != 0 && item.deliverType != 4))
-          this.dealCount--;
-        }).catch(e=>{
-          this.dealCount--;
+        this.dealDirFunc().then(res=>{
+           if(this.dirFunctionArr.length){
+             console.log(JSON.stringify(res));
+             this.form.details.forEach((item,index)=>{
+                if(item.deliverType == 1 && res.hasOwnProperty(item.functionModule)){
+                  item.configName = res[item.functionModule];
+                }
+             })
+           }
+          //对于增值非增值和授权同时存在进行复制授权补填配置项信息
+          this.dealCount++
+          this.checkOutDeliveryType(this.form.details.filter(item=>item.deliverType===getDictValue('非增值',this.dictDeliverType)&&item.configName)).then(res=>{
+            this.dealNoAddValueScipts(res.arr,res.res);
+            this.fillFunctionNo().then(res=>{
+              this.accretionAddAuthor(res,this.form.details.filter(item=>item.deliverType == 4),this.form.details.filter(item=>item.deliverType != 0 && item.deliverType != 4))
+              this.dealCount--;
+            }).catch(e=>{
+              this.dealCount--;
+            })
+
+          }).catch(e=>{
+            this.dealCount--;
+          });
         })
-        this.dealCount++
-        this.checkOutDeliveryType(this.form.details.filter(item=>item.deliverType===getDictValue('非增值',this.dictDeliverType)&&item.configName)).then(res=>{
-          this.dealNoAddValueScipts(res.arr,res.res);
-          this.dealCount--;
-        }).catch(e=>{
-          this.dealCount--;
-        });
+
         this.dealCount--;
       },
       dealSentence(text,index){
@@ -1237,6 +1274,7 @@ import store from '@/store'
          var type = DELIVER_SOFTWARE;
          if(str.match(/授权/g)!==null){
            type =  DELIVER_AUTHOR;
+           return  type
          }else  if (str.match(/数据字典[_|\/]/g)!==null){
            type =   DELIVER_DICT;
          }else  if (str.match(/接口[_|\/]/g)!==null){
@@ -1354,7 +1392,7 @@ import store from '@/store'
                   detail.issueDate = strDate(item1);
                 }else if(index1 ===1){
 
-                  if(item1.length>10){
+                  if(item1.length>10 && item1.indexOf('&') === -1){
                     falg =true;
                     detail.noTrunkVersion += '('+item1+")";
                   }else {
@@ -1418,6 +1456,7 @@ import store from '@/store'
             detail.issueGist = getDictValue('TS需求',this.dictIssueGistNoAccretion);
           }
          }
+        var isDir = false; //是否是目录
          var productIdName = getDictCaption(detail.productId,this.dictProductId);
          for(var i = 0;i < arr.length;i++) {
            var str = trim(arr[i]);
@@ -1439,7 +1478,6 @@ import store from '@/store'
                  issueDate = str.substring(find(str, '_', subindex-1)+1, find(str, '_', subindex));
                }
                detail.issueDate = issueDate;
-               var isDir = false;
                var SqlName = str.substring(find(str, '_', subindex) + 1, str.length);
                if (SqlName.indexOf(".sql") === -1 && SqlName.indexOf(".pdf") === -1 && SqlName.indexOf(".xlsx") === -1 && SqlName.indexOf(".execl") === -1
                 && SqlName.indexOf(".xls") === -1) {
@@ -1476,20 +1514,7 @@ import store from '@/store'
                    funcName = funcName.substring(funcName.indexOf(matchs[0])+matchs[0].length,funcName.length);
                  }
                  detail.functionModule = funcName
-                 if(isDir){
-                   queryFunction(detail.productId,funcName).then(res=>{
-                        var funcData = res.option;
-                        if(funcData && funcData.length && funcData[0].scripts && funcData[0].scripts.length){
-                           detail.configName = funcData[0].scripts.map((scriptItem)=>{
-                              return scriptItem.scriptName;
-                           }).join(SPLIT_CHAR);
-                        }else {
-                          detail.configName += SqlName
-                        }
-                   })
-                 }else {
-                   detail.configName += SqlName
-                 }
+                 detail.configName += SqlName
                } else {
                  detail.configName += SqlName;
                }
@@ -1505,12 +1530,17 @@ import store from '@/store'
           if((item.deliverType === detail.deliverType)&&(item.issueGist === detail.issueGist)&&
             (((item.deliverType==='1') && (item.functionModule === detail.functionModule))||
               ((item.deliverType==='2'|| item.deliverType === '3') && (item.moduleType ===detail.moduleType) ))){
-            item.configName +=SPLIT_CHAR+detail.configName;
+            if(!isDir){
+              item.configName +=SPLIT_CHAR+detail.configName;
+            }
             flag = true;
           }
         })
         if(!flag){
           this.form.details.push(detail);
+          if(isDir){
+            this.dirFunctionArr.push(detail.functionModule)
+          }
         }
       },
       custRemoteMethod(custName){
@@ -1557,58 +1587,58 @@ import store from '@/store'
           //处理数据
           var scriptsFunc = {}
           arr.forEach((item,index)=>{
-              if(item.functions && item.functions.length){
-                scriptsFunc[item.scriptName] = item.functions;
-              }
+            if(item.functions && item.functions.length){
+              scriptsFunc[item.scriptName] = item.functions;
+            }
 
           })
           nArr.forEach((item,index)=>{
-              var itemArr = item.configName.split(SPLIT_CHAR);
-              var func = [];
-              var nofunc = [];
-              itemArr.forEach((item1)=>{
-                  //检测是否有功能脚本 有则判断为增值  没有则判断为非增值
-                  if(scriptsFunc.hasOwnProperty(item1)){
-                    func.push(item1);
-                  }else {
-                    nofunc.push(item1);
-                  }
-              })
-              //判断是否有 没有功能的脚本则保留为非增值
-              if(nofunc.length){
-                 //1.修改原配置项为当前非增值
-                 item.configName = nofunc.join(SPLIT_CHAR);
+            var itemArr = item.configName.split(SPLIT_CHAR);
+            var func = [];
+            var nofunc = [];
+            itemArr.forEach((item1)=>{
+              //检测是否有功能脚本 有则判断为增值  没有则判断为非增值
+              if(scriptsFunc.hasOwnProperty(item1)){
+                func.push(item1);
               }else {
-                 item.configName = '';
+                nofunc.push(item1);
               }
-              //剩下的进行新增
-              if(func.length){
-                //对增值分组
-                var deliverFunc = {};
-                func.forEach((item1)=>{
-                  //脚本第一个功能
-                  var functionName = scriptsFunc[item1][0].functionName;
-                  if(!deliverFunc.hasOwnProperty(functionName)){
-                    deliverFunc[functionName]  = []
-                  }
-                  deliverFunc[functionName].push(item1);
-                })
-                //根据功能新增交付物明细
-                for(var key in deliverFunc){
-                  var detail = deepClone(formModel);
-                  detail.functionModule = key ;
-                  detail.deliverType = getDictValue('增值',this.dictDeliverType);
-                  detail.configName  = deliverFunc[key].join(SPLIT_CHAR)
-                  this.form.details.push(detail);
-                  this.addOption(1);
+            })
+            //判断是否有 没有功能的脚本则保留为非增值
+            if(nofunc.length){
+              //1.修改原配置项为当前非增值
+              item.configName = nofunc.join(SPLIT_CHAR);
+            }else {
+              item.configName = '';
+            }
+            //剩下的进行新增
+            if(func.length){
+              //对增值分组
+              var deliverFunc = {};
+              func.forEach((item1)=>{
+                //脚本第一个功能
+                var functionName = scriptsFunc[item1][0].functionName;
+                if(!deliverFunc.hasOwnProperty(functionName)){
+                  deliverFunc[functionName]  = []
                 }
+                deliverFunc[functionName].push(item1);
+              })
+              //根据功能新增交付物明细
+              for(var key in deliverFunc){
+                var detail = deepClone(formModel);
+                detail.functionModule = key ;
+                detail.deliverType = getDictValue('增值',this.dictDeliverType);
+                detail.configName  = deliverFunc[key].join(SPLIT_CHAR)
+                this.form.details.push(detail);
+                this.addOption(1);
               }
+            }
           })
           //最后删除configname 为空的交付明细
           this.form.details.forEach((item,index)=>{
-             if((item.deliverType == 2 || item.deliverType == 3) && (!item.configName || !item.configName.length)){
-                 this.delDeliverCard(index);
-             }
+            if((item.deliverType == 2 || item.deliverType == 3) && (!item.configName || !item.configName.length)){
+              this.delDeliverCard(index);
+            }
           })
         }
       },

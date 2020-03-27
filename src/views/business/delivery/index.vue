@@ -899,7 +899,20 @@ export default {
     }
   },
   watch:{
-
+    activeName(activeName){
+      this.$nextTick(()=>{
+        //修改查询条件,只获取配置字段其余清空
+        var tempForm = deepClone(this.form);
+        this.clearForm();
+        this.form.deliverType = String(activeName);
+        if(this.$refs['queryForm'].fields){
+          this.$refs['queryForm'].fields.forEach((item,index)=>{
+            this.form[item.prop] = tempForm[item.prop];
+          })
+        }
+        this.toQuery();
+      })
+    }
   },
   created() {
     this.clientHeight = document.body.clientHeight -200;
@@ -996,9 +1009,40 @@ export default {
     upload(){
       this.$refs.upform.dialog=true;
     },
+    clearForm(){
+      this.form = {
+        id: '',
+        deliverId:'',
+        productId:'',
+        deliverType: '',
+        custType: '',
+        area: '',
+        custName: '',
+        noTrunkVersion: '',
+        trunkVersion: '',
+        issueSource: '',
+        taskNo: '',
+        svnNo: '',
+        requireNo: '',
+        requireType: '',
+        issueDate: '',
+        issuePerson: '',
+        memo: '',
+        functionModule: '',
+        configName: '',
+        projectNo: '',
+        issueGist: '',
+        moduleType: '',
+        taCode: '',
+        module: '',
+        functionNo:'',
+        authorDateType:'',
+        used:'1'
+      };
+    },
     resetQuery(){
       this.$refs['queryForm'].resetFields();
-      this.form.used = '1';
+      this.clearForm();
     },
     rowContextMenu(row){
       this.rightClickRow = row;
@@ -1010,12 +1054,7 @@ export default {
       _this.dialog = true
     },
     tabHandleClick(tab,event){
-      //修改查询条件
-      this.form= {
-        ...this.form,
-        deliverType: tab.paneName
-      };
-      this.toQuery();
+
     },
     replaceDouChar(config){
       var  arr = config;
