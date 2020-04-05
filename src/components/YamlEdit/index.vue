@@ -1,6 +1,6 @@
 <template>
   <div class="json-editor">
-    <textarea ref="textarea"/>
+    <textarea ref="textarea" />
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
 // 替换主题这里需修改名称
 import 'codemirror/theme/idea.css'
-require('codemirror/mode/yaml/yaml.js')
+import 'codemirror/mode/yaml/yaml'
 export default {
   props: {
     value: {

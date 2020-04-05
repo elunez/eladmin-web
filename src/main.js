@@ -1,27 +1,43 @@
 import Vue from 'vue'
 
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
+import Cookies from 'js-cookie'
+
+import 'normalize.css/normalize.css'
+
+import Element from 'element-ui'
+//
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
-import '@/styles/index.scss' // global css
+// 数据字典
+import dict from './components/Dict'
+
+// 权限指令
+import permission from './components/Permission'
+import './assets/styles/element-variables.scss'
+// global css
+import './assets/styles/index.scss'
+
+// 代码高亮
+import VueHighlightJS from 'vue-highlightjs'
+import 'highlight.js/styles/atom-one-dark.css'
 
 import App from './App'
-import router from './router/routers'
-import permission from './components/permission'
 import store from './store'
+import router from './router/routers'
 
-import '@/icons' // icon
+import './assets/icons' // icon
 import './router/index' // permission control
 
+Vue.use(VueHighlightJS)
 Vue.use(mavonEditor)
 Vue.use(permission)
-Vue.use(ElementUI, { locale })
+Vue.use(dict)
+Vue.use(Element, {
+  size: Cookies.get('size') || 'small' // set element-ui default size
+})
+
 Vue.config.productionTip = false
-require('babel-polyfill')
 
 new Vue({
   el: '#app',

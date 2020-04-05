@@ -1,26 +1,24 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-editor-container">
-      <panel-group/>
-
+      <panel-group />
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <line-chart/>
+        <line-chart />
       </el-row>
-
       <el-row :gutter="32">
         <el-col :xs="24" :sm="24" :lg="8">
           <div class="chart-wrapper">
-            <raddar-chart/>
+            <radar-chart />
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="8">
           <div class="chart-wrapper">
-            <pie-chart/>
+            <pie-chart />
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="8">
           <div class="chart-wrapper">
-            <bar-chart/>
+            <bar-chart />
           </div>
         </el-col>
       </el-row>
@@ -29,31 +27,27 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import PanelGroup from './dashboard/PanelGroup'
 import LineChart from './dashboard/LineChart'
-import RaddarChart from './dashboard/RaddarChart'
-import PieChart from './dashboard/PieChart'
-import BarChart from './dashboard/BarChart'
-import { count } from '@/api/visits'
+import RadarChart from '@/components/Echarts/RadarChart'
+import PieChart from '@/components/Echarts/PieChart'
+import BarChart from '@/components/Echarts/BarChart'
+import { count } from '@/api/monitor/visits'
 
 /**
  * 记录访问，只有页面刷新或者第一次加载才会记录
  */
-count().then(res => {})
+count().then(res => {
+})
 
 export default {
   name: 'Dashboard',
   components: {
     PanelGroup,
     LineChart,
-    RaddarChart,
+    RadarChart,
     PieChart,
-    BarChart },
-  computed: {
-    ...mapGetters([
-      'roles'
-    ])
+    BarChart
   }
 }
 </script>
