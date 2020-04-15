@@ -79,7 +79,8 @@ export default {
     checkPermission,
     beforeInit() {
       this.url = 'api/dictDetail'
-      this.params = { page: this.page, size: this.size, dictName: this.dictName }
+      const sort = 'value,desc'
+      this.params = { page: this.page, size: this.size, sort:sort, dictName: this.dictName }
       const query = this.query
       const value = query.value
       if (value) { this.params['label'] = value }

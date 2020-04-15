@@ -127,7 +127,7 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="所处阶段" prop="stage">
-            <el-select v-model="form.stage" filterable  placeholder="请选择" style="width: 150px;">
+            <el-select v-model="form.stage" filterable  placeholder="请选择" style="width: 150px;" @change="stageChange">
               <el-option
                 v-for="item in dictStage"
                 :key="item.value"
@@ -190,7 +190,7 @@
 import { add, edit } from '@/api/businessInfo'
 import { initData } from  '@/api/data'
 import { queryCustName } from  '@/utils/business'
-import { arrToString, deepClone, formatDate, yearMonthDate } from '@/utils/index'
+import { arrToString, deepClone, formatDate, yearMonthDate, getDictValue } from '@/utils/index'
 export default {
   props: {
     operate: {
@@ -421,6 +421,12 @@ export default {
           this.custLoading = res.loading;
         })
 
+      }
+    },
+    stageChange(){
+      if(this.form.stage == getDictValue('合同签回',this.dictStage)){
+        this.form.estimatedTime = this.$parent.timeFormat(new Date())
+        this.form.contractFillDate = this.$parent.timeFormat(new Date())
       }
     }
   }

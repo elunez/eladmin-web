@@ -24,7 +24,13 @@ export function edit(data) {
     data
   })
 }
-
+export function batchEdit(data) {
+  return request({
+    url: BASE_SERVICE+'/batchupdate',
+    method: 'post',
+    data
+  })
+}
 export function downloadCustomer(data) {
   return request({
     url: BASE_SERVICE+'/download',

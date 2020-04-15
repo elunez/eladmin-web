@@ -831,6 +831,17 @@ import store from '@/store'
       }
     },
     data() {
+      const customerValidator = (rule, value, callback) => {
+        if(!value){
+          callback(new Error('请输入客户名称!'))
+        }else {
+          queryCustName(this.form.custType,this.form.area,value).then(res=>{
+             if(res.option.length){
+               callback(new Error('不存在此客户,请先维护!'))
+             }
+          })
+        }
+      }
       return {
         loading: false,
         dialog: false,
@@ -917,7 +928,7 @@ import store from '@/store'
             { required: true,  trigger: 'blur', validator:(rule,value,callback)=>(validDictSelect(rule,value,callback,this.dictArea)) }
           ],
           custName: [
-            { required: true, message: '请输入客户名称', trigger: 'blur' },
+            { required: true, message: '请输入客户名称!', trigger: 'blur' },
             { min: 1, max: 100, message: '长度在 1 到 50 个字符', trigger: 'blur' }
           ],
           issueDate: [
@@ -1114,6 +1125,20 @@ import store from '@/store'
           }
         })
       },
+      checkOther(){
+        var reslut = true;
+        return new Promise((resolve, reject) => {
+          queryCustName(this.form.custType,this.form.area,this.form.custName).then(res=>{
+            if(res.option.length){
+              reslut = false;
+              this.$message.warning("请先维护客户信息再新增!")
+              resolve(reslut);
+            }
+          }).catch(err=>{
+            reject(reslut);
+          })
+        })
+      },
       doSubmit(){
         if(!this.form.details.length){
           this.$message.warning("请先增加交付物明细!")
@@ -1121,7 +1146,12 @@ import store from '@/store'
         }
         this.$refs.form.validate((vaild, object)=> {
           if (vaild) {
-              this.doAdd();
+            // this.checkOther().then(res=>{
+            //   if(res){
+            //     this.doAdd();
+            //   }
+            // })
+            this.doAdd();
           }else {
             setTimeout(()=>{
               //定位到检验错误第一个位置
@@ -1229,7 +1259,7 @@ import store from '@/store'
            if(this.dirFunctionArr.length){
              console.log(JSON.stringify(res));
              this.form.details.forEach((item,index)=>{
-                if(item.deliverType == 1 && res.hasOwnProperty(item.functionModule)){
+                if((item.deliverType == 1 || item.deliverType == 2 || item.deliverType == 3) && res.hasOwnProperty(item.functionModule)){
                   item.configName = res[item.functionModule];
                 }
              })
@@ -1462,63 +1492,56 @@ import store from '@/store'
            var str = trim(arr[i]);
            if (i === 0) {
              detail.moduleType = getDictValue(moduleType, this.dictModuleType)
-             if (str.indexOf('手册') !== -1 && arr.length < 6) {
-               detail.issueDate = str.substring(0, find(str, '_', 1));
-               detail.configName = str.substring(find(str, '_', 1) + 1, str.length);
-             } else {
-               //第一个_为截止的字符串
-               var subindex = 1;
-               var issueDate =str.substring(0, find(str, '_', 1));
-               var count = coutChar(str,'_');
-               while (true){
-                 if(!issueDate || issueDate.length === 8 || subindex>count){
-                   break;
-                 }
-                 subindex++;
-                 issueDate = str.substring(find(str, '_', subindex-1)+1, find(str, '_', subindex));
+             //第一个_为截止的字符串
+             var subindex = 1;
+             /*截取日期*/
+             var issueDate =str.substring(0, find(str, '_', 1));
+             var count = coutChar(str,'_');
+             while (true){
+               if(!issueDate || issueDate.length === 8 || subindex>count){
+                 break;
                }
-               detail.issueDate = issueDate;
-               var SqlName = str.substring(find(str, '_', subindex) + 1, str.length);
-               if (SqlName.indexOf(".sql") === -1 && SqlName.indexOf(".pdf") === -1 && SqlName.indexOf(".xlsx") === -1 && SqlName.indexOf(".execl") === -1
-                && SqlName.indexOf(".xls") === -1) {
-                 if(moduleType!==DELIVER_REPROT && productIdName !== 'AOP'){
-                   SqlName += ".sql";
-                   if(arr.length  === 1){
-                     isDir = true;
-                   }
-                 }else {
-                   SqlName += '/'
+               subindex++;
+               issueDate = str.substring(find(str, '_', subindex-1)+1, find(str, '_', subindex));
+             }
+             detail.issueDate = issueDate;
+             var SqlName = str.substring(find(str, '_', subindex) + 1, str.length);
+             if (SqlName.indexOf(".sql") === -1 && SqlName.indexOf(".pdf") === -1 && SqlName.indexOf(".xlsx") === -1 && SqlName.indexOf(".execl") === -1
+              && SqlName.indexOf(".xls") === -1) {
+               if(moduleType!==DELIVER_REPROT && productIdName !== 'AOP'){
+                 SqlName += ".sql";
+                 if(arr.length  === 1){
+                   isDir = true;
                  }
-               }
-               if (detail.deliverType === '1') {
-                 //全局去掉mysql oracle_和.sql
-                 var funcName = SqlName.replace(new RegExp("_mysql|_oracle|.sql|","g"), '');
-                 //去掉第一个开通
-                 funcName = funcName.replace(/开通/, '');
-                 //获取符合条件的最长最字符串
-                 var matchs = funcName.match(new RegExp(productIdName+"(\\.[0-9])?[-_]?"));
-                 //只取最大的字符串
-                 if(matchs && matchs.length){
-                   matchs.sort((a,b)=>{
-                     var orderA = 0;
-                     if(a){
-                       orderA = a.length;
-                     }
-                     var orderB = 0;
-                     if(b){
-                       orderB = b.length;
-                     }
-                     return orderB-orderA;
-                   });
-                   //最大字符串的前面都舍弃
-                   funcName = funcName.substring(funcName.indexOf(matchs[0])+matchs[0].length,funcName.length);
-                 }
-                 detail.functionModule = funcName
-                 detail.configName += SqlName
-               } else {
-                 detail.configName += SqlName;
+               }else {
+                 SqlName += '/'
                }
              }
+             //全局去掉mysql oracle_和.sql
+             var funcName = SqlName.replace(new RegExp("_mysql|_oracle|.sql|","g"), '');
+             //去掉第一个开通
+             funcName = funcName.replace(/开通/, '');
+             //获取符合条件的最长最字符串
+             var matchs = funcName.match(new RegExp(productIdName+"(\\.[0-9])?[-_]?"));
+             //只取最大的字符串
+             if(matchs && matchs.length){
+               matchs.sort((a,b)=>{
+                 var orderA = 0;
+                 if(a){
+                   orderA = a.length;
+                 }
+                 var orderB = 0;
+                 if(b){
+                   orderB = b.length;
+                 }
+                 return orderB-orderA;
+               });
+               //最大字符串的前面都舍弃
+               funcName = funcName.substring(funcName.indexOf(matchs[0])+matchs[0].length,funcName.length);
+             }
+             detail.functionModule = funcName
+             detail.configName += SqlName
+
            }
            if(i === 1){
               detail.configName = str;
@@ -1532,8 +1555,8 @@ import store from '@/store'
               ((item.deliverType==='2'|| item.deliverType === '3') && (item.moduleType ===detail.moduleType) ))){
             if(!isDir){
               item.configName +=SPLIT_CHAR+detail.configName;
+              flag = true;
             }
-            flag = true;
           }
         })
         if(!flag){
@@ -1640,7 +1663,19 @@ import store from '@/store'
               this.delDeliverCard(index);
             }
           })
+          //如果有增值则置所有非增值为增值
+          this.changeNoAddValue();
         }
+      },
+      changeNoAddValue(){
+        //判断是否有增值
+        var temp = this.form.details.filter(item=>item.deliverType == 1);
+        //如果有则置所有非增值的为增值的
+        this.form.details.forEach((item)=>{
+           if(item.deliverType == getDictValue('非增值',this.dictDeliverType)){
+              item.deliverType = getDictValue('增值',this.dictDeliverType);
+           }
+        })
       },
       changeDeliverType(index){
          //清空发放依据
@@ -1739,24 +1774,30 @@ import store from '@/store'
         if( accretionArr && accretionArr.length){
           var addflag = false;
           accretionArr.forEach((item,index)=>{
+            var haveAccretionFlag = false;
             if(item.configName && item.configName.length){
-              var scripts = item.configName.split(SPLIT_CHAR).filter(
-                item1=>item1!='' &&
-                  item1.indexOf('.sql')!=-1 &&(
-                    authorArr && authorArr.length &&
-                    authorArr.filter(item2=>item2.configName == item1 ).length == 0 ));//如果已经在授权脚本信息汇总的排除
-              if(scripts && scripts.length){
-                scripts.forEach((item3)=>{
-                  if(functionNoList[item3]){
-                    addflag = true;
-                    var detail    =   deepClone(formModel);
-                    detail.configName = item3;
-                    detail.functionNo = functionNoList[item3].functionNo
-                    this.dealAuthoration(detail);
-                    this.addOption(1)
-                  }
-                })
-              }
+                var scripts = item.configName.split(SPLIT_CHAR).filter(
+                  item1=>item1!='' &&
+                    item1.indexOf('.sql')!=-1 &&(
+                      authorArr && authorArr.length &&
+                      authorArr.filter(item2=>item2.configName == item1 ).length == 0 ));//如果已经在授权脚本信息汇总的排除
+                if(scripts && scripts.length){
+                  scripts.forEach((item3)=>{
+                    if(functionNoList[item3]){
+                      addflag = true;
+                      haveAccretionFlag = true;
+                      var detail    =   deepClone(formModel);
+                      detail.configName = item3;
+                      detail.functionNo = functionNoList[item3].functionNo
+                      this.dealAuthoration(detail);
+                      this.addOption(1)
+                    }
+                  })
+                }
+            }
+            //对于有功能授权的非增值需要改成增值
+            if(haveAccretionFlag && item.deliverType == getDictValue('非增值',this.dictDeliverType)){
+              item.deliverType = getDictValue('增值',this.dictDeliverType);
             }
           })
           if(addflag){

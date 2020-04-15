@@ -129,6 +129,11 @@
                      <el-date-picker v-model="form.contractFillDate" type="year" style="width: 100px;"/>
                    </el-form-item>
                  </el-col>
+                 <el-col :span="4">
+                   <el-form-item label="项目描述" prop="productDescription">
+                     <el-input v-model="form.productDescription" style="width: 100px;" placeholder="模糊查询" />
+                   </el-form-item>
+                 </el-col>
                </el-row>
             </el-form>
          </el-collapse-item>
@@ -394,7 +399,8 @@ export default {
       var y = date.getFullYear(); //年
       var m = date.getMonth() + 1; //月
       var d = date.getDate(); //日
-
+      if(m < 10)m = "0"+m;
+      if(d < 10)d = "0"+d;
       return y + "-" + m + "-" + d;
     },
     getFirstDayOfYear (date) {

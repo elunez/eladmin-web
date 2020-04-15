@@ -9,10 +9,11 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(data) {
   return request({
-    url: BASE_SERVICE + '/' + id,
-    method: 'delete'
+    url: BASE_SERVICE + '/delete',
+    method: 'post',
+    data
   })
 }
 

@@ -25,7 +25,7 @@ export function queryVersionNo(productId,versionNo) {
 }
 
 
-export function queryCustName(custType,area,custName){
+export function queryCustName(custType,area,custName,parentId){
   var url = 'api/customer'
   const sort = 'id,desc'
   var params = { page: 0, size: 999999, sort: sort };
@@ -37,6 +37,9 @@ export function queryCustName(custType,area,custName){
   }
   if (custName !== ''){
     params["custName"] = custName;
+  }
+  if(parentId && parentId.length){
+    params["parentId"] = parentId
   }
   var  data = {};
   return new Promise((resolve,reject)=>{

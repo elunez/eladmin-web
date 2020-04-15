@@ -35,3 +35,12 @@ export function validatEmail(str) {
   const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
   return reg.test(str)
 }
+
+
+
+/**
+ * 检测限制只输入数字
+ * */
+export function upNumber(e){
+  e.target.value = e.target.value.replace(/[^\d]/g,'');
+}

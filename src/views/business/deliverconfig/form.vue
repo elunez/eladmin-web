@@ -41,8 +41,6 @@ export default {
         callback(new Error('请输入地址'))
       } else if (!this.isvalidAddress(value)) {
         callback(new Error('请输入正确地址必须到文件名且只支持.xlsx或者.xls文件'))
-      } else {
-        callback()
       }
     }
     return {

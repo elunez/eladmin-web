@@ -1,29 +1,68 @@
-<template>
-  <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="operate" width="500px">
+<template xmlns:el-col="http://www.w3.org/1999/html">
+  <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="operate" width="60%">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px" :disabled="operate==='详情'">
-      <el-form-item label="客户类型" prop="custType">
-        <el-select v-model="form.custType" filterable  placeholder="请选择">
-          <el-option
-            v-for="item in dictCustType"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="地区" prop="area">
-        <el-select v-model="form.area" filterable  placeholder="请选择">
-          <el-option
-            v-for="item in dictArea"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value" ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="客户名称" prop="custName">
-        <el-input v-model="form.custName" style="width: 370px;" maxlength="50" placeholder="请输入内容"/>
-      </el-form-item>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="客户类型" prop="custType">
+            <el-select v-model="form.custType" filterable  placeholder="请选择">
+              <el-option
+                v-for="item in dictCustType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="地区" prop="area">
+            <el-select v-model="form.area" filterable  placeholder="请选择">
+              <el-option
+                v-for="item in dictArea"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="客户名称" prop="custName">
+            <el-input v-model="form.custName" style="width: 200px;" maxlength="50" placeholder="请输入内容"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="客户编号" prop="custNo">
+            <el-input v-model="form.custNo" style="width: 200px;" maxlength="8" placeholder="请输入内容"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="类型" prop="custProductType">
+            <el-select v-model="form.custProductType" filterable  placeholder="请选择">
+              <el-option
+                v-for="item in dictCustProductType1"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="上线产品" prop="custHaveProduct">
+            <el-select v-model="form.custHaveProduct" multiple   placeholder="请选择">
+              <el-option
+                v-for="item in dictProductId"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label="备注" prop="memo">
-        <el-input v-model="form.memo" style="width: 370px;" type="textarea"  maxlength="250" placeholder="请输入内容"/>
+        <el-input v-model="form.memo" style="width: 600px;" type="textarea"  maxlength="250" placeholder="请输入内容"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -41,6 +80,10 @@ export default {
       type: String,
       required: true
     },
+    dictProductId:{
+      type:Array,
+      required: true
+    },
     dictCustType: {
       type: Array,
       required: true
@@ -48,7 +91,11 @@ export default {
     dictArea: {
       type: Array,
       required: true
-    }
+    },
+    dictCustProductType1:{
+      type: Array,
+      required: true
+    },
   },
   data() {
     return {
@@ -58,6 +105,9 @@ export default {
         custType: '',
         area: '',
         custName: '',
+        custNo: '',
+        custProductType:'',
+        custHaveProduct:[],
         memo: ''
       },
       rules: {
@@ -70,7 +120,11 @@ export default {
         custName: [
           { required: true, message: '请输入客户名称', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个汉字', trigger: 'blur' }
-        ]
+        ],
+        custNo: [
+          { required: true, message: '请输入客户编号', trigger: 'blur' },
+          { min: 1, max: 8, message: '长度在 1 到 8 个字符', trigger: 'blur' }
+        ],
       }
     }
   },
@@ -82,6 +136,7 @@ export default {
       this.$refs.form.validate((vaild)=>{
          if(vaild){
            this.loading = true
+           this.dealData()
            if (this.operate ==='新增') {
              this.doAdd();
            } else if(this.operate ==='修改'){
@@ -89,6 +144,14 @@ export default {
            }
          }
       });
+    },
+    dealData(){
+      if(this.form.custHaveProduct.length){
+        this.form = {
+          ...this.form,
+          custHaveProduct:this.form.custHaveProduct.join(',')
+        }
+      }
     },
     doAdd() {
        add(this.form).then(res => {
@@ -129,6 +192,9 @@ export default {
         custType: '',
         area: '',
         custName: '',
+        custNo: '',
+        custProductType:'',
+        custHaveProduct:[],
         memo: ''
       }
     }

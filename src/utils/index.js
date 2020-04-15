@@ -251,7 +251,7 @@ export  function getDictValue(label,dict){
 }
 function dictValueFindLabel(value,dict) {
   if(dict){
-    var label = '';
+    var label = value;
     for(var i=0;i<dict.length;i++){
       if(dict[i].value === value){
         label = dict[i].label;
@@ -335,10 +335,10 @@ export function rtrim(str){ //删除右边的空格
   return str.replace(/(\s*$)/g,"");
 }
 
-export function strDate(str){
+export function strDate(str,fmt='/'){
   var date = str;
   if(date&&date.length ===8){
-    date = str.substring(0,4)+'/'+str.substring(4,6)+'/'+str.substring(6,8)
+    date = str.substring(0,4)+fmt+str.substring(4,6)+fmt+str.substring(6,8)
   }
   return date;
 }
@@ -381,4 +381,19 @@ export function replaceFrontNZero(str) {
       return  data.replace(/\b(0+)/gi,"");
    }
    return data;
+}
+
+
+export function getHmS(date){
+  if(date){
+    date = new Date(date);
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    if(hour < 10) hour = "0"+hour;
+    if(minutes < 10) minutes = "0"+minutes;
+    if(seconds < 10) seconds = "0"+seconds;
+    return hour+':'+minutes+':'+seconds;
+  }
+  return  date;
 }
