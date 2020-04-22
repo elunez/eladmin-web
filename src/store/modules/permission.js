@@ -37,7 +37,7 @@ export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由�
 }
 
 export const loadView = (view) => {
-  return () => import(`@/views/${view}`)
+  return (resolve) => require([`@/views/${view}`], resolve)
 }
 
 export default permission
