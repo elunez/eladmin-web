@@ -147,7 +147,8 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(http://api.neweb.top/bing.php?type=rand);
+    /*请更换为自己的地址，不保证该地址不被删除*/
+    background-image:url(https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/bg.jpeg);
     background-size: cover;
   }
   .title {

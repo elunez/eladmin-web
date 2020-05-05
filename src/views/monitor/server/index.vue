@@ -89,11 +89,8 @@
             <div class="content">
               <el-tooltip placement="top-end">
                 <div slot="content" style="font-size: 12px;">
-                  <div style="padding: 3px;">
-                    读取：{{ data.disk.reads }}
-                  </div>
                   <div style="padding: 3px">
-                    写入：{{ data.disk.writes }}
+                    总量：{{ data.disk.total }}
                   </div>
                   <div style="padding: 3px">
                     空闲：{{ data.disk.available }}
