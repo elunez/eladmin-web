@@ -63,7 +63,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-show="form.type.toString() !== '2'" label="菜单标题" prop="name">
-          <el-input v-model="form.name" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题" />
+          <el-input v-model="form.title" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题" />
         </el-form-item>
         <el-form-item v-show="form.type.toString() === '2'" label="按钮名称" prop="name">
           <el-input v-model="form.name" placeholder="按钮名称" style="width: 178px;" />
@@ -71,11 +71,11 @@
         <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
           <el-input v-model="form.permission" :disabled="form.iframe" placeholder="权限标识" style="width: 178px;" />
         </el-form-item>
-        <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
-          <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;" />
+        <el-form-item v-if="form.type.toString() !== '2'" label="链接地址" prop="path">
+          <el-input v-model="form.path" placeholder="链接地址" style="width: 178px;" />
         </el-form-item>
-        <el-form-item label="菜单排序" prop="sort">
-          <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 178px;" />
+        <el-form-item label="菜单排序" prop="menuSort">
+          <el-input-number v-model.number="form.menuSort" :min="0" :max="999" controls-position="right" style="width: 178px;" />
         </el-form-item>
         <el-form-item v-show="!form.iframe && form.type.toString() === '1'" label="组件名称" prop="componentName">
           <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段" />
@@ -95,15 +95,15 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" @select="crud.selectChange" @select-all="crud.selectAllChange" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name" />
+      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="title" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
         </template>
       </el-table-column>
-      <el-table-column prop="sort" align="center" label="排序">
+      <el-table-column prop="menuSort" align="center" label="排序">
         <template slot-scope="scope">
-          {{ scope.row.sort }}
+          {{ scope.row.menuSort }}
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址" />
@@ -156,7 +156,7 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 
 // crud交由presenter持有
-const defaultForm = { id: null, name: null, sort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
+const defaultForm = { id: null, title: null, menuSort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
 export default {
   name: 'Menu',
   components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation },
@@ -173,8 +173,8 @@ export default {
         del: ['admin', 'menu:del']
       },
       rules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' }
         ],
         path: [
           { required: true, message: '请输入地址', trigger: 'blur' }

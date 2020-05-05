@@ -490,9 +490,6 @@ function CRUD(options) {
       Vue.set(crud.props, name, value)
     },
     getDataId(data) {
-      if (!data.hasOwnProperty(this.idField)) {
-        console.error('[CRUD error]: no property [%s] in %o', this.idField, data)
-      }
       return data[this.idField]
     },
     attchTable() {

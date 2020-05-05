@@ -89,21 +89,27 @@
                 :options="depts"
                 style="width: 178px"
                 placeholder="选择部门"
-                @select="selectFun"
               />
             </el-form-item>
-            <el-form-item label="岗位" prop="job.id">
-              <el-select v-model="form.job.id" style="width: 178px" placeholder="请先选择部门">
+            <el-form-item label="岗位" prop="jobs">
+              <el-select
+                v-model="form.jobs"
+                style="width: 178px"
+                multiple
+                placeholder="请选择"
+                @remove-tag="deleteTag"
+                @change="changeJob"
+              >
                 <el-option
-                  v-for="(item, index) in jobs"
-                  :key="item.name + index"
+                  v-for="item in jobs"
+                  :key="item.name"
                   :label="item.name"
                   :value="item.id"
                 />
               </el-select>
             </el-form-item>
             <el-form-item label="性别">
-              <el-radio-group v-model="form.sex" style="width: 178px">
+              <el-radio-group v-model="form.gender" style="width: 178px">
                 <el-radio label="男">男</el-radio>
                 <el-radio label="女">女</el-radio>
               </el-radio-group>
@@ -146,12 +152,12 @@
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
           <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
           <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
-          <el-table-column prop="sex" label="性别" />
+          <el-table-column prop="gender" label="性别" />
           <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
-          <el-table-column :show-overflow-tooltip="true" width="125" prop="email" label="邮箱" />
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="dept" label="部门 / 岗位">
+          <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
+          <el-table-column :show-overflow-tooltip="true" prop="dept" label="部门">
             <template slot-scope="scope">
-              <div>{{ scope.row.dept.name }} / {{ scope.row.job.name }}</div>
+              <div>{{ scope.row.dept.name }}</div>
             </template>
           </el-table-column>
           <el-table-column label="状态" align="center" prop="enabled">
@@ -209,7 +215,8 @@ import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 let userRoles = []
-const defaultForm = { id: null, username: null, nickName: null, sex: '男', email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null }
+let userJobs = []
+const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], jobs: [], dept: { id: null }, phone: null }
 export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination },
@@ -270,7 +277,6 @@ export default {
   created() {
     this.$nextTick(() => {
       this.getDeptDatas()
-      this.crud.toQuery()
       this.crud.msg.add = '新增成功，默认密码：123456'
     })
   },
@@ -288,6 +294,13 @@ export default {
         userRoles.push(role)
       })
     },
+    changeJob(value) {
+      userJobs = []
+      value.forEach(function(data, index) {
+        const job = { id: data }
+        userJobs.push(job)
+      })
+    },
     [CRUD.HOOK.afterAddError](crud) {
       this.afterErrorMethod(crud)
     },
@@ -297,10 +310,15 @@ export default {
     afterErrorMethod(crud) {
       // 恢复select
       const initRoles = []
+      const initJobs = []
       userRoles.forEach(function(role, index) {
         initRoles.push(role.id)
       })
+      userJobs.forEach(function(job, index) {
+        initJobs.push(job.id)
+      })
       crud.form.roles = initRoles
+      crud.form.jobs = initJobs
     },
     deleteTag(value) {
       userRoles.forEach(function(data, index) {
@@ -314,20 +332,30 @@ export default {
       this.getDepts()
       this.getRoles()
       this.getRoleLevel()
+      this.getJobs()
       form.enabled = form.enabled.toString()
     },
     // 打开编辑弹窗前做的操作
     [CRUD.HOOK.beforeToEdit](crud, form) {
       this.getJobs(this.form.dept.id)
       userRoles = []
+      userJobs = []
       const roles = []
+      const jobs = []
       form.roles.forEach(function(role, index) {
         roles.push(role.id)
         // 初始化编辑时候的角色
         const rol = { id: role.id }
         userRoles.push(rol)
       })
+      form.jobs.forEach(function(job, index) {
+        jobs.push(job.id)
+        // 初始化编辑时候的岗位
+        const data = { id: job.id }
+        userJobs.push(data)
+      })
       form.roles = roles
+      form.jobs = jobs
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {
@@ -337,13 +365,13 @@ export default {
           type: 'warning'
         })
         return false
-      } else if (!crud.form.job.id) {
+      } else if (crud.form.jobs.length === 0) {
         this.$message({
           message: '岗位不能为空',
           type: 'warning'
         })
         return false
-      } else if (this.roles.length === 0) {
+      } else if (crud.form.roles.length === 0) {
         this.$message({
           message: '角色不能为空',
           type: 'warning'
@@ -351,6 +379,7 @@ export default {
         return false
       }
       crud.form.roles = userRoles
+      crud.form.jobs = userJobs
       return true
     },
     // 获取左侧部门数据
@@ -400,15 +429,10 @@ export default {
       }).catch(() => { })
     },
     // 获取弹窗内岗位数据
-    getJobs(id) {
-      getAllJob(id).then(res => {
+    getJobs() {
+      getAllJob().then(res => {
         this.jobs = res.content
       }).catch(() => { })
-    },
-    // 点击部门搜索对应的岗位
-    selectFun(node, instanceId) {
-      this.getJobs(node.id)
-      this.form.job.id = null
     },
     // 获取权限级别
     getRoleLevel() {

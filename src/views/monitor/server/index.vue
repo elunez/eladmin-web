@@ -1,194 +1,281 @@
 <template>
-  <div class="app-container">
-    <!--工具栏-->
-    <div class="head-container">
-      <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者服务地址" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation />
+  <div v-loading="!show" element-loading-text="数据加载中..." :style="!show ? 'height: 500px' : 'height: 100%'" class="app-container">
+    <div v-if="show">
+      <el-card class="box-card">
+        <div style="color: #666;font-size: 13px;">
+          <svg-icon icon-class="system" style="margin-right: 5px" />
+          <span>
+            系统：{{ data.sys.os }}
+          </span>
+          <span>
+            IP：{{ data.sys.ip }}
+          </span>
+          <span>
+            项目已不间断运行：{{ data.sys.day }}
+          </span>
+          <i class="el-icon-refresh" style="margin-left: 40px" @click="init" />
+        </div>
+      </el-card>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span style="font-weight: bold;color: #666;font-size: 15px">状态</span>
+        </div>
+        <div>
+          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" style="margin-bottom: 10px">
+            <div class="title">CPU使用率</div>
+            <el-tooltip placement="top-end">
+              <div slot="content" style="font-size: 12px;">
+                <div style="padding: 3px;">
+                  {{ data.cpu.name }}
+                </div>
+                <div style="padding: 3px">
+                  {{ data.cpu.package }}
+                </div>
+                <div style="padding: 3px">
+                  {{ data.cpu.core }}
+                </div>
+                <div style="padding: 3px">
+                  {{ data.cpu.logic }}
+                </div>
+              </div>
+              <div class="content">
+                <el-progress type="circle" :percentage="parseFloat(data.cpu.used)" />
+              </div>
+            </el-tooltip>
+            <div class="footer">{{ data.cpu.coreNumber }} 核心</div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" style="margin-bottom: 10px">
+            <div class="title">内存使用率</div>
+            <el-tooltip placement="top-end">
+              <div slot="content" style="font-size: 12px;">
+                <div style="padding: 3px;">
+                  总量：{{ data.memory.total }}
+                </div>
+                <div style="padding: 3px">
+                  已使用：{{ data.memory.used }}
+                </div>
+                <div style="padding: 3px">
+                  空闲：{{ data.memory.available }}
+                </div>
+              </div>
+              <div class="content">
+                <el-progress type="circle" :percentage="parseFloat(data.memory.usageRate)" />
+              </div>
+            </el-tooltip>
+            <div class="footer">{{ data.memory.used }} / {{ data.memory.total }}</div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" style="margin-bottom: 10px">
+            <div class="title">交换区使用率</div>
+            <el-tooltip placement="top-end">
+              <div slot="content" style="font-size: 12px;">
+                <div style="padding: 3px;">
+                  总量：{{ data.swap.total }}
+                </div>
+                <div style="padding: 3px">
+                  已使用：{{ data.swap.used }}
+                </div>
+                <div style="padding: 3px">
+                  空闲：{{ data.swap.available }}
+                </div>
+              </div>
+              <div class="content">
+                <el-progress type="circle" :percentage="parseFloat(data.swap.usageRate)" />
+              </div>
+            </el-tooltip>
+            <div class="footer">{{ data.swap.used }} / {{ data.swap.total }}</div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" style="margin-bottom: 10px">
+            <div class="title">磁盘使用率</div>
+            <div class="content">
+              <el-tooltip placement="top-end">
+                <div slot="content" style="font-size: 12px;">
+                  <div style="padding: 3px;">
+                    读取：{{ data.disk.reads }}
+                  </div>
+                  <div style="padding: 3px">
+                    写入：{{ data.disk.writes }}
+                  </div>
+                  <div style="padding: 3px">
+                    空闲：{{ data.disk.available }}
+                  </div>
+                </div>
+                <div class="content">
+                  <el-progress type="circle" :percentage="parseFloat(data.disk.usageRate)" />
+                </div>
+              </el-tooltip>
+            </div>
+            <div class="footer">{{ data.disk.used }} / {{ data.disk.total }}</div>
+          </el-col>
+        </div>
+      </el-card>
+
+      <div>
+        <el-row :gutter="6">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="margin-bottom: 10px">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span style="font-weight: bold;color: #666;font-size: 15px">CPU使用率监控</span>
+              </div>
+              <div>
+                <v-chart :options="cpuInfo" />
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="margin-bottom: 10px">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span style="font-weight: bold;color: #666;font-size: 15px">内存使用率监控</span>
+              </div>
+              <div>
+                <v-chart :options="memoryInfo" />
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </div>
-      <crudOperation :permission="permission" />
     </div>
-    <!--表单组件-->
-    <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" style="width: 370px;" />
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" style="width: 370px;" />
-        </el-form-item>
-        <el-form-item label="端口" prop="port">
-          <el-input-number v-model.number="form.port" />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model.number="form.sort" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
-      </div>
-    </el-dialog>
-    <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
-      <el-table-column type="selection" width="55" />
-      <el-table-column prop="state" label="状态" width="50px">
-        <template slot-scope="scope">
-          <el-tag
-            :type="scope.row.state === '1' ? 'success' : 'info'"
-            disable-transitions
-          >
-            <i v-if="scope.row.state === '1'" class="el-icon-success" />
-            <i v-if="scope.row.state === '0'" class="el-icon-error" />
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="address" label="地址" />
-      <el-table-column prop="port" label="端口" width="80px" align="center" />
-      <el-table-column :formatter="formatCpuRate" prop="cpuRate" label="CPU使用率" width="100px" align="center" />
-      <el-table-column prop="cpuCore" label="CPU内核数" width="100px" align="center" />
-      <el-table-column prop="memTotal" label="物理内存" align="center">
-        <template slot-scope="scope">
-          <el-row>
-            <el-col :span="24">{{ formatMem(scope.row) }}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-progress :percentage="percentNumber(scope.row.memUsed,scope.row.memTotal)" :status="percentStatus(scope.row.memUsed,scope.row.memTotal)" :show-text="false" />
-            </el-col>
-          </el-row>
-        </template>
-      </el-table-column>
-      <el-table-column prop="diskTotal" :formatter="formatDisk" label="磁盘使用情况" align="center">
-        <template slot-scope="scope">
-          <el-row>
-            <el-col :span="24">{{ formatDisk(scope.row) }}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-progress :percentage="percentNumber(scope.row.diskUsed,scope.row.diskTotal)" :status="percentStatus(scope.row.diskUsed,scope.row.diskTotal)" :show-text="false" />
-            </el-col>
-          </el-row>
-        </template>
-      </el-table-column>
-      <el-table-column prop="swapTotal" label="交换空间" align="center">
-        <template slot-scope="scope">
-          <el-row>
-            <el-col :span="24">{{ formatSwap(scope.row) }}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-progress :percentage="percentNumber(scope.row.swapUsed,scope.row.swapTotal)" :status="percentStatus(scope.row.swapUsed,scope.row.swapTotal)" :show-text="false" />
-            </el-col>
-          </el-row>
-        </template>
-      </el-table-column>
-      <el-table-column v-permission="['admin','server:edit','server:del']" label="操作" width="150px" align="center">
-        <template slot-scope="scope">
-          <udOperation
-            :data="scope.row"
-            :permission="permission"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--分页组件-->
-    <pagination />
   </div>
 </template>
 
 <script>
-import crudServer from '@/api/monitor/server'
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
-
-const defaultForm = { id: null, address: 'localhost', name: null, ip: null, port: 8777, state: null, cpuRate: null, cpuCore: null, memTotal: null, memUsed: null, diskTotal: null, diskUsed: null, swapTotal: null, swapUsed: null, sort: 999 }
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/polar'
+import { initData } from '@/api/data'
 export default {
   name: 'ServerMonitor',
-  components: { pagination, crudOperation, rrOperation, udOperation },
-  cruds() {
-    return CRUD({ title: '监控', url: 'api/server', sort: 'sort,asc', crudMethod: { ...crudServer }})
+  components: {
+    'v-chart': ECharts
   },
-  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
-      permission: {
-        add: ['admin', 'server:add'],
-        edit: ['admin', 'server:edit'],
-        del: ['admin', 'server:del']
+      show: false,
+      monitor: null,
+      url: 'api/monitor',
+      data: {},
+      cpuInfo: {
+        tooltip: {
+          trigger: 'axis'
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: []
+        },
+        yAxis: {
+          type: 'value',
+          min: 0,
+          max: 100,
+          interval: 20
+        },
+        series: [{
+          data: [],
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: 'rgb(32, 160, 255)' // 改变区域颜色
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#6fbae1',
+              lineStyle: {
+                color: '#6fbae1' // 改变折线颜色
+              }
+            }
+          }
+        }]
       },
-      rules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
-        ],
-        address: [
-          { required: true, message: '请输入IP', trigger: 'blur' }
-        ],
-        port: [
-          { required: true, message: '请输入访问端口', trigger: 'blur', type: 'number' }
-        ]
+      memoryInfo: {
+        tooltip: {
+          trigger: 'axis'
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: []
+        },
+        yAxis: {
+          type: 'value',
+          min: 0,
+          max: 100,
+          interval: 20
+        },
+        series: [{
+          data: [],
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: 'rgb(32, 160, 255)' // 改变区域颜色
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#6fbae1',
+              lineStyle: {
+                color: '#6fbae1' // 改变折线颜色
+              }
+            }
+          }
+        }]
       }
     }
   },
   created() {
-    this.crud.optShow.download = false
+    this.init()
+    this.monitor = window.setInterval(() => {
+      setTimeout(() => {
+        this.init()
+      }, 2)
+    }, 3500)
+  },
+  destroyed() {
+    clearInterval(this.monitor)
   },
   methods: {
-    formatCpuRate(row, column) {
-      const value = row.cpuRate
-      if (!value) {
-        return 0
-      }
-      return (Math.floor(value * 10000) / 100) + '%'
-    },
-    percentNumber(value, total) {
-      if (!value || !total) {
-        return 0
-      }
-      return value / total * 100
-    },
-    percentStatus(value, total) {
-      const percent = this.percentNumber(value, total)
-      if (percent < 60) {
-        return 'success'
-      } else if (percent < 90) {
-        return 'warning'
-      } else {
-        return 'exception'
-      }
-    },
-    convertToGb(num) {
-      if (!num) {
-        return '-'
-      }
-      let unit = 'G'
-      if (num > 1024) {
-        num = num / 1024
-        unit = 'T'
-      }
-      num = Math.floor(num * 100) / 100
-      return num + unit
-    },
-    formatMem(row, column) {
-      return this.convertToGb(row.memUsed) + ' / ' + this.convertToGb(row.memTotal)
-    },
-    formatDisk(row, column) {
-      return this.convertToGb(row.diskUsed) + ' / ' + this.convertToGb(row.diskTotal)
-    },
-    formatSwap(row, column) {
-      return this.convertToGb(row.swapUsed) + ' / ' + this.convertToGb(row.swapTotal)
+    init() {
+      initData(this.url, {}).then(data => {
+        this.data = data
+        this.show = true
+        this.cpuInfo.xAxis.data.push(data.time)
+        this.memoryInfo.xAxis.data.push(data.time)
+        this.cpuInfo.series[0].data.push(parseFloat(data.memory.used))
+        this.memoryInfo.series[0].data.push(parseFloat(data.memory.usageRate))
+      })
     }
   }
 }
 </script>
 
-<style scoped>
-  .el-col {
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .box-card {
+    margin-bottom: 5px;
+    span {
+      margin-right: 28px;
+    }
+    .el-icon-refresh {
+      margin-right: 10px;
+      float: right;
+      cursor:pointer;
+    }
+  }
+  .cpu, .memory, .swap, .disk  {
+    width: 20%;
+    float: left;
+    padding-bottom: 20px;
+    margin-right: 5%;
+  }
+  .title, .footer {
     text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: #999;
+    height: 25px;
+    line-height: 25px;
+  }
+  .content {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 </style>

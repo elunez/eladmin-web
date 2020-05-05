@@ -24,13 +24,13 @@
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="520px">
       <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="form.name" style="width: 145px;" />
+          <el-input v-model="form.name" style="width: 380px;" />
         </el-form-item>
-        <el-form-item label="角色权限" prop="permission">
-          <el-input v-model="form.permission" style="width: 145px;" />
+        <el-form-item label="角色级别" prop="level">
+          <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 145px;" />
         </el-form-item>
         <el-form-item label="数据范围" prop="dataScope">
-          <el-select v-model="form.dataScope" style="width: 145px" placeholder="请选择数据范围" @change="changeScope">
+          <el-select v-model="form.dataScope" style="width: 140px" placeholder="请选择数据范围" @change="changeScope">
             <el-option
               v-for="item in dateScopes"
               :key="item"
@@ -39,14 +39,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="角色级别" prop="level">
-          <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 145px;" />
-        </el-form-item>
         <el-form-item v-if="form.dataScope === '自定义'" label="数据权限" prop="depts">
           <treeselect v-model="form.depts" :options="depts" multiple style="width: 380px" placeholder="请选择" />
         </el-form-item>
-        <el-form-item label="描述信息" prop="remark">
-          <el-input v-model="form.remark" style="width: 380px;" rows="5" type="textarea" />
+        <el-form-item label="描述信息" prop="description">
+          <el-input v-model="form.description" style="width: 380px;" rows="5" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -65,9 +62,8 @@
             <el-table-column :selectable="checkboxT" type="selection" width="55" />
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="dataScope" label="数据权限" />
-            <el-table-column prop="permission" label="角色权限" />
             <el-table-column prop="level" label="角色级别" />
-            <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
+            <el-table-column :show-overflow-tooltip="true" prop="description" label="描述" />
             <el-table-column :show-overflow-tooltip="true" width="135px" prop="createTime" label="创建日期">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -133,7 +129,7 @@ import pagination from '@crud/Pagination'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
-const defaultForm = { id: null, name: null, depts: [], remark: null, dataScope: '全部', level: 3, permission: null }
+const defaultForm = { id: null, name: null, depts: [], description: null, dataScope: '全部', level: 3 }
 export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, rrOperation, udOperation },
@@ -166,9 +162,6 @@ export default {
     this.getMenus()
     crudRoles.getLevel().then(data => {
       this.level = data.level
-    })
-    this.$nextTick(() => {
-      this.crud.toQuery()
     })
   },
   methods: {

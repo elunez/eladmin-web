@@ -9,14 +9,9 @@
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="名称" />
-      <el-table-column prop="dept" label="所属部门">
+      <el-table-column prop="jobSort" label="排序">
         <template slot-scope="scope">
-          <div>{{ scope.row.deptSuperiorName ? scope.row.deptSuperiorName + ' / ' : '' }}{{ scope.row.dept.name }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sort" label="排序">
-        <template slot-scope="scope">
-          {{ scope.row.sort }}
+          {{ scope.row.jobSort }}
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" align="center">
@@ -73,7 +68,7 @@ export default {
     return CRUD({
       title: '岗位',
       url: 'api/job',
-      sort: ['sort,asc', 'id,desc'],
+      sort: ['jobSort,asc', 'id,desc'],
       crudMethod: { ...crudJob }
     })
   },
@@ -98,9 +93,9 @@ export default {
         type: 'warning'
       }).then(() => {
         // eslint-disable-next-line no-undef
-        crud.crudMethod.edit(data).then(() => {
+        crudJob.edit(data).then(() => {
           // eslint-disable-next-line no-undef
-          crud.notify(this.dict.label.job_status[val] + '成功', 'success')
+          this.crud.notify(this.dict.label.job_status[val] + '成功', 'success')
         }).catch(err => {
           data.enabled = !data.enabled
           console.log(err.data.message)

@@ -28,6 +28,7 @@ import router from './router/routers'
 
 import './assets/icons' // icon
 import './router/index' // permission control
+import 'echarts-gl'
 
 Vue.use(VueHighlightJS)
 Vue.use(mavonEditor)
