@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" :style="'background-image:url('+ Background +');'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
         EL-ADMIN 后台管理系统
@@ -46,10 +46,12 @@ import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
+import Background from '@/assets/images/background.jpg'
 export default {
   name: 'Login',
   data() {
     return {
+      Background: Background,
       codeUrl: '',
       cookiePass: '',
       loginForm: {
@@ -147,8 +149,6 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    /*请更换为自己的地址，不保证该地址不被删除*/
-    background-image:url(https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/bg.jpeg);
     background-size: cover;
   }
   .title {

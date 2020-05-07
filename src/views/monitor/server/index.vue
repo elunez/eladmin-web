@@ -234,6 +234,12 @@ export default {
       initData(this.url, {}).then(data => {
         this.data = data
         this.show = true
+        if (this.cpuInfo.xAxis.data.length >= 8) {
+          this.cpuInfo.xAxis.data.shift()
+          this.memoryInfo.xAxis.data.shift()
+          this.cpuInfo.series[0].data.shift()
+          this.memoryInfo.series[0].data.shift()
+        }
         this.cpuInfo.xAxis.data.push(data.time)
         this.memoryInfo.xAxis.data.push(data.time)
         this.cpuInfo.series[0].data.push(parseFloat(data.memory.used))
