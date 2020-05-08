@@ -96,7 +96,7 @@
     <fForm ref="sysRestore" :key="times" :app-name="appName" />
     <dForm ref="deploy" />
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="app.name" label="应用名称" />
       <el-table-column prop="servers" label="服务器列表" />
@@ -187,13 +187,20 @@ export default {
     sysRestore() {
       this.$refs.sysRestore.dialog = true
     },
-    handleCurrentChange(row) {
-      this.currentRow = row
-      this.selectIndex = !row ? null : row.id
-      this.appName = !row ? null : row.app.name
-      this.times = this.times + !row ? 0 : 1
-      this.appId = !row ? null : row.appId
-      this.deployId = !row ? null : row.id
+    handleCurrentChange(selection) {
+      this.crud.selections = selection
+      if (selection.length === 1) {
+        const row = selection[0]
+        this.selectIndex = row.id
+        this.currentRow = row
+        this.appName = row.app.name
+        this.times = this.times + 1
+        this.appId = row.appId
+        this.deployId = row.id
+      } else {
+        this.currentRow = {}
+        this.selectIndex = ''
+      }
     },
     startServer() {
       crudDeploy.startServer(JSON.stringify(this.currentRow))

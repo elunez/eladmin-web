@@ -56,7 +56,7 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" width="130px" label="数据库名称" />
       <el-table-column prop="jdbcUrl" label="连接地址" />
@@ -142,9 +142,16 @@ export default {
     execute() {
       this.$refs.execute.dialog = true
     },
-    handleCurrentChange(row) {
-      this.currentRow = row
-      this.selectIndex = !row ? null : row.id
+    handleCurrentChange(selection) {
+      this.crud.selections = selection
+      if (selection.length === 1) {
+        const row = selection[0]
+        this.selectIndex = row.id
+        this.currentRow = row
+      } else {
+        this.currentRow = {}
+        this.selectIndex = ''
+      }
     }
   }
 }
