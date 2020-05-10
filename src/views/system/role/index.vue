@@ -40,7 +40,14 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.dataScope === '自定义'" label="数据权限" prop="depts">
-          <treeselect v-model="form.depts" :options="depts" multiple style="width: 380px" placeholder="请选择" />
+          <treeselect
+            v-model="form.depts"
+            :load-options="loadDepts"
+            :options="depts"
+            multiple
+            style="width: 380px"
+            placeholder="请选择"
+          />
         </el-form-item>
         <el-form-item label="描述信息" prop="description">
           <el-input v-model="form.description" style="width: 380px;" rows="5" type="textarea" />
@@ -103,8 +110,10 @@
           </div>
           <el-tree
             ref="menu"
+            lazy
             :data="menus"
             :default-checked-keys="menuIds"
+            :load="getMenuDatas"
             :props="defaultProps"
             check-strictly
             accordion
@@ -119,7 +128,7 @@
 
 <script>
 import crudRoles from '@/api/system/role'
-import { getDepts } from '@/api/system/dept'
+import { getDepts, getSuperior } from '@/api/system/dept'
 import { getMenusTree } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
@@ -128,6 +137,7 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 
 const defaultForm = { id: null, name: null, depts: [], description: null, dataScope: '全部', level: 3 }
 export default {
@@ -139,7 +149,7 @@ export default {
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
-      defaultProps: { children: 'children', label: 'label' },
+      defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
       dateScopes: ['全部', '本级', '自定义'], level: 3,
       currentId: 0, menuLoading: false, showButton: false,
       menus: [], menuIds: [], depts: [],
@@ -159,19 +169,29 @@ export default {
     }
   },
   created() {
-    this.getMenus()
     crudRoles.getLevel().then(data => {
       this.level = data.level
     })
   },
   methods: {
+    getMenuDatas(node, resolve) {
+      setTimeout(() => {
+        getMenusTree(node.data.id ? node.data.id : 0).then(res => {
+          resolve(res)
+        })
+      }, 100)
+    },
     [CRUD.HOOK.afterRefresh]() {
       this.$refs.menu.setCheckedKeys([])
     },
     // 编辑前
     [CRUD.HOOK.beforeToEdit](crud, form) {
       if (form.dataScope === '自定义') {
-        this.getDepts()
+        if (form.id == null) {
+          this.getDepts()
+        } else {
+          this.getSupDepts(form.depts)
+        }
       }
       const depts = []
       form.depts.forEach(function(dept, index) {
@@ -211,12 +231,6 @@ export default {
         depts.push(dept.id)
       })
       crud.form.depts = depts
-    },
-    // 获取所有菜单
-    getMenus() {
-      getMenusTree().then(res => {
-        this.menus = res
-      })
     },
     // 触发单选
     handleCurrentChange(val) {
@@ -273,8 +287,43 @@ export default {
     // 获取部门数据
     getDepts() {
       getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+        this.depts = res.content.map(function(obj) {
+          if (obj.hasChildren) {
+            obj.children = null
+          }
+          return obj
+        })
       })
+    },
+    getSupDepts(depts) {
+      const ids = []
+      depts.forEach(dept => {
+        ids.push(dept.id)
+      })
+      getSuperior(ids).then(res => {
+        this.depts = res.content.map(function(obj) {
+          if (obj.hasChildren && !obj.children) {
+            obj.children = null
+          }
+          return obj
+        })
+      })
+    },
+    // 获取弹窗内部门数据
+    loadDepts({ action, parentNode, callback }) {
+      if (action === LOAD_CHILDREN_OPTIONS) {
+        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+          parentNode.children = res.content.map(function(obj) {
+            if (obj.hasChildren) {
+              obj.children = null
+            }
+            return obj
+          })
+          setTimeout(() => {
+            callback()
+          }, 200)
+        })
+      }
     },
     // 如果数据权限为自定义则获取部门数据
     changeScope() {
@@ -299,5 +348,12 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   /deep/ .el-input-number .el-input__inner {
     text-align: left;
+  }
+  /deep/ .vue-treeselect__multi-value{
+    margin-bottom: 0;
+  }
+  /deep/ .vue-treeselect__multi-value-item{
+    border: 0;
+    padding: 0;
   }
 </style>

@@ -1,10 +1,21 @@
 import request from '@/utils/request'
+import qs from 'qs'
 
 export function getDepts(params) {
   return request({
     url: 'api/dept',
     method: 'get',
     params
+  })
+}
+
+export function getSuperior(ids) {
+  const params = {
+    ids: ids
+  }
+  return request({
+    url: 'api/dept/superior?' + qs.stringify(params, { indices: false }),
+    method: 'get'
   })
 }
 
@@ -32,4 +43,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getDepts }
+export default { add, edit, del, getDepts, getSuperior }

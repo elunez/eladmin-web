@@ -62,7 +62,7 @@
             <el-radio-button label="true">否</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-show="form.type.toString() !== '2'" label="菜单标题" prop="name">
+        <el-form-item v-if="form.type.toString() !== '2'" label="菜单标题" prop="title">
           <el-input v-model="form.title" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题" />
         </el-form-item>
         <el-form-item v-show="form.type.toString() === '2'" label="按钮名称" prop="name">
@@ -71,8 +71,8 @@
         <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
           <el-input v-model="form.permission" :disabled="form.iframe" placeholder="权限标识" style="width: 178px;" />
         </el-form-item>
-        <el-form-item v-if="form.type.toString() !== '2'" label="链接地址" prop="path">
-          <el-input v-model="form.path" placeholder="链接地址" style="width: 178px;" />
+        <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
+          <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;" />
         </el-form-item>
         <el-form-item label="菜单排序" prop="menuSort">
           <el-input-number v-model.number="form.menuSort" :min="0" :max="999" controls-position="right" style="width: 178px;" />
@@ -84,7 +84,13 @@
           <el-input v-model="form.component" style="width: 178px;" placeholder="组件路径" />
         </el-form-item>
         <el-form-item label="上级类目" prop="pid">
-          <treeselect v-model="form.pid" :options="menus" style="width: 450px;" placeholder="选择上级类目" />
+          <treeselect
+            v-model="form.pid"
+            :options="menus"
+            :load-options="loadMenus"
+            style="width: 450px;"
+            placeholder="选择上级类目"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -93,7 +99,18 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" @select="crud.selectChange" @select-all="crud.selectAllChange" @selection-change="crud.selectionChangeHandler">
+    <el-table
+      ref="table"
+      v-loading="crud.loading"
+      lazy
+      :load="getMenus"
+      :data="crud.data"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      row-key="id"
+      @select="crud.selectChange"
+      @select-all="crud.selectAllChange"
+      @selection-change="crud.selectionChangeHandler"
+    >
       <el-table-column type="selection" width="55" />
       <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="title" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
@@ -106,7 +123,6 @@
           {{ scope.row.menuSort }}
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址" />
       <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
       <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" />
       <el-table-column prop="iframe" label="外链" width="75px">
@@ -150,6 +166,7 @@ import crudMenu from '@/api/system/menu'
 import IconSelect from '@/components/IconSelect'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -185,12 +202,49 @@ export default {
   methods: {
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
-      crudMenu.getMenusTree().then(res => {
-        this.menus = []
-        const menu = { id: 0, label: '顶级类目', children: [] }
-        menu.children = res
-        this.menus.push(menu)
+      this.menus = []
+      if (form.id != null) {
+        if (form.pid === null) {
+          form.pid = 0
+        }
+        this.getSupDepts(form.id)
+      } else {
+        this.menus.push({ id: 0, label: '顶级类目', children: null })
+      }
+    },
+    getMenus(tree, treeNode, resolve) {
+      const params = { pid: tree.id }
+      setTimeout(() => {
+        crudMenu.getMenus(params).then(res => {
+          resolve(res.content)
+        })
+      }, 100)
+    },
+    getSupDepts(id) {
+      crudMenu.getSuperior(id).then(res => {
+        const children = res.content.map(function(obj) {
+          if (!obj.leaf && !obj.children) {
+            obj.children = null
+          }
+          return obj
+        })
+        this.menus = [{ id: 0, label: '顶级类目', children: children }]
       })
+    },
+    loadMenus({ action, parentNode, callback }) {
+      if (action === LOAD_CHILDREN_OPTIONS) {
+        crudMenu.getMenusTree(parentNode.id).then(res => {
+          parentNode.children = res.map(function(obj) {
+            if (!obj.leaf) {
+              obj.children = null
+            }
+            return obj
+          })
+          setTimeout(() => {
+            callback()
+          }, 100)
+        })
+      }
     },
     // 选中图标
     selected(name) {
@@ -203,5 +257,9 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   /deep/ .el-input-number .el-input__inner {
     text-align: left;
+  }
+  /deep/ .vue-treeselect__control, /deep/ .vue-treeselect__placeholder, /deep/ .vue-treeselect__single-value {
+    height: 30px;
+    line-height: 30px;
   }
 </style>

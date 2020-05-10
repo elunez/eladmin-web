@@ -1,8 +1,23 @@
 import request from '@/utils/request'
 
-export function getMenusTree() {
+export function getMenusTree(pid) {
   return request({
-    url: 'api/menus/tree',
+    url: 'api/menus/lazy?pid=' + pid,
+    method: 'get'
+  })
+}
+
+export function getMenus(params) {
+  return request({
+    url: 'api/menus',
+    method: 'get',
+    params
+  })
+}
+
+export function getSuperior(id) {
+  return request({
+    url: 'api/menus/superior?id=' + id,
     method: 'get'
   })
 }
@@ -38,4 +53,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getMenusTree }
+export default { add, edit, del, getMenusTree, getSuperior, getMenus }

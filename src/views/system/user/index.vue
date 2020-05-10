@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--侧边部门数据-->
-      <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
+      <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
         <div class="head-container">
           <el-input
             v-model="deptName"
@@ -16,14 +16,15 @@
         </div>
         <el-tree
           :data="deptDatas"
+          :load="getDeptDatas"
           :props="defaultProps"
           :expand-on-click-node="false"
-          default-expand-all
+          lazy
           @node-click="handleNodeClick"
         />
       </el-col>
       <!--用户数据-->
-      <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
+      <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
           <div v-if="crud.props.searchToggle">
@@ -87,6 +88,7 @@
               <treeselect
                 v-model="form.dept.id"
                 :options="depts"
+                :load-options="loadDepts"
                 style="width: 178px"
                 placeholder="选择部门"
               />
@@ -171,7 +173,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="140" label="创建日期">
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="创建日期">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -179,7 +181,7 @@
           <el-table-column
             v-permission="['admin','user:edit','user:del']"
             label="操作"
-            width="125"
+            width="115"
             align="center"
             fixed="right"
           >
@@ -202,7 +204,7 @@
 <script>
 import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
-import { getDepts } from '@/api/system/dept'
+import { getDepts, getSuperior } from '@/api/system/dept'
 import { getAll, getLevel } from '@/api/system/role'
 import { getAllJob } from '@/api/system/job'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
@@ -213,7 +215,7 @@ import pagination from '@crud/Pagination'
 import Treeselect from '@riophae/vue-treeselect'
 import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-
+import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 let userRoles = []
 let userJobs = []
 const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], jobs: [], dept: { id: null }, phone: null }
@@ -240,7 +242,7 @@ export default {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;',
       deptName: '', depts: [], deptDatas: [], jobs: [], level: 3, roles: [],
-      defaultProps: { children: 'children', label: 'name' },
+      defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
       permission: {
         add: ['admin', 'user:add'],
         edit: ['admin', 'user:edit'],
@@ -275,10 +277,7 @@ export default {
     ])
   },
   created() {
-    this.$nextTick(() => {
-      this.getDeptDatas()
-      this.crud.msg.add = '新增成功，默认密码：123456'
-    })
+    this.crud.msg.add = '新增成功，默认密码：123456'
   },
   mounted: function() {
     const that = this
@@ -329,8 +328,12 @@ export default {
     },
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
-      this.getDepts()
       this.getRoles()
+      if (form.id == null) {
+        this.getDepts()
+      } else {
+        this.getSupDepts(form.dept.id)
+      }
       this.getRoleLevel()
       this.getJobs()
       form.enabled = form.enabled.toString()
@@ -383,19 +386,59 @@ export default {
       return true
     },
     // 获取左侧部门数据
-    getDeptDatas() {
+    getDeptDatas(node, resolve) {
       const sort = 'id,desc'
       const params = { sort: sort }
-      if (this.deptName) { params['name'] = this.deptName }
-      getDepts(params).then(res => {
-        this.deptDatas = res.content
+      if (typeof node !== 'object') {
+        params['name'] = node
+      } else if (node.level !== 0) {
+        params['pid'] = node.data.id
+      }
+      setTimeout(() => {
+        getDepts(params).then(res => {
+          if (resolve) {
+            resolve(res.content)
+          } else {
+            this.deptDatas = res.content
+          }
+        })
+      }, 100)
+    },
+    getDepts() {
+      getDepts({ enabled: true }).then(res => {
+        this.depts = res.content.map(function(obj) {
+          if (obj.hasChildren) {
+            obj.children = null
+          }
+          return obj
+        })
+      })
+    },
+    getSupDepts(deptId) {
+      getSuperior(deptId).then(res => {
+        this.depts = res.content.map(function(obj) {
+          if (obj.hasChildren && !obj.children) {
+            obj.children = null
+          }
+          return obj
+        })
       })
     },
     // 获取弹窗内部门数据
-    getDepts() {
-      getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
-      })
+    loadDepts({ action, parentNode, callback }) {
+      if (action === LOAD_CHILDREN_OPTIONS) {
+        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+          parentNode.children = res.content.map(function(obj) {
+            if (obj.hasChildren) {
+              obj.children = null
+            }
+            return obj
+          })
+          setTimeout(() => {
+            callback()
+          }, 200)
+        })
+      }
     },
     // 切换部门
     handleNodeClick(data) {
@@ -447,5 +490,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  /deep/ .vue-treeselect__control, /deep/ .vue-treeselect__placeholder, /deep/ .vue-treeselect__single-value {
+    height: 30px;
+    line-height: 30px;
+  }
 </style>

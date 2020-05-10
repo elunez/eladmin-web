@@ -3,7 +3,8 @@ import request from '@/utils/request'
 export function getAllJob() {
   const params = {
     page: 0,
-    size: 9999
+    size: 9999,
+    enabled: true
   }
   return request({
     url: 'api/job',
