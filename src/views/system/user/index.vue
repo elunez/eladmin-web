@@ -204,7 +204,7 @@
 <script>
 import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
-import { getDepts, getSuperior } from '@/api/system/dept'
+import { getDepts, getDeptSuperior } from '@/api/system/dept'
 import { getAll, getLevel } from '@/api/system/role'
 import { getAllJob } from '@/api/system/job'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
@@ -415,7 +415,7 @@ export default {
       })
     },
     getSupDepts(deptId) {
-      getSuperior(deptId).then(res => {
+      getDeptSuperior(deptId).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren && !obj.children) {
             obj.children = null

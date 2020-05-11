@@ -128,8 +128,8 @@
 
 <script>
 import crudRoles from '@/api/system/role'
-import { getDepts, getSuperior } from '@/api/system/dept'
-import { getMenusTree } from '@/api/system/menu'
+import { getDepts, getDeptSuperior } from '@/api/system/dept'
+import { getMenusTree, getMenuSuperior } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -247,6 +247,9 @@ export default {
         val.menus.forEach(function(data, index) {
           _this.menuIds.push(data.id)
         })
+        getMenuSuperior(this.menuIds).then(res => {
+          this.menus = res
+        })
       }
     },
     // 保存菜单
@@ -300,7 +303,7 @@ export default {
       depts.forEach(dept => {
         ids.push(dept.id)
       })
-      getSuperior(ids).then(res => {
+      getDeptSuperior(ids).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren && !obj.children) {
             obj.children = null

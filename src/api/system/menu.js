@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 
 export function getMenusTree(pid) {
   return request({
@@ -15,9 +16,12 @@ export function getMenus(params) {
   })
 }
 
-export function getSuperior(id) {
+export function getMenuSuperior(ids) {
+  const params = {
+    ids: ids
+  }
   return request({
-    url: 'api/menus/superior?id=' + id,
+    url: 'api/menus/superior?' + qs.stringify(params, { indices: false }),
     method: 'get'
   })
 }
@@ -53,4 +57,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getMenusTree, getSuperior, getMenus }
+export default { add, edit, del, getMenusTree, getMenuSuperior, getMenus }

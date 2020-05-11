@@ -174,7 +174,7 @@ export default {
       }
     },
     getSupDepts(id) {
-      crudDept.getSuperior(id).then(res => {
+      crudDept.getDeptSuperior(id).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren && !obj.children) {
             obj.children = null

@@ -9,7 +9,7 @@ export function getDepts(params) {
   })
 }
 
-export function getSuperior(ids) {
+export function getDeptSuperior(ids) {
   const params = {
     ids: ids
   }
@@ -43,4 +43,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getDepts, getSuperior }
+export default { add, edit, del, getDepts, getDeptSuperior }
