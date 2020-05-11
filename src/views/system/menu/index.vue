@@ -65,8 +65,8 @@
         <el-form-item v-if="form.type.toString() !== '2'" label="菜单标题" prop="title">
           <el-input v-model="form.title" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题" />
         </el-form-item>
-        <el-form-item v-show="form.type.toString() === '2'" label="按钮名称" prop="name">
-          <el-input v-model="form.name" placeholder="按钮名称" style="width: 178px;" />
+        <el-form-item v-if="form.type.toString() === '2'" label="按钮名称" prop="title">
+          <el-input v-model="form.title" placeholder="按钮名称" style="width: 178px;" />
         </el-form-item>
         <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
           <el-input v-model="form.permission" :disabled="form.iframe" placeholder="权限标识" style="width: 178px;" />
