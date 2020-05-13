@@ -390,7 +390,9 @@ export default {
       const sort = 'id,desc'
       const params = { sort: sort }
       if (typeof node !== 'object') {
-        params['name'] = node
+        if (node) {
+          params['name'] = node
+        }
       } else if (node.level !== 0) {
         params['pid'] = node.data.id
       }
