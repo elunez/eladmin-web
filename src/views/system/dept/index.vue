@@ -40,14 +40,14 @@
         </el-form-item>
         <el-form-item label="顶级部门">
           <el-radio-group v-model="form.isTop" style="width: 140px">
-            <el-radio label="0">是</el-radio>
-            <el-radio label="1">否</el-radio>
+            <el-radio label="1">是</el-radio>
+            <el-radio label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态" prop="enabled">
           <el-radio v-for="item in dict.dept_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
         </el-form-item>
-        <el-form-item v-if="form.isTop === '1'" style="margin-bottom: 0;" label="上级部门" prop="pid">
+        <el-form-item v-if="form.isTop === '0'" style="margin-bottom: 0;" label="上级部门" prop="pid">
           <treeselect
             v-model="form.pid"
             :load-options="loadDepts"
@@ -118,7 +118,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 
-const defaultForm = { id: null, name: null, isTop: '1', pid: null, deptSort: 999, enabled: 'true' }
+const defaultForm = { id: null, name: null, isTop: '1', subCount: 0, pid: null, deptSort: 999, enabled: 'true' }
 export default {
   name: 'Dept',
   components: { Treeselect, crudOperation, rrOperation, udOperation },
@@ -162,9 +162,9 @@ export default {
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       if (form.pid !== null) {
-        form.isTop = '1'
-      } else if (form.id !== null) {
         form.isTop = '0'
+      } else if (form.id !== null) {
+        form.isTop = '1'
       }
       form.enabled = `${form.enabled}`
       if (form.id != null) {
@@ -217,6 +217,9 @@ export default {
           type: 'warning'
         })
         return false
+      }
+      if (this.form.isTop === '1') {
+        this.form.pid = null
       }
       return true
     },
