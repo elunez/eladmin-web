@@ -8,7 +8,8 @@ export function getDepts(params) {
   })
 }
 
-export function getDeptSuperior(data) {
+export function getDeptSuperior(ids) {
+  const data = ids.length ? ids : ids.toString().split('')
   return request({
     url: 'api/dept/superior',
     method: 'post',
