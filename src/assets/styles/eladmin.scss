@@ -9,6 +9,16 @@
       line-height: 30.5px;
     }
   }
+  .el-form-item-label {
+    margin: 0 3px 9px 0;
+    display: inline-block;
+    text-align: right;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #606266;
+    line-height: 30.5px;
+    padding: 0 7px 0 7px;
+  }
   .el-button+.el-button {
     margin-left: 0 !important;
   }

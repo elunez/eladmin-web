@@ -386,6 +386,8 @@ function CRUD(options) {
       Object.keys(query).forEach(key => {
         query[key] = defaultQuery[key]
       })
+      // 重置参数
+      this.params = {}
       if (toQuery) {
         crud.toQuery()
       }
