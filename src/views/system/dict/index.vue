@@ -79,7 +79,7 @@ import pagination from '@crud/Pagination'
 import rrOperation from '@crud/RR.operation'
 import udOperation from '@crud/UD.operation'
 
-const defaultForm = { id: null, name: null, description: null }
+const defaultForm = { id: null, name: null, description: null, dictDetails: [] }
 
 export default {
   name: 'Dict',
