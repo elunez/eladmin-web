@@ -8,16 +8,15 @@
           </div>
           <div>
             <div style="text-align: center">
-              <el-upload
-                :show-file-list="false"
-                :on-success="handleSuccess"
-                :on-error="handleError"
-                :headers="headers"
-                :action="updateAvatarApi"
-                class="avatar-uploader"
-              >
-                <img :src="user.avatarName ? baseApi + '/avatar/' + user.avatarName : Avatar" title="点击上传头像" class="avatar">
-              </el-upload>
+              <div class="el-upload">
+                <img :src="user.avatarName ? baseApi + '/avatar/' + user.avatarName : Avatar" title="点击上传头像" class="avatar" @click="toggleShow">
+                <myUpload
+                  v-model="show"
+                  :headers="headers"
+                  :url="updateAvatarApi"
+                  @crop-upload-success="cropUploadSuccess"
+                />
+              </div>
             </div>
             <ul class="user-info">
               <li><div style="height: 100%"><svg-icon icon-class="login" /> 登录账号<div class="user-right">{{ user.username }}</div></div></li>
@@ -106,6 +105,7 @@
 </template>
 
 <script>
+import myUpload from 'vue-image-crop-upload'
 import { mapGetters } from 'vuex'
 import updatePass from './center/updatePass'
 import updateEmail from './center/updateEmail'
@@ -118,7 +118,7 @@ import { editUser } from '@/api/system/user'
 import Avatar from '@/assets/images/avatar.png'
 export default {
   name: 'Center',
-  components: { updatePass, updateEmail },
+  components: { updatePass, updateEmail, myUpload },
   mixins: [crud],
   data() {
     // 自定义验证
@@ -132,6 +132,7 @@ export default {
       }
     }
     return {
+      show: false,
       Avatar: Avatar,
       activeName: 'first',
       saveLoading: false,
@@ -163,6 +164,9 @@ export default {
   },
   methods: {
     parseTime,
+    toggleShow() {
+      this.show = !this.show
+    },
     handleClick(tab, event) {
       if (tab.name === 'second') {
         this.init()
@@ -172,22 +176,8 @@ export default {
       this.url = 'api/logs/user'
       return true
     },
-    handleSuccess(response, file, fileList) {
-      this.$notify({
-        title: '头像修改成功',
-        type: 'success',
-        duration: 2500
-      })
+    cropUploadSuccess(jsonData, field) {
       store.dispatch('GetInfo').then(() => {})
-    },
-    // 监听上传失败
-    handleError(e, file, fileList) {
-      const msg = JSON.parse(e.message)
-      this.$notify({
-        title: msg.message,
-        type: 'error',
-        duration: 2500
-      })
     },
     doSubmit() {
       if (this.$refs['form']) {
@@ -210,19 +200,10 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .avatar-uploader-icon {
-    font-size: 28px;
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    text-align: center
-  }
-
   .avatar {
     width: 120px;
     height: 120px;
-    display: block;
-    border-radius: 50%
+    border-radius: 50%;
   }
   .user-info {
     padding-left: 0;
@@ -234,7 +215,6 @@ export default {
     }
     .user-right {
       float: right;
-
       a{
         color: #317EF3;
       }
