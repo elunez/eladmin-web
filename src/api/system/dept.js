@@ -9,7 +9,7 @@ export function getDepts(params) {
 }
 
 export function getDeptSuperior(ids) {
-  const data = ids.length ? ids : Array.of(ids)
+  const data = ids.length !== null ? ids : Array.of(ids)
   return request({
     url: 'api/dept/superior',
     method: 'post',
