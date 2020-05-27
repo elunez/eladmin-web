@@ -16,7 +16,8 @@ export function getMenus(params) {
 }
 
 export function getMenuSuperior(ids) {
-  const data = ids.length !== null ? ids : Array.of(ids)
+  console.log(ids.length)
+  const data = ids.length || ids.length === 0 ? ids : Array.of(ids)
   return request({
     url: 'api/menus/superior',
     method: 'post',
