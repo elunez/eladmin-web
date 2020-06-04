@@ -79,8 +79,12 @@ export default {
     }
   },
   created() {
+    // 获取验证码
     this.getCode()
+    // 获取用户名密码等Cookie
     this.getCookie()
+    // token 过期提示
+    this.point()
   },
   methods: {
     getCode() {
@@ -138,6 +142,18 @@ export default {
           return false
         }
       })
+    },
+    point() {
+      const point = Cookies.get('point') !== undefined
+      if (point) {
+        this.$notify({
+          title: '提示',
+          message: '当前登录状态已过期，请重新登录！',
+          type: 'warning',
+          duration: 8000
+        })
+        Cookies.remove('point')
+      }
     }
   }
 }

@@ -1,9 +1,10 @@
 import axios from 'axios'
 import router from '@/router/routers'
-import { Notification, MessageBox } from 'element-ui'
+import { Notification } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import Config from '@/settings'
+import Cookies from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
@@ -55,18 +56,10 @@ service.interceptors.response.use(
     }
     if (code) {
       if (code === 401) {
-        MessageBox.confirm(
-          '登录状态已过期，您可以继续留在该页面，或者重新登录',
-          '系统提示',
-          {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        ).then(() => {
-          store.dispatch('LogOut').then(() => {
-            location.reload() // 为了重新实例化vue-router对象 避免bug
-          })
+        store.dispatch('LogOut').then(() => {
+          // 用户登录界面提示
+          Cookies.set('point', 401)
+          location.reload()
         })
       } else if (code === 403) {
         router.push({ path: '/401' })
