@@ -133,7 +133,7 @@ function CRUD(options) {
         // 请求数据
         initData(crud.url, crud.getQueryParams()).then(data => {
           const table = crud.getTable()
-          if (table.lazy) { // 懒加载子节点数据，清掉已加载的数据
+          if (table && table.lazy) { // 懒加载子节点数据，清掉已加载的数据
             table.store.states.treeData = {}
             table.store.states.lazyTreeNodeMap = {}
           }
@@ -504,22 +504,7 @@ function CRUD(options) {
     },
     attchTable() {
       const table = this.getTable()
-      const columns = []
-      table.columns.forEach((e, index) => {
-        if (!e.property || e.type !== 'default') {
-          return
-        }
-        e.__index = index
-        columns.push({
-          property: e.property,
-          index,
-          label: e.label,
-          visible: true
-        })
-      })
-      this.updateProp('tableColumns', columns)
       this.updateProp('table', table)
-
       const that = this
       table.$on('expand-change', (row, expanded) => {
         if (!expanded) {
