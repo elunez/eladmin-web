@@ -55,7 +55,6 @@
 
 <script>
 import crudDictDetail from '@/api/system/dictDetail'
-
 import CRUD, { presenter, header, form } from '@crud/crud'
 import pagination from '@crud/Pagination'
 import rrOperation from '@crud/RR.operation'
@@ -69,7 +68,8 @@ export default {
     return [
       CRUD({ title: '字典详情', url: 'api/dictDetail', query: { dictName: '' }, sort: ['dictSort,asc', 'id,desc'],
         crudMethod: { ...crudDictDetail },
-        optShow: { add: true,
+        optShow: {
+          add: true,
           edit: true,
           del: true,
           reset: false

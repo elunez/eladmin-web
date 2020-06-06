@@ -11,6 +11,8 @@ const port = 8013 // 端口配置
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
+  // hash 模式下可使用
+  // publicPath: process.env.NODE_ENV === 'development' ? '/' : './',
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
