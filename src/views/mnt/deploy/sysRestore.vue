@@ -2,17 +2,7 @@
   <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="系统还原" width="800px">
     <!--工具栏-->
     <div class="head-container">
-      <el-date-picker
-        v-model="query.createTime"
-        :default-time="['00:00:00','23:59:59']"
-        type="daterange"
-        range-separator=":"
-        size="small"
-        class="date-item"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
+      <date-range-picker v-model="query.createTime" class="date-item" />
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </div>
     <el-form size="small" label-width="80px">
@@ -52,7 +42,9 @@
 <script>
 import crud from '@/mixins/crud'
 import { reducte } from '@/api/mnt/deployHistory'
+import DateRangePicker from '@/components/DateRangePicker'
 export default {
+  components: { DateRangePicker },
   mixins: [crud],
   props: {
     appName: {
