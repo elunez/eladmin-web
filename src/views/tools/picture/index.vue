@@ -143,7 +143,7 @@ export default {
     handleBeforeRemove(file, fileList) {
       for (let i = 0; i < this.pictures.length; i++) {
         if (this.pictures[i].uid === file.uid) {
-          crudPic.del(this.pictures[i].id).then(res => {})
+          crudPic.del(Array.of(this.pictures[i].id)).then(res => {})
           return true
         }
       }
