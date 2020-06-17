@@ -150,7 +150,7 @@ export default {
           title: '提示',
           message: '当前登录状态已过期，请重新登录！',
           type: 'warning',
-          duration: 8000
+          duration: 5000
         })
         Cookies.remove('point')
       }

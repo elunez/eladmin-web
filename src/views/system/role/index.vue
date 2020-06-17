@@ -235,12 +235,13 @@ export default {
     // 触发单选
     handleCurrentChange(val) {
       if (val) {
+        // 先将保存按钮置灰
+        this.showButton = false
         const _this = this
         // 清空菜单的选中
         this.$refs.menu.setCheckedKeys([])
         // 保存当前的角色id
         this.currentId = val.id
-        this.showButton = this.level <= val.level
         // 初始化
         this.menuIds = []
         // 菜单数据需要特殊处理
@@ -249,6 +250,8 @@ export default {
         })
         getMenuSuperior(this.menuIds).then(res => {
           this.menus = res
+          // 待所有菜单加载完再允许点击保存按钮
+          this.showButton = this.level <= val.level
         })
       }
     },
