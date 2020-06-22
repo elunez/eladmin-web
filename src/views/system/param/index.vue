@@ -17,15 +17,10 @@
         <!--          />-->
         <!--          -->
         <!--        </div>-->
-        <div class="head-container">
+        <el-checkbox v-model="cascadeShow" style="margin:0 0 10px 0;" @change="changeCascadeShow()">
           显示下级
-          <el-switch
-            v-model="cascadeShow"
-            active-color="#409EFF"
-            inactive-color="#F56C6C"
-            @change="changeCascadeShow()"
-          />
-        </div>
+        </el-checkbox>
+
         <el-tree
           :data="catalogDatas"
           :props="defaultProps"
