@@ -120,7 +120,7 @@
 <script>
 import crudRoles from '@/api/system/role'
 import { getDepts, getDeptSuperior } from '@/api/system/dept'
-import { getMenusTree, getMenuSuperior } from '@/api/system/menu'
+import { getMenusTree } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -227,24 +227,17 @@ export default {
     // 触发单选
     handleCurrentChange(val) {
       if (val) {
-        // 先将保存按钮置灰
-        this.showButton = false
         const _this = this
         // 清空菜单的选中
         this.$refs.menu.setCheckedKeys([])
         // 保存当前的角色id
         this.currentId = val.id
-        // 初始化
+        // 初始化默认选中的key
         this.menuIds = []
-        // 菜单数据需要特殊处理
         val.menus.forEach(function(data) {
           _this.menuIds.push(data.id)
         })
-        getMenuSuperior(this.menuIds).then(res => {
-          this.menus = res
-          // 待所有菜单加载完再允许点击保存按钮
-          this.showButton = this.level <= val.level
-        })
+        this.showButton = true
       }
     },
     menuChange(menu) {
