@@ -166,12 +166,19 @@ export default {
     },
     getSupDepts(id) {
       crudDept.getDeptSuperior(id).then(res => {
-        this.depts = res.content.map(function(obj) {
-          if (obj.hasChildren && !obj.children) {
-            obj.children = null
-          }
-          return obj
-        })
+        const date = res.content
+        this.buildDepts(date)
+        this.depts = date
+      })
+    },
+    buildDepts(depts) {
+      depts.forEach(data => {
+        if (data.children) {
+          this.buildDepts(data.children)
+        }
+        if (data.hasChildren && !data.children) {
+          data.children = null
+        }
       })
     },
     getDepts() {
