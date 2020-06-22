@@ -510,6 +510,9 @@ function CRUD(options) {
         if (!expanded) {
           return
         }
+        if (!table.lazy) { // 不需要懒加载子节点数据
+          return
+        }
         const lazyTreeNodeMap = table.store.states.lazyTreeNodeMap
         const children = lazyTreeNodeMap[row.id]
         row.children = children
