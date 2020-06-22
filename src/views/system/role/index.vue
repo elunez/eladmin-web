@@ -109,6 +109,7 @@
             accordion
             show-checkbox
             node-key="id"
+            @check="menuChange"
           />
         </el-card>
       </el-col>
@@ -185,7 +186,7 @@ export default {
         }
       }
       const depts = []
-      form.depts.forEach(function(dept, index) {
+      form.depts.forEach(function(dept) {
         depts.push(dept.id)
       })
       form.depts = depts
@@ -200,7 +201,7 @@ export default {
         return false
       } else if (crud.form.dataScope === '自定义') {
         const depts = []
-        crud.form.depts.forEach(function(data, index) {
+        crud.form.depts.forEach(function(data) {
           const dept = { id: data }
           depts.push(dept)
         })
@@ -218,7 +219,7 @@ export default {
     },
     afterErrorMethod(crud) {
       const depts = []
-      crud.form.depts.forEach(function(dept, index) {
+      crud.form.depts.forEach(function(dept) {
         depts.push(dept.id)
       })
       crud.form.depts = depts
@@ -236,7 +237,7 @@ export default {
         // 初始化
         this.menuIds = []
         // 菜单数据需要特殊处理
-        val.menus.forEach(function(data, index) {
+        val.menus.forEach(function(data) {
           _this.menuIds.push(data.id)
         })
         getMenuSuperior(this.menuIds).then(res => {
@@ -246,21 +247,25 @@ export default {
         })
       }
     },
+    menuChange(menu) {
+      // 判断是否在 menuIds 中，如果存在则删除，否则添加
+      const index = this.menuIds.indexOf(menu.id)
+      if (index !== -1) {
+        this.menuIds.splice(index, 1)
+      } else {
+        this.menuIds.push(menu.id)
+      }
+    },
     // 保存菜单
     saveMenu() {
       this.menuLoading = true
       const role = { id: this.currentId, menus: [] }
-      // 得到半选的父节点数据，保存起来
-      this.$refs.menu.getHalfCheckedNodes().forEach(function(data, index) {
-        const menu = { id: data.id }
-        role.menus.push(menu)
-      })
       // 得到已选中的 key 值
-      this.$refs.menu.getCheckedKeys().forEach(function(data, index) {
-        const menu = { id: data }
+      this.menuIds.forEach(function(id) {
+        const menu = { id: id }
         role.menus.push(menu)
       })
-      crudRoles.editMenu(role).then(res => {
+      crudRoles.editMenu(role).then(() => {
         this.crud.notify('保存成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         this.menuLoading = false
         this.update()
@@ -328,7 +333,7 @@ export default {
         this.getDepts()
       }
     },
-    checkboxT(row, rowIndex) {
+    checkboxT(row) {
       return row.level >= this.level
     }
   }
