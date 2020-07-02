@@ -14,7 +14,7 @@ const api = {
     // 上传文件到七牛云
     qiNiuUploadApi: baseUrl + '/api/qiNiuContent',
     // Sql 监控
-    sqlApi: baseUrl + '/druid',
+    sqlApi: baseUrl + '/druid/index.html',
     // swagger
     swaggerApi: baseUrl + '/swagger-ui.html',
     // 文件上传
