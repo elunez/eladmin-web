@@ -372,8 +372,8 @@ export default {
         })
         return false
       }
-      crud.form.roles = userRoles
-      crud.form.jobs = userJobs
+      // crud.form.roles = userRoles
+      // crud.form.jobs = userJobs
       return true
     },
     // 获取左侧部门数据
@@ -491,7 +491,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  /deep/ .vue-treeselect__control, /deep/ .vue-treeselect__placeholder, /deep/ .vue-treeselect__single-value {
+ ::v-deep .vue-treeselect__control,::v-deep .vue-treeselect__placeholder,::v-deep .vue-treeselect__single-value {
     height: 30px;
     line-height: 30px;
   }

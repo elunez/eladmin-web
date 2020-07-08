@@ -66,7 +66,7 @@ export default {
   .text {
     text-align:left;
   }
-  /deep/ .w-e-text-container {
+ ::v-deep .w-e-text-container {
     height: 420px !important;
   }
 </style>

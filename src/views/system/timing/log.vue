@@ -102,7 +102,7 @@ export default {
     color: #444;
     background: #ffffff !important;
   }
-  /deep/ .el-dialog__body{
+ ::v-deep .el-dialog__body{
     padding: 0 20px 10px 20px !important;
   }
 </style>

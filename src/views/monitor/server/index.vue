@@ -251,7 +251,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  /deep/ .box-card {
+ ::v-deep .box-card {
     margin-bottom: 5px;
     span {
       margin-right: 28px;
