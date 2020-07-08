@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  /deep/ .el-input-number .el-input__inner {
+  ::v-deep .el-input-number .el-input__inner {
     text-align: left;
   }
 </style>
