@@ -372,8 +372,8 @@ export default {
         })
         return false
       }
-      // crud.form.roles = userRoles
-      // crud.form.jobs = userJobs
+      crud.form.roles = userRoles
+      crud.form.jobs = userJobs
       return true
     },
     // 获取左侧部门数据
