@@ -85,7 +85,7 @@
             </el-form-item>
             <el-form-item label="岗位" prop="jobs">
               <el-select
-                v-model="form.jobs"
+                v-model="jobDatas"
                 style="width: 178px"
                 multiple
                 placeholder="请选择"
@@ -117,7 +117,7 @@
             </el-form-item>
             <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
               <el-select
-                v-model="form.roles"
+                v-model="roleDatas"
                 style="width: 437px"
                 multiple
                 placeholder="请选择"
@@ -233,6 +233,7 @@ export default {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;',
       deptName: '', depts: [], deptDatas: [], jobs: [], level: 3, roles: [],
+      jobDatas: [], roleDatas: [], // 多选时使用
       defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
       permission: {
         add: ['admin', 'user:add'],
@@ -291,25 +292,6 @@ export default {
         userJobs.push(job)
       })
     },
-    [CRUD.HOOK.afterAddError](crud) {
-      this.afterErrorMethod(crud)
-    },
-    [CRUD.HOOK.afterEditError](crud) {
-      this.afterErrorMethod(crud)
-    },
-    afterErrorMethod(crud) {
-      // 恢复select
-      const initRoles = []
-      const initJobs = []
-      userRoles.forEach(function(role, index) {
-        initRoles.push(role.id)
-      })
-      userJobs.forEach(function(job, index) {
-        initJobs.push(job.id)
-      })
-      crud.form.roles = initRoles
-      crud.form.jobs = initJobs
-    },
     deleteTag(value) {
       userRoles.forEach(function(data, index) {
         if (data.id === value) {
@@ -329,27 +311,29 @@ export default {
       this.getJobs()
       form.enabled = form.enabled.toString()
     },
-    // 打开编辑弹窗前做的操作
+    // 新增前将多选的值设置为空
+    [CRUD.HOOK.beforeToAdd]() {
+      this.jobDatas = []
+      this.roleDatas = []
+    },
+    // 初始化编辑时候的角色与岗位
     [CRUD.HOOK.beforeToEdit](crud, form) {
       this.getJobs(this.form.dept.id)
+      this.jobDatas = []
+      this.roleDatas = []
       userRoles = []
       userJobs = []
-      const roles = []
-      const jobs = []
+      const _this = this
       form.roles.forEach(function(role, index) {
-        roles.push(role.id)
-        // 初始化编辑时候的角色
+        _this.roleDatas.push(role.id)
         const rol = { id: role.id }
         userRoles.push(rol)
       })
       form.jobs.forEach(function(job, index) {
-        jobs.push(job.id)
-        // 初始化编辑时候的岗位
+        _this.jobDatas.push(job.id)
         const data = { id: job.id }
         userJobs.push(data)
       })
-      form.roles = roles
-      form.jobs = jobs
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {
@@ -359,13 +343,13 @@ export default {
           type: 'warning'
         })
         return false
-      } else if (crud.form.jobs.length === 0) {
+      } else if (this.jobDatas.length === 0) {
         this.$message({
           message: '岗位不能为空',
           type: 'warning'
         })
         return false
-      } else if (crud.form.roles.length === 0) {
+      } else if (this.roleDatas.length === 0) {
         this.$message({
           message: '角色不能为空',
           type: 'warning'
@@ -491,7 +475,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
- ::v-deep .vue-treeselect__control,::v-deep .vue-treeselect__placeholder,::v-deep .vue-treeselect__single-value {
+  ::v-deep .vue-treeselect__control,::v-deep .vue-treeselect__placeholder,::v-deep .vue-treeselect__single-value {
     height: 30px;
     line-height: 30px;
   }
