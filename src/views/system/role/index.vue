@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item v-if="form.dataScope === '自定义'" label="数据权限" prop="depts">
           <treeselect
-            v-model="form.depts"
+            v-model="deptDatas"
             :load-options="loadDepts"
             :options="depts"
             multiple
@@ -144,7 +144,7 @@ export default {
       defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
       dateScopes: ['全部', '本级', '自定义'], level: 3,
       currentId: 0, menuLoading: false, showButton: false,
-      menus: [], menuIds: [], depts: [],
+      menus: [], menuIds: [], depts: [], deptDatas: [], // 多选时使用
       permission: {
         add: ['admin', 'roles:add'],
         edit: ['admin', 'roles:edit'],
@@ -176,24 +176,24 @@ export default {
     [CRUD.HOOK.afterRefresh]() {
       this.$refs.menu.setCheckedKeys([])
     },
-    // 编辑前
+    // 新增前初始化部门信息
+    [CRUD.HOOK.beforeToAdd]() {
+      this.deptDatas = []
+    },
+    // 编辑前初始化自定义数据权限的部门信息
     [CRUD.HOOK.beforeToEdit](crud, form) {
+      this.deptDatas = []
       if (form.dataScope === '自定义') {
-        if (form.id == null) {
-          this.getDepts()
-        } else {
-          this.getSupDepts(form.depts)
-        }
+        this.getSupDepts(form.depts)
       }
-      const depts = []
+      const _this = this
       form.depts.forEach(function(dept) {
-        depts.push(dept.id)
+        _this.deptDatas.push(dept.id)
       })
-      form.depts = depts
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {
-      if (crud.form.dataScope === '自定义' && crud.form.depts.length === 0) {
+      if (crud.form.dataScope === '自定义' && this.deptDatas.length === 0) {
         this.$message({
           message: '自定义数据权限不能为空',
           type: 'warning'
@@ -201,7 +201,7 @@ export default {
         return false
       } else if (crud.form.dataScope === '自定义') {
         const depts = []
-        crud.form.depts.forEach(function(data) {
+        this.deptDatas.forEach(function(data) {
           const dept = { id: data }
           depts.push(dept)
         })
@@ -210,19 +210,6 @@ export default {
         crud.form.depts = []
       }
       return true
-    },
-    [CRUD.HOOK.afterAddError](crud) {
-      this.afterErrorMethod(crud)
-    },
-    [CRUD.HOOK.afterEditError](crud) {
-      this.afterErrorMethod(crud)
-    },
-    afterErrorMethod(crud) {
-      const depts = []
-      crud.form.depts.forEach(function(dept) {
-        depts.push(dept.id)
-      })
-      crud.form.depts = depts
     },
     // 触发单选
     handleCurrentChange(val) {
