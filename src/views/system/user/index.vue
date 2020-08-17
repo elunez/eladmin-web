@@ -85,7 +85,7 @@
             </el-form-item>
             <el-form-item label="岗位" prop="jobs">
               <el-select
-                v-model="jobDatas"
+                v-model="form.jobs"
                 style="width: 178px"
                 multiple
                 placeholder="请选择"
@@ -117,7 +117,7 @@
             </el-form-item>
             <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
               <el-select
-                v-model="roleDatas"
+                v-model="form.roles"
                 style="width: 437px"
                 multiple
                 placeholder="请选择"
@@ -233,7 +233,6 @@ export default {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;',
       deptName: '', depts: [], deptDatas: [], jobs: [], level: 3, roles: [],
-      jobDatas: [], roleDatas: [], // 多选时使用
       defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
       permission: {
         add: ['admin', 'user:add'],
@@ -292,6 +291,25 @@ export default {
         userJobs.push(job)
       })
     },
+    [CRUD.HOOK.afterAddError](crud) {
+      this.afterErrorMethod(crud)
+    },
+    [CRUD.HOOK.afterEditError](crud) {
+      this.afterErrorMethod(crud)
+    },
+    afterErrorMethod(crud) {
+      // 恢复select
+      const initRoles = []
+      const initJobs = []
+      userRoles.forEach(function(role, index) {
+        initRoles.push(role.id)
+      })
+      userJobs.forEach(function(job, index) {
+        initJobs.push(job.id)
+      })
+      crud.form.roles = initRoles
+      crud.form.jobs = initJobs
+    },
     deleteTag(value) {
       userRoles.forEach(function(data, index) {
         if (data.id === value) {
@@ -311,29 +329,27 @@ export default {
       this.getJobs()
       form.enabled = form.enabled.toString()
     },
-    // 新增前将多选的值设置为空
-    [CRUD.HOOK.beforeToAdd]() {
-      this.jobDatas = []
-      this.roleDatas = []
-    },
-    // 初始化编辑时候的角色与岗位
+    // 打开编辑弹窗前做的操作
     [CRUD.HOOK.beforeToEdit](crud, form) {
       this.getJobs(this.form.dept.id)
-      this.jobDatas = []
-      this.roleDatas = []
       userRoles = []
       userJobs = []
-      const _this = this
+      const roles = []
+      const jobs = []
       form.roles.forEach(function(role, index) {
-        _this.roleDatas.push(role.id)
+        roles.push(role.id)
+        // 初始化编辑时候的角色
         const rol = { id: role.id }
         userRoles.push(rol)
       })
       form.jobs.forEach(function(job, index) {
-        _this.jobDatas.push(job.id)
+        jobs.push(job.id)
+        // 初始化编辑时候的岗位
         const data = { id: job.id }
         userJobs.push(data)
       })
+      form.roles = roles
+      form.jobs = jobs
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {
