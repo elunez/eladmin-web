@@ -49,10 +49,10 @@
               @change="crud.toQuery"
             >
               <el-option
-                v-for="item in enabledTypeOptions"
+                v-for="item in dict.user_status"
                 :key="item.key"
-                :label="item.display_name"
-                :value="item.key"
+                :label="item.label"
+                :value="item.value"
               />
             </el-select>
             <rrOperation />
@@ -157,6 +157,8 @@
               <el-switch
                 v-model="scope.row.enabled"
                 :disabled="user.id === scope.row.id"
+                :active-value="1"
+                :inactive-value="0"
                 active-color="#409EFF"
                 inactive-color="#F56C6C"
                 @change="changeEnabled(scope.row, scope.row.enabled)"
@@ -209,7 +211,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 let userRoles = []
 let userJobs = []
-const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], jobs: [], dept: { id: null }, phone: null }
+const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 0, roles: [], jobs: [], dept: { id: null }, phone: null }
 export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
@@ -240,10 +242,6 @@ export default {
         edit: ['admin', 'user:edit'],
         del: ['admin', 'user:del']
       },
-      enabledTypeOptions: [
-        { key: 'true', display_name: '激活' },
-        { key: 'false', display_name: '锁定' }
-      ],
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -309,7 +307,6 @@ export default {
       }
       this.getRoleLevel()
       this.getJobs()
-      form.enabled = form.enabled.toString()
     },
     // 新增前将多选的值设置为空
     [CRUD.HOOK.beforeToAdd]() {
@@ -382,7 +379,7 @@ export default {
       }, 100)
     },
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
+      getDepts({ enabled: 1 }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -411,7 +408,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        getDepts({ enabled: 1, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
@@ -443,10 +440,10 @@ export default {
         crudUser.edit(data).then(res => {
           this.crud.notify(this.dict.label.user_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {
-          data.enabled = !data.enabled
+          data.enabled = (data.enabled === 1) ? 0 : 1
         })
       }).catch(() => {
-        data.enabled = !data.enabled
+        data.enabled = (data.enabled === 1) ? 0 : 1
       })
     },
     // 获取弹窗内角色数据

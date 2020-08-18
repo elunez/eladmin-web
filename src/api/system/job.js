@@ -4,7 +4,7 @@ export function getAllJob() {
   const params = {
     page: 0,
     size: 9999,
-    enabled: true
+    enabled: 1
   }
   return request({
     url: 'api/job',

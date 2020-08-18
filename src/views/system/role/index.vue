@@ -268,7 +268,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
+      getDepts({ enabled: 1 }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -301,7 +301,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        getDepts({ enabled: 1, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null

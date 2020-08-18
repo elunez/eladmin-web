@@ -44,7 +44,7 @@
           v-for="item in jobStatus"
           :key="item.id"
           v-model="form.enabled"
-          :label="item.value === 'true'"
+          :label="item.value"
         >
           {{ item.label }}
         </el-radio>
@@ -78,7 +78,7 @@ const defaultForm = {
   id: null,
   name: '',
   jobSort: 999,
-  enabled: true
+  enabled: 1
 }
 export default {
   mixins: [form(defaultForm)],

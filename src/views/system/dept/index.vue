@@ -7,7 +7,7 @@
         <el-input v-model="query.name" clearable size="small" placeholder="输入部门名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
         <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="crud.toQuery">
-          <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          <el-option v-for="item in dict.dept_status" :key="item.key" :label="item.label" :value="item.value" />
         </el-select>
         <rrOperation />
       </div>
@@ -73,6 +73,8 @@
           <el-switch
             v-model="scope.row.enabled"
             :disabled="scope.row.id === 1"
+            :active-value="1"
+            :inactive-value="0"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             @change="changeEnabled(scope.row, scope.row.enabled,)"
@@ -109,7 +111,7 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = { id: null, name: null, isTop: '1', subCount: 0, pid: null, deptSort: 999, enabled: 'true' }
+const defaultForm = { id: null, name: null, isTop: '1', subCount: 0, pid: null, deptSort: 999, enabled: 1 }
 export default {
   name: 'Dept',
   components: { Treeselect, crudOperation, rrOperation, udOperation, DateRangePicker },
@@ -134,11 +136,7 @@ export default {
         add: ['admin', 'dept:add'],
         edit: ['admin', 'dept:edit'],
         del: ['admin', 'dept:del']
-      },
-      enabledTypeOptions: [
-        { key: 'true', display_name: '正常' },
-        { key: 'false', display_name: '禁用' }
-      ]
+      }
     }
   },
   methods: {
@@ -157,7 +155,6 @@ export default {
       } else if (form.id !== null) {
         form.isTop = '1'
       }
-      form.enabled = `${form.enabled}`
       if (form.id != null) {
         this.getSupDepts(form.id)
       } else {
@@ -182,7 +179,7 @@ export default {
       })
     },
     getDepts() {
-      crudDept.getDepts({ enabled: true }).then(res => {
+      crudDept.getDepts({ enabled: 1 }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -194,7 +191,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        crudDept.getDepts({ enabled: 1, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
@@ -231,11 +228,11 @@ export default {
         crudDept.edit(data).then(res => {
           this.crud.notify(this.dict.label.dept_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(err => {
-          data.enabled = !data.enabled
+          data.enabled = (data.enabled === 1) ? 0 : 1
           console.log(err.response.data.message)
         })
       }).catch(() => {
-        data.enabled = !data.enabled
+        data.enabled = (data.enabled === 1) ? 0 : 1
       })
     },
     checkboxT(row, rowIndex) {

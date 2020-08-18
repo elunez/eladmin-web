@@ -18,6 +18,8 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
+            :active-value="1"
+            :inactive-value="0"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             @change="changeEnabled(scope.row, scope.row.enabled)"
@@ -97,11 +99,11 @@ export default {
           // eslint-disable-next-line no-undef
           this.crud.notify(this.dict.label.job_status[val] + '成功', 'success')
         }).catch(err => {
-          data.enabled = !data.enabled
+          data.enabled = (data.enabled === 1) ? 0 : 1
           console.log(err.data.message)
         })
       }).catch(() => {
-        data.enabled = !data.enabled
+        data.enabled = (data.enabled === 1) ? 0 : 1
       })
     }
   }
