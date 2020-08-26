@@ -511,17 +511,18 @@ function CRUD(options) {
           return
         }
         const lazyTreeNodeMap = table.store.states.lazyTreeNodeMap
-        const children = lazyTreeNodeMap[crud.getDataId(row)]
-        row.children = children
-        children.forEach(ele => {
-          const id = crud.getDataId(ele)
-          if (that.dataStatus[id] === undefined) {
-            that.dataStatus[id] = {
-              delete: 0,
-              edit: 0
+        row.children = lazyTreeNodeMap[crud.getDataId(row)]
+        if (row.children) {
+          row.children.forEach(ele => {
+            const id = crud.getDataId(ele)
+            if (that.dataStatus[id] === undefined) {
+              that.dataStatus[id] = {
+                delete: 0,
+                edit: 0
+              }
             }
-          }
-        })
+          })
+        }
       })
     }
   }
