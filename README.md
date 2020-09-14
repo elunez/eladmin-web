@@ -10,7 +10,7 @@ ELADMIN 前端源码
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
 #### 开发文档
-[https://docs.auauz.net/#/](https://docs.auauz.net/#/)
+[https://el-admin.vip](https://el-admin.vip)
 
 #### 前端模板
 
@@ -21,7 +21,7 @@ ELADMIN 前端源码
 #### Build Setup
 ``` bash
 # 配置镜像加速
-npm config set registry https://registry.npm.taobao.org
+https://www.ydyno.com/archives/1219.html
 
 # 安装依赖
 npm install
@@ -30,23 +30,12 @@ npm install
 npm run dev
 
 # 构建生产环境
-npm run build
-
-# 如果遇到 node-sass 安装慢，或者安装不了的问题，请查看
-- https://www.ydyno.com/archives/1219.html
--
+npm run build:prod
 ```
 
 #### 常见问题
 
-1、依赖安装失败
-
-可通过配置淘宝的镜像源解决
-```
-npm config set registry https://registry.npm.taobao.org
-```
-
-2、linux 系统在安装依赖的时候会出现 node-sass 无法安装的问题
+1、linux 系统在安装依赖的时候会出现 node-sass 无法安装的问题
 
 解决方案：
 ```
@@ -54,9 +43,24 @@ npm config set registry https://registry.npm.taobao.org
 2. 直接使用：npm install --unsafe-perm
 ```
 
-3、加速node-sass安装
+2、加速node-sass安装
 
 https://www.ydyno.com/archives/1219.html
+
+#### 特别鸣谢
+
+- 感谢 [JetBrains](https://www.jetbrains.com/) 提供的非商业开源软件开发授权
+
+- 感谢 [PanJiaChen](https://github.com/PanJiaChen/vue-element-admin) 大佬提供的前端模板
+
+- 感谢 [Moxun](https://github.com/moxun1639) 大佬提供的前端 Curd 通用组件
+
+- 感谢 [zhy6599](https://gitee.com/zhy6599) 大佬提供的后端运维管理相关功能
+
+- 感谢 [j.yao.SUSE](https://github.com/everhopingandwaiting) 大佬提供的匿名接口与Redis限流等功能
+
+- 感谢 [d15801543974](https://github.com/d15801543974) 大佬提供的基于注解的通用查询方式
+
 #### 反馈交流
 
 - QQ交流群：891137268

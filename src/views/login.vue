@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" :style="'background-image:url('+ Background +');'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
         EL-ADMIN 后台管理系统
@@ -46,10 +46,12 @@ import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
+import Background from '@/assets/images/background.jpg'
 export default {
   name: 'Login',
   data() {
     return {
+      Background: Background,
       codeUrl: '',
       cookiePass: '',
       loginForm: {
@@ -77,8 +79,12 @@ export default {
     }
   },
   created() {
+    // 获取验证码
     this.getCode()
+    // 获取用户名密码等Cookie
     this.getCookie()
+    // token 过期提示
+    this.point()
   },
   methods: {
     getCode() {
@@ -136,6 +142,18 @@ export default {
           return false
         }
       })
+    },
+    point() {
+      const point = Cookies.get('point') !== undefined
+      if (point) {
+        this.$notify({
+          title: '提示',
+          message: '当前登录状态已过期，请重新登录！',
+          type: 'warning',
+          duration: 5000
+        })
+        Cookies.remove('point')
+      }
     }
   }
 }
@@ -147,7 +165,6 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image:url(http://api.neweb.top/bing.php?type=rand);
     background-size: cover;
   }
   .title {

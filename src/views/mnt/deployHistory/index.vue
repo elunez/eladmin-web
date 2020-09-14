@@ -5,18 +5,7 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable placeholder="输入搜索内容" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <el-date-picker
-          v-model="query.deployDate"
-          :default-time="['00:00:00','23:59:59']"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          class="date-item"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          style="width: 240px"
-          start-placeholder="部署开始日期"
-          end-placeholder="部署结束日期"
-        />
+        <date-range-picker v-model="query.deployDate" class="date-item" />
         <rrOperation />
       </div>
       <crudOperation :permission="permission" />
@@ -61,10 +50,11 @@ import CRUD, { presenter, header } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
+import DateRangePicker from '@/components/DateRangePicker'
 
 export default {
   name: 'DeployHistory',
-  components: { pagination, crudOperation, rrOperation },
+  components: { pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '部署历史', url: 'api/deployHistory', crudMethod: { del }})
   },

@@ -3,7 +3,6 @@
     <p class="warn-content">
       Markdown 基于
       <el-link type="primary" href="https://github.com/hinesboy/mavonEditor" target="_blank">MavonEditor</el-link>
-      ，图片上传使用 <el-link type="primary" href="https://sm.ms/" target="_blank">SM.MS</el-link>
     </p>
     <mavon-editor ref="md" :style="'height:' + height" @imgAdd="imgAdd" />
   </div>
@@ -21,7 +20,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'imagesUploadApi'
+      'imagesUploadApi',
+      'baseApi'
     ])
   },
   mounted() {
@@ -32,8 +32,10 @@ export default {
   },
   methods: {
     imgAdd(pos, $file) {
-      upload(this.imagesUploadApi, $file).then(data => {
-        this.$refs.md.$img2Url(pos, data.data.url)
+      upload(this.imagesUploadApi, $file).then(res => {
+        const data = res.data
+        const url = this.baseApi + '/file/' + data.type + '/' + data.realName
+        this.$refs.md.$img2Url(pos, url)
       })
     }
   }

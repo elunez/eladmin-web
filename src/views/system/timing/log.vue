@@ -3,17 +3,7 @@
     <!-- 搜索 -->
     <div class="head-container">
       <el-input v-model="query.jobName" clearable size="small" placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
-      <el-date-picker
-        v-model="query.createTime"
-        :default-time="['00:00:00','23:59:59']"
-        type="daterange"
-        range-separator=":"
-        size="small"
-        class="date-item"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
+      <date-range-picker v-model="query.createTime" class="date-item" />
       <el-select v-model="query.isSuccess" placeholder="日志状态" clearable size="small" class="filter-item" style="width: 110px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
@@ -72,7 +62,9 @@
 
 <script>
 import crud from '@/mixins/crud'
+import DateRangePicker from '@/components/DateRangePicker'
 export default {
+  components: { DateRangePicker },
   mixins: [crud],
   data() {
     return {
@@ -110,7 +102,7 @@ export default {
     color: #444;
     background: #ffffff !important;
   }
-  /deep/ .el-dialog__body{
+ ::v-deep .el-dialog__body{
     padding: 0 20px 10px 20px !important;
   }
 </style>

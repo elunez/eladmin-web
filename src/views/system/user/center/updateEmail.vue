@@ -48,7 +48,6 @@ export default {
     return {
       loading: false, dialog: false, title: '修改邮箱', form: { pass: '', email: '', code: '' },
       user: { email: '', password: '' }, codeLoading: false,
-      codeData: { type: 'email', value: '' },
       buttonName: '获取验证码', isDisabled: false, time: 60,
       rules: {
         pass: [
@@ -71,9 +70,8 @@ export default {
       if (this.form.email && this.form.email !== this.email) {
         this.codeLoading = true
         this.buttonName = '验证码发送中'
-        this.codeData.value = this.form.email
         const _this = this
-        resetEmail(this.codeData).then(res => {
+        resetEmail(this.form.email).then(res => {
           this.$message({
             showClose: true,
             message: '发送成功，验证码有效期5分钟',

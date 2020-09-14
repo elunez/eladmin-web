@@ -5,17 +5,7 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <el-date-picker
-          v-model="query.createTime"
-          :default-time="['00:00:00','23:59:59']"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          class="date-item"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
+        <date-range-picker v-model="query.createTime" class="date-item" />
         <rrOperation />
       </div>
       <crudOperation :permission="permission">
@@ -123,10 +113,11 @@ import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
+import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, name: '' }
 export default {
-  components: { pagination, crudOperation, rrOperation },
+  components: { pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '文件', url: 'api/localStorage', crudMethod: { ...crudFile }})
   },
@@ -188,10 +179,10 @@ export default {
 </script>
 
 <style scoped>
-  /deep/ .el-image__error, .el-image__placeholder{
+ ::v-deep .el-image__error, .el-image__placeholder{
     background: none;
   }
-  /deep/ .el-image-viewer__wrapper{
+ ::v-deep .el-image-viewer__wrapper{
     top: 55px;
   }
 </style>

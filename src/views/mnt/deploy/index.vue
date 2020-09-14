@@ -5,17 +5,7 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
         <el-input v-model="query.appName" clearable placeholder="输入应用名称查询" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <el-date-picker
-          v-model="query.createTime"
-          :default-time="['00:00:00','23:59:59']"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          class="date-item"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
+        <date-range-picker v-model="query.createTime" class="date-item" />
         <rrOperation />
       </div>
       <crudOperation :permission="permission">
@@ -96,7 +86,7 @@
     <fForm ref="sysRestore" :key="times" :app-name="appName" />
     <dForm ref="deploy" />
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="app.name" label="应用名称" />
       <el-table-column prop="servers" label="服务器列表" />
@@ -128,11 +118,12 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, app: { id: null }, deploys: [] }
 export default {
   name: 'Deploy',
-  components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation },
+  components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
   },
@@ -187,13 +178,20 @@ export default {
     sysRestore() {
       this.$refs.sysRestore.dialog = true
     },
-    handleCurrentChange(row) {
-      this.currentRow = row
-      this.selectIndex = !row ? null : row.id
-      this.appName = !row ? null : row.app.name
-      this.times = this.times + !row ? 0 : 1
-      this.appId = !row ? null : row.appId
-      this.deployId = !row ? null : row.id
+    handleCurrentChange(selection) {
+      this.crud.selections = selection
+      if (selection.length === 1) {
+        const row = selection[0]
+        this.selectIndex = row.id
+        this.currentRow = row
+        this.appName = row.app.name
+        this.times = this.times + 1
+        this.appId = row.appId
+        this.deployId = row.id
+      } else {
+        this.currentRow = {}
+        this.selectIndex = ''
+      }
     },
     startServer() {
       crudDeploy.startServer(JSON.stringify(this.currentRow))

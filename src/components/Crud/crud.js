@@ -132,6 +132,11 @@ function CRUD(options) {
         crud.loading = true
         // 请求数据
         initData(crud.url, crud.getQueryParams()).then(data => {
+          const table = crud.getTable()
+          if (table && table.lazy) { // 懒加载子节点数据，清掉已加载的数据
+            table.store.states.treeData = {}
+            table.store.states.lazyTreeNodeMap = {}
+          }
           crud.page.total = data.totalElements
           crud.data = data.content
           crud.resetDataStatus()
@@ -381,6 +386,8 @@ function CRUD(options) {
       Object.keys(query).forEach(key => {
         query[key] = defaultQuery[key]
       })
+      // 重置参数
+      this.params = {}
       if (toQuery) {
         crud.toQuery()
       }
@@ -437,7 +444,7 @@ function CRUD(options) {
           crud.selectChange(selection, val)
         })
       } else {
-        crud.findVM('presenter').$refs['table'].clearSelection()
+        crud.getTable().clearSelection()
       }
     },
     /**
@@ -447,10 +454,10 @@ function CRUD(options) {
      */
     selectChange(selection, row) {
       // 如果selection中存在row代表是选中，否则是取消选中
-      if (selection.find(val => { return this.getDataId(val) === this.getDataId(row) })) {
+      if (selection.find(val => { return crud.getDataId(val) === crud.getDataId(row) })) {
         if (row.children) {
           row.children.forEach(val => {
-            crud.findVM('presenter').$refs['table'].toggleRowSelection(val, true)
+            crud.getTable().toggleRowSelection(val, true)
             selection.push(val)
             if (val.children) {
               crud.selectChange(selection, val)
@@ -469,7 +476,7 @@ function CRUD(options) {
     toggleRowSelection(selection, data) {
       if (data.children) {
         data.children.forEach(val => {
-          crud.findVM('presenter').$refs['table'].toggleRowSelection(val, false)
+          crud.getTable().toggleRowSelection(val, false)
           if (val.children) {
             crud.toggleRowSelection(selection, val)
           }
@@ -490,28 +497,33 @@ function CRUD(options) {
       Vue.set(crud.props, name, value)
     },
     getDataId(data) {
-      if (!data.hasOwnProperty(this.idField)) {
-        console.error('[CRUD error]: no property [%s] in %o', this.idField, data)
-      }
       return data[this.idField]
     },
+    getTable() {
+      return this.findVM('presenter').$refs.table
+    },
     attchTable() {
-      const table = this.findVM('presenter').$refs.table
-      const columns = []
-      table.columns.forEach((e, index) => {
-        if (!e.property || e.type !== 'default') {
+      const table = this.getTable()
+      this.updateProp('table', table)
+      const that = this
+      table.$on('expand-change', (row, expanded) => {
+        if (!expanded) {
           return
         }
-        e.__index = index
-        columns.push({
-          property: e.property,
-          index,
-          label: e.label,
-          visible: true
-        })
+        const lazyTreeNodeMap = table.store.states.lazyTreeNodeMap
+        row.children = lazyTreeNodeMap[crud.getDataId(row)]
+        if (row.children) {
+          row.children.forEach(ele => {
+            const id = crud.getDataId(ele)
+            if (that.dataStatus[id] === undefined) {
+              that.dataStatus[id] = {
+                delete: 0,
+                edit: 0
+              }
+            }
+          })
+        }
       })
-      this.updateProp('tableColumns', columns)
-      this.updateProp('table', table)
     }
   }
   const crud = Object.assign({}, data)

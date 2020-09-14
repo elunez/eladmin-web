@@ -42,7 +42,7 @@
           <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text" @click="toDownload(scope.row.tableName)">下载</el-button>
           <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text">
             <router-link :to="'/sys-tools/generator/config/' + scope.row.tableName">
-              编辑
+              配置
             </router-link>
           </el-button>
           <el-button type="text" style="margin-left: -1px" size="mini" @click="toGen(scope.row.tableName)">生成</el-button>
