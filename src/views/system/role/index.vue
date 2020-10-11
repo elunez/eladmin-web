@@ -120,7 +120,7 @@
 <script>
 import crudRoles from '@/api/system/role'
 import { getDepts, getDeptSuperior } from '@/api/system/dept'
-import { getMenusTree } from '@/api/system/menu'
+import { getMenusTree, getChild } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -228,13 +228,23 @@ export default {
       }
     },
     menuChange(menu) {
-      // 判断是否在 menuIds 中，如果存在则删除，否则添加
-      const index = this.menuIds.indexOf(menu.id)
-      if (index !== -1) {
-        this.menuIds.splice(index, 1)
-      } else {
-        this.menuIds.push(menu.id)
-      }
+      // 获取该节点的所有子节点，id 包含自身
+      getChild(menu.id).then(childIds => {
+        // 判断是否在 menuIds 中，如果存在则删除，否则添加
+        if (this.menuIds.indexOf(menu.id) !== -1) {
+          for (let i = 0; i < childIds.length; i++) {
+            const index = this.menuIds.indexOf(childIds[i])
+            if (index !== -1) {
+              this.menuIds.splice(index, 1)
+            }
+          }
+        } else {
+          for (let i = 0; i < childIds.length; i++) {
+            this.menuIds.push(childIds[i])
+          }
+        }
+        this.$refs.menu.setCheckedKeys(this.menuIds)
+      })
     },
     // 保存菜单
     saveMenu() {
