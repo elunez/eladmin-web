@@ -24,6 +24,13 @@ export function getMenuSuperior(ids) {
   })
 }
 
+export function getChild(id) {
+  return request({
+    url: 'api/menus/child?id=' + id,
+    method: 'get'
+  })
+}
+
 export function buildMenus() {
   return request({
     url: 'api/menus/build',
@@ -55,4 +62,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getMenusTree, getMenuSuperior, getMenus }
+export default { add, edit, del, getMenusTree, getMenuSuperior, getMenus, getChild }
