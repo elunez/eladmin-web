@@ -10,7 +10,7 @@ ELADMIN 前端源码
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
 #### 开发文档
-[https://doc.el-admin.xin](https://doc.el-admin.xin)
+[https://el-admin.vip](https://el-admin.vip)
 
 #### 前端模板
 
@@ -63,4 +63,4 @@ https://www.ydyno.com/archives/1219.html
 
 #### 反馈交流
 
-- QQ交流群：一群：<strike>891137268</strike> 已满、二群：947578238 无需验证，直接加入
+- QQ交流群：一群：<strike>891137268</strike> 已满、二群：947578238
