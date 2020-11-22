@@ -273,7 +273,7 @@ export default {
    font-size: 15px;
    font-weight: 500;
    color: #999;
-   height: 30px;
+   margin-bottom: 16px;
  }
  .footer {
     text-align: center;
@@ -281,7 +281,7 @@ export default {
     font-weight: 500;
     color: #999;
     margin-top: -5px;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
   .content {
     text-align: center;
