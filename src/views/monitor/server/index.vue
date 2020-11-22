@@ -242,7 +242,7 @@ export default {
         }
         this.cpuInfo.xAxis.data.push(data.time)
         this.memoryInfo.xAxis.data.push(data.time)
-        this.cpuInfo.series[0].data.push(parseFloat(data.memory.used))
+        this.cpuInfo.series[0].data.push(parseFloat(data.cpu.used))
         this.memoryInfo.series[0].data.push(parseFloat(data.memory.usageRate))
       })
     }

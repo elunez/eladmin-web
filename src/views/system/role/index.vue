@@ -240,7 +240,10 @@ export default {
           }
         } else {
           for (let i = 0; i < childIds.length; i++) {
-            this.menuIds.push(childIds[i])
+            const index = this.menuIds.indexOf(childIds[i])
+            if (index === -1) {
+              this.menuIds.push(childIds[i])
+            }
           }
         }
         this.$refs.menu.setCheckedKeys(this.menuIds)
