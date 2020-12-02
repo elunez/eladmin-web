@@ -38,6 +38,7 @@
     "clipboard": "2.0.4",
     "codemirror": "^5.49.2",
     "connect": "3.6.6",
+    "core-js": "^2.6.12",
     "echarts": "^4.2.1",
     "echarts-gl": "^1.1.1",
     "echarts-wordcloud": "^1.1.3",
