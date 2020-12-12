@@ -21,7 +21,7 @@
           <span>{{ parseTime(scope.row.deployDate) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-permission="['admin','deployHistory:del']" label="操作" width="100px" align="center">
+      <el-table-column v-if="checkPer['admin','deployHistory:del']" label="操作" width="100px" align="center">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"

@@ -38,7 +38,7 @@
         <el-table-column prop="label" label="字典标签" />
         <el-table-column prop="value" label="字典值" />
         <el-table-column prop="dictSort" label="排序" />
-        <el-table-column v-permission="['admin','dict:edit','dict:del']" label="操作" width="130px" align="center" fixed="right">
+        <el-table-column v-if="checkPer['admin','dict:edit','dict:del']" label="操作" width="130px" align="center" fixed="right">
           <template slot-scope="scope">
             <udOperation
               :data="scope.row"

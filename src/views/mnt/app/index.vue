@@ -64,7 +64,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-permission="['admin','app:edit','app:del']" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPer['admin','app:edit','app:del']" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation
             :data="scope.row"

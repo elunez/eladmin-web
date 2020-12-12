@@ -31,7 +31,7 @@
       </el-table-column>
       <!--   编辑与删除   -->
       <el-table-column
-        v-permission="['admin','job:edit','job:del']"
+        v-if="checkPer(['admin','job:edit','job:del'])"
         label="操作"
         width="130px"
         align="center"
@@ -60,7 +60,6 @@ import CRUD, { presenter } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-
 export default {
   name: 'Job',
   components: { eHeader, eForm, crudOperation, pagination, udOperation },

@@ -13,6 +13,7 @@ import 'mavon-editor/dist/css/index.css'
 import dict from './components/Dict'
 
 // 权限指令
+import checkPer from '@/utils/permission'
 import permission from './components/Permission'
 import './assets/styles/element-variables.scss'
 // global css
@@ -30,6 +31,7 @@ import './assets/icons' // icon
 import './router/index' // permission control
 import 'echarts-gl'
 
+Vue.use(checkPer)
 Vue.use(VueHighlightJS)
 Vue.use(mavonEditor)
 Vue.use(permission)

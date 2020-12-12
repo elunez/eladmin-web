@@ -169,7 +169,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-permission="['admin','user:edit','user:del']"
+            v-if="checkPer['admin','user:edit','user:del']"
             label="操作"
             width="115"
             align="center"
