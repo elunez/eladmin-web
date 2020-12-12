@@ -62,7 +62,7 @@
             <el-table-column prop="level" label="角色级别" />
             <el-table-column :show-overflow-tooltip="true" prop="description" label="描述" />
             <el-table-column :show-overflow-tooltip="true" width="135px" prop="createTime" label="创建日期" />
-            <el-table-column v-if="checkPer['admin','roles:edit','roles:del']" label="操作" width="130px" align="center" fixed="right">
+            <el-table-column v-if="checkPer(['admin','roles:edit','roles:del'])" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <udOperation
                   v-if="scope.row.level >= level"

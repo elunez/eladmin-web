@@ -91,7 +91,7 @@
       <el-table-column prop="app.name" label="应用名称" />
       <el-table-column prop="servers" label="服务器列表" />
       <el-table-column prop="createTime" label="部署日期" />
-      <el-table-column v-if="checkPer['admin','deploy:edit','deploy:del']" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPer(['admin','deploy:edit','deploy:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation
             :data="scope.row"

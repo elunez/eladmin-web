@@ -60,7 +60,7 @@
       <el-table-column prop="deployPath" label="部署目录" />
       <el-table-column prop="backupPath" label="备份目录" />
       <el-table-column prop="createTime" label="创建日期" />
-      <el-table-column v-if="checkPer['admin','app:edit','app:del']" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPer(['admin','app:edit','app:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation
             :data="scope.row"

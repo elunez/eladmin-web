@@ -33,7 +33,7 @@
             <el-table-column type="selection" width="55" />
             <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
             <el-table-column :show-overflow-tooltip="true" prop="description" label="描述" />
-            <el-table-column v-if="checkPer['admin','dict:edit','dict:del']" label="操作" width="130px" align="center" fixed="right">
+            <el-table-column v-if="checkPer(['admin','dict:edit','dict:del'])" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <udOperation
                   :data="scope.row"
@@ -52,7 +52,7 @@
           <div slot="header" class="clearfix">
             <span>字典详情</span>
             <el-button
-              v-if="checkPermission(['admin','dict:add']) && this.$refs.dictDetail && this.$refs.dictDetail.query.dictName"
+              v-if="checkPer(['admin','dict:add']) && this.$refs.dictDetail && this.$refs.dictDetail.query.dictName"
               class="filter-item"
               size="mini"
               style="float: right;padding: 4px 10px"
@@ -69,10 +69,8 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
 import dictDetail from './dictDetail'
 import crudDict from '@/api/system/dict'
-
 import CRUD, { presenter, header, form } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
@@ -109,7 +107,6 @@ export default {
     }
   },
   methods: {
-    checkPermission,
     // 获取数据前设置好接口地址
     [CRUD.HOOK.beforeRefresh]() {
       if (this.$refs.dictDetail) {

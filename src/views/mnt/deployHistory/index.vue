@@ -17,7 +17,7 @@
       <el-table-column prop="ip" label="部署IP" />
       <el-table-column prop="deployUser" label="部署人员" />
       <el-table-column prop="deployDate" label="部署时间" />
-      <el-table-column v-if="checkPer['admin','deployHistory:del']" label="操作" width="100px" align="center">
+      <el-table-column v-if="checkPer(['admin','deployHistory:del'])" label="操作" width="100px" align="center">
         <template slot-scope="scope">
           <el-popover
             :ref="scope.row.id"
