@@ -15,11 +15,7 @@
         </el-table-column>
         <el-table-column prop="appName" label="应用名称" />
         <el-table-column prop="ip" label="部署IP" />
-        <el-table-column prop="deployDate" label="部署时间">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.deployDate) }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="deployDate" label="部署时间" />
         <el-table-column prop="deployUser" label="部署人员" />
       </el-table>
     </el-form>

@@ -6,7 +6,6 @@ import {
   parseTime,
   downloadFile
 } from '@/utils/index'
-import checkPermission from '@/utils/permission'
 
 export default {
   data() {
@@ -51,7 +50,6 @@ export default {
   methods: {
     parseTime,
     downloadFile,
-    checkPermission,
     async init() {
       if (!await this.beforeInit()) {
         return

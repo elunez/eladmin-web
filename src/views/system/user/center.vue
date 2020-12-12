@@ -81,7 +81,7 @@
                     <div style="display:inline-block;float: right;cursor: pointer" @click="init">创建日期<i class="el-icon-refresh" style="margin-left: 40px" /></div>
                   </template>
                   <template slot-scope="scope">
-                    <span>{{ parseTime(scope.row.createTime) }}</span>
+                    <span>{{ scope.row.createTime }}</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -112,7 +112,6 @@ import updateEmail from './center/updateEmail'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { isvalidPhone } from '@/utils/validate'
-import { parseTime } from '@/utils/index'
 import crud from '@/mixins/crud'
 import { editUser } from '@/api/system/user'
 import Avatar from '@/assets/images/avatar.png'
@@ -163,7 +162,6 @@ export default {
     store.dispatch('GetInfo').then(() => {})
   },
   methods: {
-    parseTime,
     toggleShow() {
       this.show = !this.show
     },

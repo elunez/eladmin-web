@@ -27,11 +27,7 @@
       <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
       <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
       <el-table-column :show-overflow-tooltip="true" prop="remark" label="备注" />
-      <el-table-column prop="createTime" label="创建日期">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期" />
       <el-table-column label="操作" width="160px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" style="margin-right: 2px" type="text">
