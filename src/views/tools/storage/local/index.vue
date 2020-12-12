@@ -94,11 +94,7 @@
       <el-table-column prop="type" label="类别" />
       <el-table-column prop="size" label="大小" />
       <el-table-column prop="operate" label="操作人" />
-      <el-table-column prop="createTime" label="创建日期">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期" />
     </el-table>
     <!--分页组件-->
     <pagination />

@@ -42,11 +42,7 @@
           <el-tag v-else type="danger">{{ scope.row.time }}ms</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" width="180px">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期" width="180px" />
     </el-table>
     <!--分页组件-->
     <pagination />

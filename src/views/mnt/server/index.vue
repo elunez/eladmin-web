@@ -42,11 +42,7 @@
       <el-table-column prop="ip" label="IP" />
       <el-table-column prop="port" label="端口" />
       <el-table-column prop="account" label="账号" />
-      <el-table-column prop="createTime" label="创建日期">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期" />
       <el-table-column v-if="checkPer['admin','serverDeploy:edit','serverDeploy:del']" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <udOperation

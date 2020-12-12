@@ -24,11 +24,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期" />
       <!--   编辑与删除   -->
       <el-table-column
         v-if="checkPer(['admin','job:edit','job:del'])"
