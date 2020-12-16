@@ -1,5 +1,15 @@
 <template>
   <div style="padding:30px;">
-    <el-alert :closable="false" title="三级菜单1" type="success" />
+    <el-input v-model="input" placeholder="请输入内容" />
   </div>
 </template>
+<script>
+export default {
+  name: 'Test',
+  data() {
+    return {
+      input: ''
+    }
+  }
+}
+</script>
