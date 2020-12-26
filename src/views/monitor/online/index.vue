@@ -29,11 +29,7 @@
       <el-table-column prop="ip" label="登录IP" />
       <el-table-column :show-overflow-tooltip="true" prop="address" label="登录地点" />
       <el-table-column prop="browser" label="浏览器" />
-      <el-table-column prop="loginTime" label="登录时间">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.loginTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="loginTime" label="登录时间" />
       <el-table-column label="操作" width="70px" fixed="right">
         <template slot-scope="scope">
           <el-popover

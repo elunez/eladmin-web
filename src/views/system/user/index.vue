@@ -163,13 +163,9 @@
               />
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="创建日期">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="创建日期" />
           <el-table-column
-            v-permission="['admin','user:edit','user:del']"
+            v-if="checkPer(['admin','user:edit','user:del'])"
             label="操作"
             width="115"
             align="center"

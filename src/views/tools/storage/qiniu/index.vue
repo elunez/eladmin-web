@@ -57,11 +57,7 @@
         <el-table-column prop="bucket" label="空间名称" />
         <el-table-column prop="size" label="文件大小" />
         <el-table-column prop="type" label="空间类型" />
-        <el-table-column prop="updateTime" label="创建日期">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.updateTime) }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="updateTime" label="创建日期" />
       </el-table>
       <!--分页组件-->
       <pagination />

@@ -53,12 +53,17 @@ router.beforeEach((to, from, next) => {
 
 export const loadMenus = (next, to) => {
   buildMenus().then(res => {
-    const asyncRouter = filterAsyncRouter(res)
-    asyncRouter.push({ path: '*', redirect: '/404', hidden: true })
-    store.dispatch('GenerateRoutes', asyncRouter).then(() => { // 存储路由
-      router.addRoutes(asyncRouter) // 动态添加可访问路由表
+    const sdata = JSON.parse(JSON.stringify(res))
+    const rdata = JSON.parse(JSON.stringify(res))
+    const sidebarRoutes = filterAsyncRouter(sdata)
+    const rewriteRoutes = filterAsyncRouter(rdata, true)
+    rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
+
+    store.dispatch('GenerateRoutes', rewriteRoutes).then(() => { // 存储路由
+      router.addRoutes(rewriteRoutes) // 动态添加可访问路由表
       next({ ...to, replace: true })
     })
+    store.dispatch('SetSidebarRouters', sidebarRoutes)
   })
 }
 
