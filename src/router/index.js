@@ -22,7 +22,7 @@ router.beforeEach((to, from, next) => {
     })()
   }, 0)
   if (to.meta.title) {
-    document.title = to.meta.title + ' - ' + Config.title
+    document.title = Config.title + ' - ' + to.meta.title
   }
   NProgress.start()
   if (getToken()) {
