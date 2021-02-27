@@ -75,7 +75,7 @@ export const calendarMoveShortcuts = [{
     let endTime = new Date(new Date().setHours(23, 59, 59))
     if (!picker.value) {
       picker.value = [startTime.daysAgo(new Date().getDay()),
-        startTime.daysAgo(new Date().getDay() + 1)]
+        endTime.daysAgo(new Date().getDay() + 1)]
     } else {
       picker.value = [picker.value[0].daysAgo(picker.value[0].getDay()),
         picker.value[1].daysAgo(picker.value[1].getDay() + 1)]
@@ -91,7 +91,7 @@ export const calendarMoveShortcuts = [{
     let endTime = new Date(new Date().setHours(23, 59, 59))
     if (!picker.value) {
       picker.value = [startTime.daysAgo(new Date().getDay() - 7),
-        startTime.daysAgo(new Date().getDay() - 6)]
+        endTime.daysAgo(new Date().getDay() - 6)]
     } else {
       picker.value = [picker.value[0].daysAgo(picker.value[0].getDay() - 7),
         picker.value[1].daysAgo(picker.value[1].getDay() - 6)]
