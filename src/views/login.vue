@@ -46,6 +46,7 @@ import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
+import qs from 'qs'
 import Background from '@/assets/images/background.jpg'
 export default {
   name: 'Login',
@@ -73,7 +74,12 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+        if (route.query) {
+          const data = route.query
+          this.redirect = data.redirect
+          delete data.redirect
+          this.redirect = this.redirect + '&' + qs.stringify(data, { indices: false })
+        }
       },
       immediate: true
     }
