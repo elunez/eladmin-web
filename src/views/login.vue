@@ -78,7 +78,9 @@ export default {
         if (data && data.redirect) {
           this.redirect = data.redirect
           delete data.redirect
-          this.redirect = this.redirect + '&' + qs.stringify(data, { indices: false })
+          if (JSON.stringify(data) !== '{}') {
+            this.redirect = this.redirect + '&' + qs.stringify(data, { indices: false })
+          }
         }
       },
       immediate: true
