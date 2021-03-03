@@ -74,8 +74,8 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        if (route.query) {
-          const data = route.query
+        const data = route.query
+        if (data && data.redirect) {
           this.redirect = data.redirect
           delete data.redirect
           this.redirect = this.redirect + '&' + qs.stringify(data, { indices: false })
