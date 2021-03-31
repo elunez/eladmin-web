@@ -54,7 +54,7 @@ export const calendarMoveShortcuts = [{
     }
     startTime = picker.value[0].daysAgo(1)
     endTime = picker.value[1].daysAgo(1)
-    picker.$emit('pick', [startTime, picker])
+    picker.$emit('pick', [startTime, endTime])
   }
 }, {
   text: ' 往后一天 ›',
