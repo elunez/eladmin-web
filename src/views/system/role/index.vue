@@ -187,6 +187,8 @@ export default {
       form.depts.forEach(function(dept) {
         _this.deptDatas.push(dept.id)
       })
+      // 将角色的菜单清空，避免日志入库数据过长
+      form.menus = null
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {
