@@ -121,6 +121,11 @@ export default {
         this.$refs.dictDetail.dictId = val.id
         this.$refs.dictDetail.crud.toQuery()
       }
+    },
+    // 编辑前将字典明细临时清空，避免日志入库数据过长
+    [CRUD.HOOK.beforeToEdit](crud, form) {
+      // 将角色的菜单清空，避免日志入库数据过长
+      form.dictDetails = null
     }
   }
 }
