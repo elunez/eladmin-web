@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2018-2019
+  ~ All rights reserved, Designed By www.joolun.com
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.joolun.cloud.weixin.admin.mapper.WxMsgMapper">
+	<resultMap id="wxMsgMap" type="com.joolun.weixin.entity.WxMsg">
+		<id property="id" column="id"/>
+		<result property="createId" column="create_id"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateId" column="update_id"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="remark" column="remark"/>
+		<result property="delFlag" column="del_flag"/>
+		<result property="appName" column="app_name"/>
+		<result property="appLogo" column="app_logo"/>
+		<result property="wxUserId" column="wx_user_id"/>
+		<result property="nickName" column="nick_name"/>
+		<result property="headimgUrl" column="headimg_url"/>
+		<result property="type" column="type"/>
+		<result property="repEvent" column="rep_event"/>
+		<result property="repType" column="rep_type"/>
+		<result property="repContent" column="rep_content"/>
+		<result property="repMediaId" column="rep_media_id"/>
+		<result property="repName" column="rep_name"/>
+		<result property="repDesc" column="rep_desc"/>
+		<result property="repUrl" column="rep_url"/>
+		<result property="repHqUrl" column="rep_hq_url"/>
+		<result property="content" column="content"/>
+		<result property="repThumbMediaId" column="rep_thumb_media_id"/>
+		<result property="repThumbUrl" column="rep_thumb_url"/>
+		<result property="repLocationX" column="rep_location_x"/>
+		<result property="repLocationY" column="rep_location_y"/>
+		<result property="repScale" column="rep_scale"/>
+		<result property="readFlag" column="read_flag"/>
+	</resultMap>
+
+	<resultMap id="wxMsgMap2" extends="wxMsgMap" type="com.joolun.weixin.entity.WxMsgVO">
+		<result property="countMsg" column="count_msg"/>
+	</resultMap>
+
+	<select id="listWxMsgMapGroup" resultMap="wxMsgMap2">
+		select
+		  a.*,
+		  b.count_msg
+		from
+		  wx_msg as a
+		  right join
+			(select
+			  `wx_user_id`,
+			  max(`create_time`) as maxtime,
+			  count(`wx_user_id`) as count_msg
+			from
+			  wx_msg
+			<where>
+				<if test="query.type != null and query.type != ''">
+					AND `type` = #{query.type}
+				</if>
+				<if test="query.readFlag != null and query.readFlag != ''">
+					AND `read_flag` = #{query.readFlag}
+				</if>
+				<if test="query.notInRepType != null and query.notInRepType != ''">
+					AND `rep_type` NOT IN (#{query.notInRepType})
+				</if>
+			</where>
+			group by `wx_user_id`) as b
+			on a.`wx_user_id` = b.`wx_user_id`
+			and a.`create_time` = b.maxtime
+		order by a.`create_time` desc ;
+	</select>
+</mapper>

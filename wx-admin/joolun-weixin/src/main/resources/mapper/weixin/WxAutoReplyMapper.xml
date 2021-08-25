@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2018-2019
+  ~ All rights reserved, Designed By www.joolun.com
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.joolun.cloud.weixin.admin.mapper.WxAutoReplyMapper">
+
+	<resultMap id="wxAutoReplyMap" type="com.joolun.weixin.entity.WxAutoReply">
+		<id property="id" column="id"/>
+		<result property="createId" column="create_id"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateId" column="update_id"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="remark" column="remark"/>
+		<result property="delFlag" column="del_flag"/>
+		<result property="type" column="type"/>
+		<result property="reqKey" column="req_key"/>
+		<result property="reqType" column="req_type"/>
+		<result property="repType" column="rep_type"/>
+		<result property="repMate" column="rep_mate"/>
+		<result property="repContent" column="rep_content"/>
+		<result property="repName" column="rep_name"/>
+		<result property="repMediaId" column="rep_media_id"/>
+		<result property="repDesc" column="rep_desc"/>
+		<result property="repUrl" column="rep_url"/>
+		<result property="repHqUrl" column="rep_hq_url"/>
+		<result property="repThumbMediaId" column="rep_thumb_media_id"/>
+		<result property="repThumbUrl" column="rep_thumb_url"/>
+		<result property="content" column="content"/>
+	</resultMap>
+</mapper>
