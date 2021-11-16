@@ -41,7 +41,7 @@ export default {
     const _this = this
     var editor = new E(this.$refs.editor)
     // 自定义菜单配置
-    editor.customConfig.zIndex = 10
+    editor.customConfig.zIndex = 5
     // 文件上传
     editor.customConfig.customUploadImg = function(files, insert) {
       // files 是 input 中选中的文件列表
