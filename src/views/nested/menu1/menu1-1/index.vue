@@ -15,7 +15,7 @@
  4、具体设置可参考 菜单管理 的 多级菜单 配置进行进行相应的修改
  </pre>
       <blockquote class="my-blockquote">更多帮助</blockquote>
-      <pre class="my-code">QQ交流群：一群：891137268、二群：947578238</pre>
+      <pre class="my-code">QQ交流群：一群：891137268、二群：947578238、三群：659622532</pre>
     </div>
   </div>
 </template>
