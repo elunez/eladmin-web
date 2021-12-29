@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'ELADMIN-体验',
+      title: 'ELADMIN-体验环境',
       logo: Logo
     }
   }
