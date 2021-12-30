@@ -63,13 +63,13 @@
         <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="570px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="form.username" />
+              <el-input v-model="form.username" @keydown.native="keydown($event)" />
             </el-form-item>
             <el-form-item label="电话" prop="phone">
               <el-input v-model.number="form.phone" />
             </el-form-item>
             <el-form-item label="昵称" prop="nickName">
-              <el-input v-model="form.nickName" />
+              <el-input v-model="form.nickName" @keydown.native="keydown($event)" />
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" />
@@ -274,6 +274,12 @@ export default {
     }
   },
   methods: {
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode === 32) {
+        e.returnValue = false
+      }
+    },
     changeRole(value) {
       userRoles = []
       value.forEach(function(data, index) {
