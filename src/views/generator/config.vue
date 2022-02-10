@@ -183,6 +183,10 @@
               <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">默认不去除表前缀，可自定义</span>
             </el-form-item>
+            <el-form-item label="去列前缀" prop="columnPrefix">
+              <el-input v-model="form.columnPrefix" placeholder="默认不去除列前缀" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">默认不去除列前缀，可自定义</span>
+            </el-form-item>
             <el-form-item label="是否覆盖" prop="cover">
               <el-radio-group v-model="form.cover" size="mini" style="width: 40%">
                 <el-radio-button label="true">是</el-radio-button>
@@ -209,7 +213,7 @@ export default {
   data() {
     return {
       activeName: 'first', tableName: '', tableHeight: 550, columnLoading: false, configLoading: false, dicts: [], syncLoading: false, genLoading: false,
-      form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '', apiAlias: null },
+      form: { id: null, tableName: '', author: '', pack: '', path: '', moduleName: '', cover: 'false', apiPath: '', prefix: '', columnPrefix: '', apiAlias: null },
       rules: {
         author: [
           { required: true, message: '作者不能为空', trigger: 'blur' }
