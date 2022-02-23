@@ -2,6 +2,7 @@ module.exports = {
   /**
    * @description 网站标题
    */
+  // title: '个人软件测试',
   title: 'EL-ADMIN',
   /**
    * @description 是否显示 tagsView
@@ -46,5 +47,5 @@ module.exports = {
   /**
    * 备案号
    */
-  caseNumber: '浙ICP备18005431号'
+  caseNumber: '浙ICP备18005431号-6'
 }
