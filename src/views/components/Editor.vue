@@ -26,7 +26,7 @@ export default {
       editorContent:
         `
         <ul>
-          <li>更多帮助请查看官方文档：<a style="color: #42b983" target="_blank" href="https://www.kancloud.cn/wangfupeng/wangeditor3/332599">wangEditor</a></li>
+          <li>更多帮助请查看官方文档：<a style="color: #42b983" target="_blank" href="https://www.wangeditor.com/doc/">wangEditor</a></li>
         </ul>
         `
     }
