@@ -66,7 +66,7 @@
     "vue-splitpane": "1.0.4",
     "vuedraggable": "2.20.0",
     "vuex": "3.1.0",
-    "wangeditor": "^4.7.9",
+    "wangeditor": "^4.7.11",
     "xlsx": "^0.17.4"
   },
   "devDependencies": {
