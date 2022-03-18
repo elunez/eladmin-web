@@ -41,7 +41,7 @@
             :action="fileUploadApi + '?name=' + form.name"
           >
             <div class="eladmin-upload"><i class="el-icon-upload" /> 添加文件</div>
-            <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过100M</div>
+            <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过1M</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -145,10 +145,10 @@ export default {
     },
     beforeUpload(file) {
       let isLt2M = true
-      isLt2M = file.size / 1024 / 1024 < 100
+      isLt2M = file.size / 1024 / 1024 < 1
       if (!isLt2M) {
         this.loading = false
-        this.$message.error('上传文件大小不能超过 100MB!')
+        this.$message.error('上传文件大小超出限制:1MB')
       }
       this.form.name = file.name
       return isLt2M
