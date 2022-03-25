@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -51,7 +52,23 @@ module.exports = {
         '@': resolve('src'),
         '@crud': resolve('src/components/Crud')
       }
-    }
+    },
+    plugins: [
+      new FileManagerPlugin({
+        onEnd: {
+          mkdir: ['./dist'],
+          delete: [
+            './dist.zip'
+          ],
+          archive: [
+            {
+              source: './dist',
+              destination: './dist.zip'
+            }
+          ]
+        }
+      })
+    ]
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
