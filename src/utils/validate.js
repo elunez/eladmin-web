@@ -126,7 +126,7 @@ export function validatePhoneTwo(rule, value, callback) {
 
 /* 是否固话*/
 export function validateTelephone(rule, value, callback) {
-  const reg = /0\d{2}-\d{7,8}/
+  const reg = /0\d{2,3}-\d{7,8}/
   if (value === '' || value === undefined || value == null) {
     callback()
   } else {

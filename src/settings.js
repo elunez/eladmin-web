@@ -46,5 +46,26 @@ module.exports = {
   /**
    * 备案号
    */
-  caseNumber: '浙ICP备18005431号'
+  caseNumber: '浙ICP备18005431号',
+  /**
+   * 头部组件显示设置
+   */
+  header: {
+    /**
+     * 是否显示搜索
+     */
+    showSearch: true,
+    /**
+     * 是否显示项目文档
+     */
+    showDoc: true,
+    /**
+     * 是否显示布局设置
+     */
+    showSizeSelect: true,
+    /**
+     * 是否显示全屏
+     */
+    showScreenfull: true
+  }
 }

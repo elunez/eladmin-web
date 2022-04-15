@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 import 'echarts-gl'
 
 require('echarts/theme/macarons') // echarts theme

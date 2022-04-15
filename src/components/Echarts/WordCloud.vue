@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 require('echarts-wordcloud')
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
