@@ -32,6 +32,7 @@
           :before-remove="handleBeforeRemove"
           :on-success="handleSuccess"
           :on-error="handleError"
+          :before-upload="beforeUpload"
           :file-list="fileList"
           :headers="headers"
           :action="qiNiuUploadApi"
@@ -39,7 +40,7 @@
           multiple
         >
           <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，且文件不超过15M</div>
+          <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，且文件不超过1M</div>
         </el-upload>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="doSubmit">确认</el-button>
@@ -119,6 +120,15 @@ export default {
       const _this = this.$refs.form
       _this.init()
       _this.dialog = true
+    },
+    beforeUpload(file) {
+      let isLt2M = true
+      isLt2M = file.size / 1024 / 1024 < 1
+      if (!isLt2M) {
+        this.loading = false
+        this.$message.error('上传文件大小超出限制:1MB')
+      }
+      return isLt2M
     },
     handleSuccess(response, file, fileList) {
       const uid = file.uid
