@@ -56,7 +56,7 @@ https://www.ydyno.com/archives/1219.html
 
 - 感谢 [PanJiaChen](https://github.com/PanJiaChen/vue-element-admin) 大佬提供的前端模板
 
-- 感谢 [Moxun](https://github.com/moxun1639) 大佬提供的前端 Curd 通用组件
+- 感谢 [Moxun](https://github.com/moxun1639) 大佬提供的前端 Crud 通用组件
 
 - 感谢 [zhy6599](https://gitee.com/zhy6599) 大佬提供的后端运维管理相关功能
 
