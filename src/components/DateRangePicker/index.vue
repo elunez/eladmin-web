@@ -21,7 +21,7 @@ export default {
     pickerOptions: {
       type: DatePickerOptions,
       default: _ => {
-        return { shortcuts: calendarShortcuts }
+        return { shortcuts: calendarShortcuts, firstDayOfWeek: 1 }
       }
     },
     size: {
