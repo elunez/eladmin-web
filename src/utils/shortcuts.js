@@ -47,8 +47,8 @@ export const calendarBaseShortcuts = [{
 export const calendarMoveShortcuts = [{
   text: '‹ 往前一天 ',
   onClick(picker) {
-    let startTime = new Date(new Date().daysAgo(1).setHours(0, 0, 0))
-    let endTime = new Date(new Date().daysAgo(1).setHours(23, 59, 59))
+    let startTime = new Date(new Date().setHours(0, 0, 0))
+    let endTime = new Date(new Date().setHours(23, 59, 59))
     if (!picker.value) {
       picker.value = [startTime, endTime]
     }
