@@ -147,7 +147,7 @@ export default {
       })
     },
     initWebSocket() {
-      const wsUri = process.env.VUE_APP_WS_API + '/webSocket/deploy'
+      const wsUri = (process.env.VUE_APP_WS_API === '/' ? '' : process.env.VUE_APP_WS_API) + 'webSocket/deploy'
       this.websock = new WebSocket(wsUri)
       this.websock.onerror = this.webSocketOnError
       this.websock.onmessage = this.webSocketOnMessage
