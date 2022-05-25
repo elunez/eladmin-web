@@ -40,7 +40,7 @@
           multiple
         >
           <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，且文件不超过1M</div>
+          <div slot="tip" style="display: block;" class="el-upload__tip">请勿上传违法文件，演示环境带宽有限，限制文件大小小于50KB</div>
         </el-upload>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="doSubmit">确认</el-button>
@@ -123,10 +123,10 @@ export default {
     },
     beforeUpload(file) {
       let isLt2M = true
-      isLt2M = file.size / 1024 / 1024 < 1
+      isLt2M = file.size / 1024 < 52
       if (!isLt2M) {
         this.loading = false
-        this.$message.error('上传文件大小超出限制:1MB')
+        this.$message.error('上传文件大小超出限制:50KB')
       }
       return isLt2M
     },
