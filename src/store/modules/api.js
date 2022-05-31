@@ -6,8 +6,6 @@ const api = {
     deployUploadApi: baseUrl + '/api/deploy/upload',
     // SQL脚本上传
     databaseUploadApi: baseUrl + '/api/database/upload',
-    // 实时控制台
-    socketApi: baseUrl + '/websocket?token=kl',
     // 图片上传
     imagesUploadApi: baseUrl + '/api/localStorage/pictures',
     // 修改头像
