@@ -36,7 +36,7 @@ export const calendarBaseShortcuts = [{
     picker.$emit('pick', [startTime, endTime])
   }
 }, {
-  text: '最近一个月',
+  text: '最近30天',
   onClick(picker) {
     const startTime = new Date(new Date().daysAgo(30).setHours(0, 0, 0))
     const endTime = new Date(new Date().setHours(23, 59, 59))
