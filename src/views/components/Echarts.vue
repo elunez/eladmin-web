@@ -34,19 +34,14 @@
         </el-col>
       </el-row>
       <el-row :gutter="32">
-        <el-col :xs="24" :sm="24" :lg="8">
+        <el-col :xs="24" :sm="24" :lg="12">
           <div class="chart-wrapper">
             <graph />
           </div>
         </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
+        <el-col :xs="24" :sm="24" :lg="12">
           <div class="chart-wrapper">
             <sankey />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <line3-d />
           </div>
         </el-col>
       </el-row>
@@ -61,11 +56,6 @@
             <point />
           </div>
         </el-col>
-      </el-row>
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <div class="chart-wrapper">
-          <word-cloud />
-        </div>
       </el-row>
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
         <div class="chart-wrapper">
@@ -86,10 +76,8 @@ import Sunburst from '@/components/Echarts/Sunburst'
 import Graph from '@/components/Echarts/Graph'
 import Sankey from '@/components/Echarts/Sankey'
 import Scatter from '@/components/Echarts/Scatter'
-import Line3D from '@/components/Echarts/Line3D'
 import Category from '@/components/Echarts/Category'
 import Point from '@/components/Echarts/Point'
-import WordCloud from '@/components/Echarts/WordCloud'
 
 export default {
   name: 'Echarts',
@@ -104,9 +92,7 @@ export default {
     Rich,
     ThemeRiver,
     Sankey,
-    Line3D,
-    Scatter,
-    WordCloud
+    Scatter
   }
 }
 </script>

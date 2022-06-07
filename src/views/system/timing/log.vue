@@ -41,7 +41,7 @@
       <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期" />
     </el-table>
     <el-dialog :visible.sync="errorDialog" append-to-body title="异常详情" width="85%">
-      <pre v-highlightjs="errorInfo"><code class="java" /></pre>
+      <pre>{{ errorInfo }}</pre>
     </el-dialog>
     <!--分页组件-->
     <el-pagination
