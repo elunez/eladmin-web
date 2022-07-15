@@ -47,11 +47,12 @@ import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
 import qs from 'qs'
+import Background from '@/assets/images/background.jpeg'
 export default {
   name: 'Login',
   data() {
     return {
-      Background: 'https://img.el-admin.vip/images/background.jpeg',
+      Background: Background,
       codeUrl: '',
       cookiePass: '',
       loginForm: {
