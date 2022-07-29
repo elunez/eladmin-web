@@ -15,11 +15,6 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = Config.title + ' - ' + to.meta.title
   }
-  if (document.querySelector('.wwads-vertical')) {
-    var ele = document.querySelector('.wwads-vertical').parentElement.parentElement
-    ele.style.maxHeight = 'unset'
-    ele.firstChild.hidden = true
-  }
   NProgress.start()
   if (getToken()) {
     // 已登录且要跳转的页面是登录页
