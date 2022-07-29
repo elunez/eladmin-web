@@ -67,4 +67,7 @@ export default {
 .wwads-vertical .wwads-poweredby {
   display: none !important;
 }
+.wwads-img >img {
+  display: none;
+}
 </style>
