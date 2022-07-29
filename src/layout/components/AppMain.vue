@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 export default {
   name: 'AppMain',
   data() {
@@ -39,7 +40,10 @@ export default {
     '$route.path': {
       handler: function() {
         this.renderAd = false
-        this.renderAd = true
+        const _this = this
+        Vue.nextTick(function() {
+          _this.renderAd = true
+        })
       }
     }
   }
