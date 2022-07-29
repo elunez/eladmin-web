@@ -5,7 +5,7 @@
         <router-view :key="key" />
       </keep-alive>
     </transition>
-    <div class="wwads-cn wwads-vertical" data-id="148" style="z-index:10000;position:fixed;bottom:0px;right:10px;max-width:160px;padding:10px;border-radius:5px;" />
+    <!--    <div class="wwads-cn wwads-vertical" data-id="148" style="z-index:10000;position:fixed;bottom:0px;right:10px;max-width:160px;padding:10px;border-radius:5px;" />-->
     <div v-if="$store.state.settings.showFooter" id="el-main-footer">
       <span v-html="$store.state.settings.footerTxt" />
       <span v-if="$store.state.settings.caseNumber"> ⋅ </span>
