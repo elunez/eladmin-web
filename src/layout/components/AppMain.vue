@@ -6,6 +6,7 @@
       </keep-alive>
     </transition>
     <div
+      v-if="renderAd"
       class="wwads-cn wwads-vertical"
       data-id="148"
       style="z-index:10000;position:fixed;bottom:33px;right:5px;max-width:200px;padding:10px;border-radius:5px;"
@@ -21,12 +22,25 @@
 <script>
 export default {
   name: 'AppMain',
+  data() {
+    return {
+      renderAd: true
+    }
+  },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
       return this.$route.path
+    }
+  },
+  watch: {
+    '$route.path': {
+      handler: function() {
+        this.renderAd = false
+        this.renderAd = true
+      }
     }
   }
 }
