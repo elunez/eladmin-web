@@ -65,14 +65,6 @@ export default {
   }
 }
 .wwads-vertical .wwads-poweredby {
-  top: 0 !important;
-  position: absolute;
-  bottom: unset !important;
-  left: 38px !important;
-  display: flex;
-  align-items: center;
-}
-.wwads-logo{
   display: none !important;
 }
 </style>
