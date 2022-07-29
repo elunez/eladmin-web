@@ -64,7 +64,7 @@ export default {
     padding-right: 15px;
   }
 }
-.wwads-vertical .wwads-poweredby {
-  display: none !important;
-}
+//.wwads-vertical .wwads-poweredby {
+//  display: none !important;
+//}
 </style>
