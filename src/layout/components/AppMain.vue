@@ -6,7 +6,7 @@
       </keep-alive>
     </transition>
     <div
-      v-if="renderAd"
+      :key="adKey"
       class="wwads-cn wwads-vertical"
       data-id="148"
       style="z-index:10000;position:fixed;bottom:33px;right:5px;max-width:200px;padding:10px;border-radius:5px;"
@@ -20,12 +20,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
 export default {
   name: 'AppMain',
   data() {
     return {
-      renderAd: true
+      adKey: 'def'
     }
   },
   computed: {
@@ -39,11 +38,7 @@ export default {
   watch: {
     '$route.path': {
       handler: function() {
-        this.renderAd = false
-        const _this = this
-        Vue.nextTick(function() {
-          _this.renderAd = true
-        })
+        this.key = this.$route.path
       }
     }
   }
