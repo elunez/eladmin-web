@@ -67,6 +67,7 @@ export default {
 .wwads-vertical .wwads-poweredby {
   top: 0 !important;
   position: absolute;
+  bottom: 0 !important;
   left: 38px !important;
   display: flex;
   align-items: center;
