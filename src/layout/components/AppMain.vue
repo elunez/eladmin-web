@@ -71,6 +71,6 @@ export default {
   }
 }
 .wwads-vertical .wwads-poweredby {
-  display: none;
+  display: none !important;
 }
 </style>
