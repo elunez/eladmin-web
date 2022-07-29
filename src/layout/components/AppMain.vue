@@ -8,7 +8,7 @@
     <div
       class="wwads-cn wwads-vertical"
       data-id="148"
-      style="z-index:10000;position:fixed;bottom:0;right:0;max-width:200px;padding:10px;border-radius:5px;"
+      style="z-index:10000;position:fixed;bottom:33px;right:0;max-width:300px;padding:0 10px;border-radius:5px;"
     />
     <div v-if="$store.state.settings.showFooter" id="el-main-footer">
       <span v-html="$store.state.settings.footerTxt" />
@@ -63,5 +63,15 @@ export default {
   .fixed-header {
     padding-right: 15px;
   }
+}
+.wwads-vertical .wwads-poweredby {
+  top: 0 !important;
+  position: absolute;
+  left: 38px !important;
+  display: flex;
+  align-items: center;
+}
+.wwads-logo{
+  display: none !important;
 }
 </style>
