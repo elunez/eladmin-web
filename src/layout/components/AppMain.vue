@@ -6,7 +6,7 @@
       </keep-alive>
     </transition>
     <div
-      :key="adKey"
+      :key="key"
       class="wwads-cn wwads-vertical"
       data-id="148"
       style="z-index:10000;position:fixed;bottom:33px;right:5px;max-width:200px;padding:10px;border-radius:5px;"
@@ -33,13 +33,6 @@ export default {
     },
     key() {
       return this.$route.path
-    }
-  },
-  watch: {
-    '$route.path': {
-      handler: function() {
-        this.key = this.$route.path
-      }
     }
   }
 }
