@@ -1,6 +1,6 @@
 <template>
   <div
-    v-show="show"
+    v-if="show"
     class="wwads-cn wwads-vertical"
     data-id="148"
     style="z-index:10000;position:fixed;bottom:33px;right:5px;max-width:200px;padding:10px;border-radius:5px;"
@@ -11,22 +11,12 @@
 export default {
   data() {
     return {
-      show: false
+      show: true
     }
   },
   created() {
-    const _this = this
     if (window._AdBlockInit === undefined) {
-      _this.show = false
-    } else {
-      const oScript = document.createElement('script')
-      oScript.type = 'text/javascript'
-      oScript.src = '//cdn.wwads.cn/js/makemoney.js'
-      document.body.appendChild(oScript)
-      window._AdBlockInit()
-      setTimeout(function() {
-        _this.show = true
-      }, 650)
+      this.show = false
     }
   }
 }

@@ -10,24 +10,21 @@
       <span v-if="$store.state.settings.caseNumber"> ⋅ </span>
       <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ $store.state.settings.caseNumber }}</a>
     </div>
+    <wwads />
   </section>
 </template>
 
 <script>
+import wwads from '@/components/Ad'
 export default {
   name: 'AppMain',
+  components: { wwads },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
       return this.$route.path
-    }
-  },
-  watch: {
-    '$route.path': {
-      handler: function() {
-      }
     }
   }
 }

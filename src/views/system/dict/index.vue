@@ -1,7 +1,5 @@
 <template>
-  <div class="app-container">
-    <!--广告-->
-    <wwads />
+  <div class="app-container">===
     <!--表单组件-->
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible="crud.status.cu > 0" :title="crud.status.title" width="500px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
