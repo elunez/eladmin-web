@@ -6,6 +6,7 @@
       </keep-alive>
     </transition>
     <div
+      v-if="isActive"
       class="wwads-cn wwads-vertical"
       data-id="148"
       style="z-index:10000;position:fixed;bottom:33px;right:5px;max-width:200px;padding:10px;border-radius:5px;"
@@ -23,7 +24,7 @@ export default {
   name: 'AppMain',
   data() {
     return {
-      adKey: 'def'
+      isActive: true
     }
   },
   computed: {
@@ -32,6 +33,20 @@ export default {
     },
     key() {
       return this.$route.path
+    }
+  },
+  watch: {
+    '$route.path': {
+      handler: function() {
+        this.isActive = false
+        this.$nextTick(() => {
+          this.isActive = true
+        })
+        var hm = document.createElement('script')
+        hm.src = '//cdn.wwads.cn/js/makemoney.js'
+        var s = document.getElementsByTagName('script')[0]
+        s.parentNode.insertBefore(hm, s)
+      }
     }
   }
 }
