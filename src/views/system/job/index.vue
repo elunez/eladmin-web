@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">===
+  <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
       <eHeader :dict="dict" :permission="permission" />
