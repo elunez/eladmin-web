@@ -17,6 +17,9 @@ import './assets/styles/element-variables.scss'
 // global css
 import './assets/styles/index.scss'
 
+// AD
+import components from '@/components/Ad/components.js'
+
 import App from './App'
 import store from './store'
 import router from './router/routers'
@@ -30,6 +33,7 @@ Vue.use(dict)
 Vue.use(Element, {
   size: Cookies.get('size') || 'small' // set element-ui default size
 })
+Vue.use(components)
 
 Vue.config.productionTip = false
 

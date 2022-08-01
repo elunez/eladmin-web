@@ -1,5 +1,7 @@
 <template>
   <div class="dashboard-container">
+    <!--广告-->
+    <wwads />
     <div class="dashboard-editor-container">
       <github-corner class="github-corner" />
 

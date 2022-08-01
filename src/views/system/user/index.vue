@@ -1,5 +1,7 @@
 <template>
   <div class="app-container">
+    <!--广告-->
+    <wwads />
     <el-row :gutter="20">
       <!--侧边部门数据-->
       <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
