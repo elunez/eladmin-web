@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .wwads-vertical .wwads-poweredby {
     display: none !important;
   }
