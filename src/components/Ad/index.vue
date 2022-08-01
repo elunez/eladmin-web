@@ -16,6 +16,10 @@ export default {
   },
   created() {
     const _this = this
+    const oScript = document.createElement('script')
+    oScript.type = 'text/javascript'
+    oScript.src = '//cdn.wwads.cn/js/makemoney.js'
+    document.body.appendChild(oScript)
     setTimeout(function() {
       _this.show = true
     }, 650)
