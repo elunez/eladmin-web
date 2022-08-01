@@ -19,6 +19,11 @@ export default {
     if (window._AdBlockInit === undefined) {
       _this.show = false
     } else {
+      const oScript = document.createElement('script')
+      oScript.type = 'text/javascript'
+      oScript.src = '//cdn.wwads.cn/js/makemoney.js'
+      document.body.appendChild(oScript)
+      window._AdBlockInit()
       setTimeout(function() {
         _this.show = true
       }, 650)
