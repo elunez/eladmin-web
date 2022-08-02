@@ -10,10 +10,10 @@ ELADMIN 前端源码
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
 #### 开发文档
-[https://el-admin.vip](https://el-admin.vip)
+[https://eladmin.vip](https://eladmin.vip)
 
 #### 体验地址
-[https://el-admin.vip/demo](https://el-admin.vip/demo)
+[https://eladmin.vip/demo](https://eladmin.vip/demo)
 
 #### 前端模板
 
