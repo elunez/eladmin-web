@@ -15,10 +15,16 @@ router.beforeEach((to, from, next) => {
   setTimeout(() => {
     var _hmt = _hmt || [];
     (function() {
+      // 百度统计
       var hm = document.createElement('script')
       hm.src = 'https://hm.baidu.com/hm.js?300a24a5326d0e7a0ff1b14c4e8d9056'
       var s = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
+      // AD
+      var ww = document.createElement('script')
+      ww.src = 'https://cdn.wwads.cn/js/makemoney.js'
+      var ss = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(ww, ss)
     })()
   }, 0)
   if (to.meta.title) {
