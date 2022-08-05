@@ -21,10 +21,7 @@ router.beforeEach((to, from, next) => {
       var s = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
       // AD
-      var ww = document.createElement('script')
-      ww.src = 'https://cdn.wwads.cn/js/makemoney.js'
-      var ss = document.getElementsByTagName('script')[0]
-      s.parentNode.insertBefore(ww, ss)
+      window._AdBlockInit
     })()
   }, 0)
   if (to.meta.title) {
