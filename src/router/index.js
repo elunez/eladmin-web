@@ -21,7 +21,9 @@ router.beforeEach((to, from, next) => {
       var s = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
       // AD
-      window._AdBlockInit
+      if (window._AdBlockInit) {
+        window._AdBlockInit()
+      }
     })()
   }, 0)
   if (to.meta.title) {
