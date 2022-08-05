@@ -1,12 +1,11 @@
 <template>
-  <div id="ww-container">
-    <div
-      v-if="show"
-      class="wwads-cn wwads-vertical"
-      data-id="148"
-      style="z-index:10000;position:fixed;bottom:33px;right:1px;max-width:200px;padding: 12px 10px;border-radius:5px;"
-    />
-  </div>
+  <div
+    v-if="show"
+    id="ww-container"
+    class="wwads-cn wwads-vertical"
+    data-id="148"
+    style="z-index:10000;position:fixed;bottom:33px;right:1px;max-width:200px;padding: 12px 10px;border-radius:5px;"
+  />
 </template>
 
 <script>
