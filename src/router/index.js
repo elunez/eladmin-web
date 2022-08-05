@@ -16,10 +16,20 @@ router.beforeEach((to, from, next) => {
     var _hmt = _hmt || [];
     (function() {
       // 百度统计
-      var hm = document.createElement('script')
+      const hm = document.createElement('script')
       hm.src = 'https://hm.baidu.com/hm.js?300a24a5326d0e7a0ff1b14c4e8d9056'
-      var s = document.getElementsByTagName('script')[0]
+      const s = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
+      // define ads element
+      const ads = document.getElementById('ww-container')
+      // ad parent node
+      const prn = ads.parentNode
+      // lets clone ads block
+      const cln = ads.cloneNode(true)
+      // remove the current ads block completely
+      prn.removeChild(ads)
+      // append a newly cloned one
+      prn.appendChild(cln)
     })()
   }, 0)
   if (to.meta.title) {
