@@ -38,10 +38,13 @@
       <span v-if="$store.state.settings.caseNumber"> ⋅ </span>
       <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ $store.state.settings.caseNumber }}</a>
     </div>
+    <!--  AD  -->
+    <wwads />
   </div>
 </template>
 
 <script>
+import wwads from '@/components/Ad'
 import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
@@ -50,6 +53,7 @@ import qs from 'qs'
 import Background from '@/assets/images/background.webp'
 export default {
   name: 'Login',
+  components: { wwads },
   data() {
     return {
       Background: Background,
