@@ -20,10 +20,6 @@ router.beforeEach((to, from, next) => {
       hm.src = 'https://hm.baidu.com/hm.js?300a24a5326d0e7a0ff1b14c4e8d9056'
       var s = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
-      // AD
-      if (window._AdBlockInit) {
-        window._AdBlockInit()
-      }
     })()
   }, 0)
   if (to.meta.title) {
