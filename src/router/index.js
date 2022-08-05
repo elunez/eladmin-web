@@ -20,16 +20,6 @@ router.beforeEach((to, from, next) => {
       hm.src = 'https://hm.baidu.com/hm.js?300a24a5326d0e7a0ff1b14c4e8d9056'
       const s = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
-      // define ads element
-      const ads = document.getElementById('ww-container')
-      // ad parent node
-      const prn = ads.parentNode
-      // lets clone ads block
-      const cln = ads.cloneNode(true)
-      // remove the current ads block completely
-      prn.removeChild(ads)
-      // append a newly cloned one
-      prn.appendChild(cln)
     })()
   }, 0)
   if (to.meta.title) {
