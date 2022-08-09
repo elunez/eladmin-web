@@ -480,6 +480,7 @@ function CRUD(options) {
     toggleRowSelection(selection, data) {
       if (data.children) {
         data.children.forEach(val => {
+          selection.splice(selection.findIndex(item => this.getDataId(item) === this.getDataId(val)), 1)
           crud.getTable().toggleRowSelection(val, false)
           if (val.children) {
             crud.toggleRowSelection(selection, val)
