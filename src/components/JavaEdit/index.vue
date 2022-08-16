@@ -67,7 +67,6 @@ export default {
   }
   .json-editor >>> .CodeMirror {
     font-size: 14px;
-    overflow-y:auto;
     font-weight:normal
   }
   .json-editor >>> .CodeMirror-scroll{
