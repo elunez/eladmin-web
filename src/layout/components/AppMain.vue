@@ -23,22 +23,6 @@ export default {
     key() {
       return this.$route.path
     }
-    // watch: {
-    //   '$route.path': {
-    //     handler: function() {
-    //       // define ads element
-    //       const ads = document.getElementById('ww-container')
-    //       // ad parent node
-    //       const prn = ads.parentNode
-    //       // lets clone ads block
-    //       const cln = ads.cloneNode(true)
-    //       // remove the current ads block completely
-    //       prn.removeChild(ads)
-    //       // append a newly cloned one
-    //       prn.appendChild(cln)
-    //     }
-    //   }
-    // }
   }
 }
 </script>
