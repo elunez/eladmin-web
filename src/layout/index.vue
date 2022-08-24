@@ -2,9 +2,6 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
-    <div class="sidebar-container-ad">
-      <Ad />
-    </div>
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
@@ -22,7 +19,6 @@
 
 <script>
 import RightPanel from '@/components/RightPanel'
-import Ad from '@/components/Ad'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
@@ -37,8 +33,7 @@ export default {
     Settings,
     Sidebar,
     TagsView,
-    Theme,
-    Ad
+    Theme
   },
   mixins: [ResizeMixin],
   computed: {

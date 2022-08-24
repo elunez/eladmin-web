@@ -11,7 +11,7 @@
     transition: width 0.28s;
     width: $sideBarWidth !important;
     background-color: $menuBg;
-    height: 66.4%;
+    height: 100%;
     position: fixed;
     font-size: 0;
     top: 0;
@@ -90,12 +90,7 @@
     .sidebar-container {
       width: 54px !important;
     }
-    .sidebar-container-ad {
-      width: 54px !important;
-    }
-    #ww-container{
-      display: none;
-    }
+
     .main-container {
       margin-left: 54px;
     }
@@ -159,18 +154,8 @@
       width: $sideBarWidth !important;
     }
 
-    .sidebar-container-ad {
-      transition: transform .28s;
-      width: $sideBarWidth !important;
-    }
-
     &.hideSidebar {
       .sidebar-container {
-        pointer-events: none;
-        transition-duration: 0.3s;
-        transform: translate3d(-$sideBarWidth, 0, 0);
-      }
-      .sidebar-container-ad {
         pointer-events: none;
         transition-duration: 0.3s;
         transform: translate3d(-$sideBarWidth, 0, 0);
@@ -179,11 +164,9 @@
   }
 
   .withoutAnimation {
+
     .main-container,
     .sidebar-container {
-      transition: none;
-    }
-    .sidebar-container-ad {
       transition: none;
     }
   }
@@ -229,11 +212,76 @@
   transition: width 0.28s;
   width: $sideBarWidth !important;
   background-color: $menuBg;
-  height: 33.6%;
+  height: 30%;
   position: fixed;
   font-size: 0;
   bottom: 0;
   left: 0;
-  z-index: 999;
+  z-index: 1001;
   overflow: hidden;
+
+  // reset element-ui css
+  .horizontal-collapse-transition {
+    transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+  }
+
+  .scrollbar-wrapper {
+    overflow-x: hidden !important;
+  }
+
+  .el-scrollbar__bar.is-vertical {
+    right: 0;
+  }
+
+  .el-scrollbar {
+    height: 100%;
+  }
+
+  &.has-logo {
+    .el-scrollbar {
+      height: calc(100% - 50px);
+    }
+  }
+
+  .is-horizontal {
+    display: none;
+  }
+
+  a {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .svg-icon {
+    margin-right: 16px;
+  }
+
+  .el-menu {
+    border: none;
+    height: 100%;
+    width: 100% !important;
+  }
+
+  // menu hover
+  .submenu-title-noDropdown,
+  .el-submenu__title {
+    &:hover {
+      background-color: $menuHover !important;
+    }
+  }
+
+  .is-active>.el-submenu__title {
+    color: $subMenuActiveText !important;
+  }
+
+  & .nest-menu .el-submenu>.el-submenu__title,
+  & .el-submenu .el-menu-item {
+    min-width: $sideBarWidth !important;
+    background-color: $subMenuBg !important;
+
+    &:hover {
+      background-color: $subMenuHover !important;
+    }
+  }
 }
