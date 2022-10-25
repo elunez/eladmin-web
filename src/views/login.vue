@@ -32,6 +32,7 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <Ad />
     <!--  底部  -->
     <div v-if="$store.state.settings.showFooter" id="el-login-footer">
       <span v-html="$store.state.settings.footerTxt" />
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import Ad from '@/components/Ad'
 import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
@@ -50,6 +52,7 @@ import qs from 'qs'
 import Background from '@/assets/images/background.webp'
 export default {
   name: 'Login',
+  components: { Ad },
   data() {
     return {
       Background: Background,
