@@ -1,5 +1,6 @@
 <template>
   <div class="login" :style="'background-image:url('+ Background +');'">
+    <Ad />
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
         ELADMIN 后台管理系统
@@ -32,7 +33,6 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <Ad />
     <!--  底部  -->
     <div v-if="$store.state.settings.showFooter" id="el-login-footer">
       <span v-html="$store.state.settings.footerTxt" />

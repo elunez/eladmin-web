@@ -1,5 +1,11 @@
 <template>
-  <div class="wwads-cn wwads-vertical wwads-sticky" data-id="148" style="max-width:180px" />
+  <div
+    v-if="show"
+    id="ww-container"
+    class="wwads-cn wwads-vertical"
+    data-id="148"
+    style="z-index:10000;position:fixed;bottom:0;right:1px;max-width:200px;padding: 12px 10px;border-radius:5px;"
+  />
 </template>
 
 <script>
