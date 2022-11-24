@@ -5,7 +5,7 @@ import {
 import {
   parseTime,
   downloadFile
-} from '@/utils/index'
+} from '@/utils'
 
 export default {
   data() {
@@ -57,7 +57,7 @@ export default {
       return new Promise((resolve, reject) => {
         this.loading = true
         // 请求数据
-        initData(this.url, this.getQueryParame()).then(data => {
+        initData(this.url, this.getQueryParams()).then(data => {
           this.total = data.totalElements
           this.data = data.content
           // time 毫秒后显示表格
@@ -74,7 +74,14 @@ export default {
     beforeInit() {
       return true
     },
-    getQueryParame: function() {
+    getQueryParams: function() {
+      // 清除参数无值的情况
+      Object.keys(this.query).length !== 0 && Object.keys(this.query).forEach(item => {
+        if (this.query[item] === null || this.query[item] === '') this.query[item] = undefined
+      })
+      Object.keys(this.params).length !== 0 && Object.keys(this.params).forEach(item => {
+        if (this.params[item] === null || this.params[item] === '') this.params[item] = undefined
+      })
       return {
         page: this.page,
         size: this.size,
