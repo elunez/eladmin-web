@@ -12,16 +12,6 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
-  setTimeout(() => {
-    var _hmt = _hmt || [];
-    (function() {
-      // 百度统计
-      const hm = document.createElement('script')
-      hm.src = 'https://hm.baidu.com/hm.js?300a24a5326d0e7a0ff1b14c4e8d9056'
-      const s = document.getElementsByTagName('script')[0]
-      s.parentNode.insertBefore(hm, s)
-    })()
-  }, 0)
   if (to.meta.title) {
     document.title = Config.title + ' - ' + to.meta.title
   }

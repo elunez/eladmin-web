@@ -1,6 +1,5 @@
 <template>
   <div class="login" :style="'background-image:url('+ Background +');'">
-    <Ad />
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
         ELADMIN 后台管理系统
@@ -43,7 +42,6 @@
 </template>
 
 <script>
-import Ad from '@/components/Ad'
 import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
@@ -52,7 +50,6 @@ import qs from 'qs'
 import Background from '@/assets/images/background.webp'
 export default {
   name: 'Login',
-  components: { Ad },
   data() {
     return {
       Background: Background,
