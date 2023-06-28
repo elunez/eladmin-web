@@ -22,6 +22,7 @@ ELADMIN 前端源码
 模板文档： [https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
 
 #### Build Setup
+**推荐 node 版本：12-16**
 ``` bash
 # 配置镜像加速
 https://www.ydyno.com/archives/1219.html
@@ -66,4 +67,4 @@ https://www.ydyno.com/archives/1219.html
 
 #### 反馈交流
 
-- QQ交流群：一群：891137268、二群：947578238、三群：659622532
+- QQ交流群：891137268 、947578238、659622532
