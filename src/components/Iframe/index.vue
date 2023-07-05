@@ -13,7 +13,7 @@ export default {
   },
   data() {
     return {
-      height: document.documentElement.clientHeight - 94.5 + 'px;',
+      height: document.documentElement.clientHeight - (84 + 22) + 'px;',
       loading: true
     }
   },
@@ -23,7 +23,7 @@ export default {
     }, 230)
     const that = this
     window.onresize = function temp() {
-      that.height = document.documentElement.clientHeight - 94.5 + 'px;'
+      that.height = document.documentElement.clientHeight - (84 + 22) + 'px;'
     }
   }
 }
