@@ -5,7 +5,7 @@
       <el-link type="primary" href="https://www.wangeditor.com/v5/getting-started.html" target="_blank">wangEditor</el-link>
     </p>
     <el-row :gutter="10">
-      <wang-editor v-model="editorContent" :editor-height="200" />
+      <wang-editor v-model="editorContent" style="height: 500px; overflow-y: hidden;" />
     </el-row>
   </div>
 </template>
@@ -20,11 +20,7 @@ export default {
   data() {
     return {
       editorContent:
-        `
-        <ul>
-          <li>更多帮助请查看官方文档：<a style="color: #42b983" target="_blank" href="https://www.wangeditor.com/v5/getting-started.html">wangEditor</a></li>
-        </ul>
-        `
+        `更多帮助请查看官方文档`
     }
   },
   computed: {
@@ -34,16 +30,6 @@ export default {
     ])
   },
   mounted() {
-
   }
 }
 </script>
-
-<style scoped>
-.text {
-  text-align:left;
-}
-::v-deep .w-e-text-container {
-  height: 420px !important;
-}
-</style>
