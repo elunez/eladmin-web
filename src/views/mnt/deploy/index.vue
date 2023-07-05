@@ -64,7 +64,7 @@
       </crudOperation>
     </div>
     <!--表单组件-->
-    <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+    <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible="crud.status.cu" :title="crud.status.title" width="500px">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="应用" prop="app.id">
           <el-select v-model.number="form.app.id" placeholder="请选择" style="width: 370px">

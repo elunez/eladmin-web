@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "^0.4.0",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
     "axios": "^0.21.1",
     "clipboard": "2.0.4",
     "codemirror": "^5.49.2",
