@@ -45,6 +45,14 @@ export function updatePass(user) {
   })
 }
 
+export function resetPwd(ids) {
+  return request({
+    url: 'api/users/resetPwd',
+    method: 'put',
+    data: ids
+  })
+}
+
 export function updateEmail(form) {
   const data = {
     password: encrypt(form.pass),
@@ -57,5 +65,5 @@ export function updateEmail(form) {
   })
 }
 
-export default { add, edit, del }
+export default { add, edit, del, resetPwd }
 

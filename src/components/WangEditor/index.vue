@@ -25,16 +25,16 @@ export default {
   name: 'WangEditor',
   components: { Toolbar, Editor },
   props: {
-    value: [String],
+    value: {
+      type: String,
+      required: false,
+      default: ''
+    },
     editorHeight: {
-      type: Number
+      type: Number,
+      required: false,
+      default: 420
     }
-  },
-  computed: {
-    ...mapGetters([
-      'imagesUploadApi',
-      'baseApi'
-    ])
   },
   data() {
     const _this = this
@@ -55,6 +55,12 @@ export default {
           }
         }
       }},
+      computed: {
+        ...mapGetters([
+          'imagesUploadApi',
+          'baseApi'
+        ])
+      },
       editMode: 'simple',
       editor: null,
       editValue: null
