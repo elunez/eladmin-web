@@ -57,7 +57,19 @@
             </el-select>
             <rrOperation />
           </div>
-          <crudOperation show="" :permission="permission" />
+          <crudOperation show="" :permission="permission">
+            <el-button
+              slot="right"
+              v-permission="['admin','user:add']"
+              :disabled="crud.selections.length === 0"
+              class="filter-item"
+              size="mini"
+              type="primary"
+              icon="el-icon-refresh-left"
+              @click="resetPwd(crud.selections)"
+            >重置密码
+            </el-button>
+          </crudOperation>
         </div>
         <!--表单渲染-->
         <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="570px">
@@ -471,6 +483,23 @@ export default {
     },
     checkboxT(row, rowIndex) {
       return row.id !== this.user.id
+    },
+    resetPwd(datas) {
+      this.$confirm(`你选中了 ${datas.length} 位用户，确认重置用户的密码吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const ids = []
+        datas.forEach(val => {
+          ids.push(val.id)
+        })
+        console.log(ids)
+        crudUser.resetPwd(ids).then(() => {
+          this.crud.notify('重置成功, 用户新密码:123456', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        }).catch(() => {})
+      }).catch(() => {
+      })
     }
   }
 }
