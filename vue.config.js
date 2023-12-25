@@ -27,18 +27,25 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '/api': {
+      'mng/api': {
         target: process.env.VUE_APP_BASE_API,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': 'api'
+          '^/mng/api': '/mng/api'
         }
       },
-      '/auth': {
+      'quartz/api': {
         target: process.env.VUE_APP_BASE_API,
         changeOrigin: true,
         pathRewrite: {
-          '^/auth': 'auth'
+          '^/quartz/api': 'quartz/api'
+        }
+      },
+      'system/auth': {
+        target: process.env.VUE_APP_BASE_API,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/system/auth': 'system/auth'
         }
       }
     }

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function del(ids) {
   return request({
-    url: 'api/deployHistory',
+    url: 'mng/api/deployHistory',
     method: 'delete',
     data: ids
   })
@@ -14,7 +14,7 @@ export function del(ids) {
  */
 export function reducte(data) {
   return request({
-    url: 'api/deploy/serverReduction',
+    url: 'mng/api/deploy/serverReduction',
     method: 'post',
     data
   })

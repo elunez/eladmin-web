@@ -80,7 +80,7 @@ export default {
     },
     // 获取数据前设置好接口地址
     beforeInit() {
-      this.url = 'api/jobs/logs'
+      this.url = 'quartz/api/jobs/logs'
       this.size = 6
       return true
     },
