@@ -47,6 +47,13 @@ module.exports = {
         pathRewrite: {
           '^/system/auth': 'system/auth'
         }
+      },
+      'system/api': {
+        target: process.env.VUE_APP_BASE_API,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/system/api': 'system/api'
+        }
       }
     }
   },
