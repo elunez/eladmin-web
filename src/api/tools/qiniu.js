@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function get() {
   return request({
-    url: 'api/qiNiuContent/config',
+    url: 'system/api/qiNiuContent/config',
     method: 'get'
   })
 }
 
 export function update(data) {
   return request({
-    url: 'api/qiNiuContent/config',
+    url: 'system/api/qiNiuContent/config',
     data,
     method: 'put'
   })
@@ -17,21 +17,21 @@ export function update(data) {
 
 export function download(id) {
   return request({
-    url: 'api/qiNiuContent/download/' + id,
+    url: 'system/api/qiNiuContent/download/' + id,
     method: 'get'
   })
 }
 
 export function sync() {
   return request({
-    url: 'api/qiNiuContent/synchronize',
+    url: 'system/api/qiNiuContent/synchronize',
     method: 'post'
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/qiNiuContent',
+    url: 'system/api/qiNiuContent',
     method: 'delete',
     data: ids
   })
