@@ -47,7 +47,7 @@ import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
 import qs from 'qs'
-import Background from '@/assets/images/background.webp'
+import Background from '@/assets/images/background.jpeg'
 export default {
   name: 'Login',
   data() {
