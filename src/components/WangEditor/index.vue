@@ -71,7 +71,7 @@ export default {
       this.$emit('input', newVal)
     },
     value(newVal, oldVal) {
-      this.editValue = newVal
+      this.editor.setHtml(newVal)
     }
   },
   mounted() {
