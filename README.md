@@ -26,7 +26,7 @@ ELADMIN 前端源码
 <img src="https://eladmin.vip/images/banner/side.jpeg" style="width: 435px;border-radius: 2px;">
 </a>
 
-使用优惠码: `BWHNCXNVXV`，可获得 6.81% 的折扣， [查看介绍](https://eladmin.vip/pages/040101/)
+使用优惠码: `BWHCCNCXVV`，可获得 6.81% 的折扣， [查看介绍](https://bwhstock.in/)
 
 #### Build Setup
 **推荐 node 版本：12-16**
