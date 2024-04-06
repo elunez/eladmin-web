@@ -64,7 +64,7 @@ export default {
   name: 'OnlineUser',
   components: { pagination, crudOperation, rrOperation },
   cruds() {
-    return CRUD({ url: 'auth/online', title: '在线用户' })
+    return CRUD({ url: 'system/auth/online', title: '在线用户' })
   },
   mixins: [presenter(), header(), crud()],
   data() {

@@ -127,7 +127,7 @@ export default {
   name: 'Timing',
   components: { Log, pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
+    return CRUD({ title: '定时任务', url: 'quartz/api/jobs', crudMethod: { ...crudJob }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
