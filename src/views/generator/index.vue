@@ -63,7 +63,7 @@ export default {
   name: 'GeneratorIndex',
   components: { pagination, crudOperation, rrOperation },
   cruds() {
-    return CRUD({ url: 'api/generator/tables' })
+    return CRUD({ url: 'system/api/generator/tables' })
   },
   mixins: [presenter(), header()],
   data() {

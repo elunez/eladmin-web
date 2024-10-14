@@ -82,7 +82,7 @@ export default {
   name: 'DataBase',
   components: { eForm, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '数据库', url: 'api/database', crudMethod: { ...crudDatabase }})
+    return CRUD({ title: '数据库', url: 'mng/api/database', crudMethod: { ...crudDatabase }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
