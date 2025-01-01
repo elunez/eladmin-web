@@ -63,12 +63,15 @@ export default {
       },
       editMode: 'simple',
       editor: null,
-      editValue: null
+      editValue: this.value
     }
   },
   watch: {
     editValue(newVal, oldVal) {
       this.$emit('input', newVal)
+    },
+    value(newVal, oldVal) {
+      this.editor.setHtml(newVal)
     }
   },
   mounted() {
