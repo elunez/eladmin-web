@@ -12,6 +12,15 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
+  setTimeout(() => {
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement('script')
+      hm.src = 'https://hm.baidu.com/hm.js?a8cc029036ab1e31acc5e8c8a519fe45'
+      var s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(hm, s)
+    })()
+  }, 0)
   if (to.meta.title) {
     document.title = Config.title + ' - ' + to.meta.title
   }
