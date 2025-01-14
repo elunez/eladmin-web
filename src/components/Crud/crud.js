@@ -397,6 +397,10 @@ function CRUD(options) {
      * @param {Array} data 数据
      */
     resetForm(data) {
+      delete crud.form['createTime']
+      delete crud.form['updateTime']
+      delete crud.form['createBy']
+      delete crud.form['updateBy']
       const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm.apply(crud.findVM('form')))
       const crudFrom = crud.form
       for (const key in form) {
