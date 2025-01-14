@@ -10,7 +10,7 @@ export function getDepts(params) {
 
 export function getDeptSuperior(ids, exclude) {
   exclude = exclude !== undefined ? exclude : false
-  const data = ids.length || ids.length === 0 ? ids : Array.of(ids)
+  const data = Array.isArray(ids) ? ids : [ids]
   return request({
     url: 'api/dept/superior?exclude=' + exclude,
     method: 'post',
