@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import crudDeploy from '@/api/mnt/deploy'
+import crudDeploy from '@/api/maint/deploy'
 import dForm from './deploy'
 import fForm from './sysRestore'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
