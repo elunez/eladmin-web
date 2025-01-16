@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { add, edit, getApps, getServers } from '@/api/mnt/deploy'
+import { add, edit, getApps, getServers } from '@/api/maint/deploy'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 

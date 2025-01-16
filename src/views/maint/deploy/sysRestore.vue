@@ -37,7 +37,7 @@
 
 <script>
 import crud from '@/mixins/crud'
-import { reducte } from '@/api/mnt/deployHistory'
+import { reducte } from '@/api/maint/deployHistory'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
   components: { DateRangePicker },

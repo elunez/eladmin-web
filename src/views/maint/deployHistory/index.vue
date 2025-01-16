@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { del } from '@/api/mnt/deployHistory'
+import { del } from '@/api/maint/deployHistory'
 import CRUD, { presenter, header } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
