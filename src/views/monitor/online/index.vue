@@ -23,6 +23,7 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
+      <el-table-column :show-overflow-tooltip="true" prop="uid" label="会话编号" />
       <el-table-column prop="userName" label="用户名" />
       <el-table-column prop="nickName" label="用户昵称" />
       <el-table-column prop="dept" label="部门" />
