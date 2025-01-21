@@ -72,7 +72,7 @@
           </crudOperation>
         </div>
         <!--表单渲染-->
-        <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="570px">
+        <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="555px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" @keydown.native="keydown($event)" />
@@ -91,14 +91,14 @@
                 v-model="form.dept.id"
                 :options="depts"
                 :load-options="loadDepts"
-                style="width: 178px"
+                style="width: 173px"
                 placeholder="选择部门"
               />
             </el-form-item>
-            <el-form-item label="岗位" prop="jobs">
+            <el-form-item label="岗位" prop="jobDatas" class="is-required">
               <el-select
                 v-model="jobDatas"
-                style="width: 178px"
+                style="width: 172px"
                 multiple
                 placeholder="请选择"
                 @remove-tag="deleteTag"
@@ -127,10 +127,11 @@
                 >{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
+            <el-form-item style="margin-bottom: 0;" label="角色" prop="roleDatas" class="is-required">
               <el-select
                 v-model="roleDatas"
-                style="width: 437px"
+                :disabled="form.id === user.id"
+                style="width: 426px"
                 multiple
                 placeholder="请选择"
                 @remove-tag="deleteTag"
@@ -267,6 +268,35 @@ export default {
         ],
         phone: [
           { required: true, trigger: 'blur', validator: validPhone }
+        ],
+        'dept.id': [
+          { required: true, message: '部门不能为空', trigger: 'blur' }
+        ],
+        jobDatas: [
+          {
+            validator: (rule, value, callback) => {
+              value = this.jobDatas
+              if (!value || value.length === 0) {
+                callback(new Error('请选择至少一个岗位'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
+          }
+        ],
+        roleDatas: [
+          {
+            validator: (rule, value, callback) => {
+              value = this.roleDatas
+              if (!value || value.length === 0) {
+                callback(new Error('请选择至少一个角色'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
+          }
         ]
       }
     }
@@ -351,25 +381,6 @@ export default {
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {
-      if (!crud.form.dept.id) {
-        this.$message({
-          message: '部门不能为空',
-          type: 'warning'
-        })
-        return false
-      } else if (this.jobDatas.length === 0) {
-        this.$message({
-          message: '岗位不能为空',
-          type: 'warning'
-        })
-        return false
-      } else if (this.roleDatas.length === 0) {
-        this.$message({
-          message: '角色不能为空',
-          type: 'warning'
-        })
-        return false
-      }
       crud.form.roles = userRoles
       crud.form.jobs = userJobs
       return true
