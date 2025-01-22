@@ -56,7 +56,14 @@ npm run build:prod
 
 2、加速node-sass安装
 
-https://www.ydyno.com/archives/1219.html
+https://izlzl.com/archives/1219.html
+
+3、出现 No module named 'distutils'
+
+```
+需要安装 python，安装 pip 或者 pip3
+然后安装 pip install distutils / pip3 install distutils
+```
 
 #### 特别鸣谢
 
