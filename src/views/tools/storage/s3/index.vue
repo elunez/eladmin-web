@@ -14,16 +14,6 @@
         <template slot="left">
           <!-- 上传 -->
           <el-button class="filter-item" size="mini" type="primary" icon="el-icon-upload" @click="dialog = true">上传</el-button>
-          <!-- 同步 -->
-          <el-button :icon="icon" class="filter-item" size="mini" type="warning" @click="synchronize">同步</el-button>
-          <!-- 配置 -->
-          <el-button
-            class="filter-item"
-            size="mini"
-            type="success"
-            icon="el-icon-s-tools"
-            @click="doConfig"
-          >配置</el-button>
         </template>
       </crudOperation>
       <!-- 文件上传 -->
@@ -34,7 +24,7 @@
           :on-error="handleError"
           :file-list="fileList"
           :headers="headers"
-          :action="qiNiuUploadApi"
+          :action="s3UploadApi"
           class="upload-demo"
           multiple
         >
@@ -48,15 +38,14 @@
       <!--表格渲染-->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="name" :show-overflow-tooltip="true" label="文件名">
+        <el-table-column prop="fileName" :show-overflow-tooltip="true" label="文件名">
           <template slot-scope="scope">
-            <a href="JavaScript:" class="el-link el-link--primary" target="_blank" type="primary" @click="download(scope.row.id)">{{ scope.row.key }}</a>
+            <a href="JavaScript:" class="el-link el-link--primary" target="_blank" type="primary" @click="download(scope.row.id)">{{ scope.row.fileName }}</a>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="suffix" label="文件类型" @selection-change="crud.selectionChangeHandler" />
-        <el-table-column prop="bucket" label="空间名称" />
-        <el-table-column prop="size" label="文件大小" />
-        <el-table-column prop="type" label="空间类型" />
+        <el-table-column prop="fileRealName" width="350" label="真实文件名称" />
+        <el-table-column :show-overflow-tooltip="true" prop="fileType" label="文件类型" @selection-change="crud.selectionChangeHandler" />
+        <el-table-column prop="fileSize" label="文件大小" />
         <el-table-column prop="updateTime" label="创建日期" />
       </el-table>
       <!--分页组件-->
@@ -66,10 +55,9 @@
 </template>
 
 <script>
-import crudQiNiu from '@/api/tools/qiniu'
+import s3Storage from '@/api/tools/s3Storage'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import eForm from './form'
 import CRUD, { presenter, header, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -77,9 +65,9 @@ import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 export default {
-  components: { eForm, pagination, crudOperation, rrOperation, DateRangePicker },
+  components: { pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '七牛云文件', url: 'api/qiNiuContent', crudMethod: { ...crudQiNiu }})
+    return CRUD({ title: '对象存储', url: 'api/s3Storage', crudMethod: { ...s3Storage }})
   },
   mixins: [presenter(), header(), crud()],
   data() {
@@ -95,7 +83,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'qiNiuUploadApi'
+      's3UploadApi'
     ])
   },
   watch: {
@@ -114,12 +102,6 @@ export default {
     this.crud.optShow.edit = false
   },
   methods: {
-    // 七牛云配置
-    doConfig() {
-      const _this = this.$refs.form
-      _this.init()
-      _this.dialog = true
-    },
     handleSuccess(response, file, fileList) {
       const uid = file.uid
       const id = response.id
@@ -128,7 +110,7 @@ export default {
     handleBeforeRemove(file, fileList) {
       for (let i = 0; i < this.files.length; i++) {
         if (this.files[i].uid === file.uid) {
-          crudQiNiu.del([this.files[i].id]).then(res => {})
+          s3Storage.del([this.files[i].id]).then(res => {})
           return true
         }
       }
@@ -155,7 +137,7 @@ export default {
       this.downloadLoading = true
       // 先打开一个空的新窗口，再请求
       this.newWin = window.open()
-      crudQiNiu.download(id).then(res => {
+      s3Storage.download(id).then(res => {
         this.downloadLoading = false
         this.url = res.url
       }).catch(err => {
@@ -166,7 +148,7 @@ export default {
     // 同步数据
     synchronize() {
       this.icon = 'el-icon-loading'
-      crudQiNiu.sync().then(res => {
+      s3Storage.sync().then(res => {
         this.icon = 'el-icon-refresh'
         this.$message({
           showClose: true,
